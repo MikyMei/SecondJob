@@ -124,7 +124,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     /**
      *  只是将图片作为北京图片贴了上去，并没有实现3d效果，尤其是在进行旋转的时候感觉尤为明显
      *  */
-    scene.background = textureLoader.load('./img/img_7.png');
+    scene.background = textureLoader.load('./img/sceneBackground.png');
 
     // 获得渲染器所在的标签元素，作为渲染器的尺寸
     renderer = new THREE.WebGLRenderer({antialias: true});
@@ -438,7 +438,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         },
         glowColor: {
           type: "c",
-          value: new THREE.Color("#336AAC")
+          value: new THREE.Color("#30D2BD")
         }
       },
       vertexShader,
@@ -589,7 +589,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             value: min,
           },
           uTopColor: {
-            value: new THREE.Color('rgb(47,156,255)'),
+            value: new THREE.Color('#30D2BD'),
           },
           uDiffusion: {
             value: new THREE.Vector3(
@@ -608,7 +608,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           },
 
           uFlowColor: {
-            value: new THREE.Color("#fffa89")
+            value: new THREE.Color("#ffffff")
           },
 
           uColor: {
@@ -630,7 +630,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           },
           glowColor: {
             type: 'c',
-            value: new THREE.Color('rgb(47,156,255)'),
+            value: new THREE.Color('#30D2BD'),
           },
           cameraMatrix: {
             value: new THREE.Matrix4(),
@@ -690,7 +690,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           uniform vec3 uDiffusion;
           uniform vec3 uDiffusionCenter;
           void main() {
-          vec3 distColor =  vec3(0.3, 0.6, 1.0);
+          vec3 distColor =  vec3(0.5, 1.0, 1.0);
 
           float indexMix = vPosition.z / uSize.z ;
           distColor = mix(distColor, uTopColor, indexMix);
@@ -936,11 +936,11 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           centroid.multiplyScalar(0.5);
           centroid.applyMatrix4(object.matrixWorld);
 
-          const geometry = new THREE.SphereGeometry(0.1, 32, 16);
-          const material = new THREE.MeshBasicMaterial({color: 0xffff00});
-          const sphere = new THREE.Mesh(geometry, material);
-          sphere.position.copy(centroid)
-          threeScence.add(sphere);
+          // const geometry = new THREE.SphereGeometry(0.1, 32, 16);
+          // const material = new THREE.MeshBasicMaterial({color: 0xffff00});
+          // const sphere = new THREE.Mesh(geometry, material);
+          // sphere.position.copy(centroid)
+          // threeScence.add(sphere);
 
           new TWEEN.Tween(threeCamera.position)
             .to({x: centroid.x, y: centroid.y * 1.1, z: centroid.z + radius * 1.3}, 3000)

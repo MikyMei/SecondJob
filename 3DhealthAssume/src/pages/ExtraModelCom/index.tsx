@@ -59,19 +59,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
         </Row>
       </div>
     )
-    // setCurrentOrga(value);
-    // if (dispatch){
-    //   dispatch(
-    //     {
-    //       type: 'bodyModel/initOrgaInfo',
-    //       payload: {
-    //         newOrgaName: value,
-    //         newOrgaDesc: bodyPart[`${value}`],
-    //         newIllList: contentlist1,
-    //       }
-    //     }
-    //   )
-    // }
+
 
     bodyRef.current.testEnlarge(value);
 
@@ -80,9 +68,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
   }
 
-  // useEffect(() => {
-  //   changeInfoWindow(infoDisplay, infoTop, infoRight);
-  // }, [infoDisplay, infoTop, infoRight])
+
 
 
   const changeInfoWindow = (display: any, top: any, right: any) => {
@@ -125,67 +111,6 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
   return (
     <div className={styles.mainContainer}>
       {bodyModel}
-      {/* 本来是在父组件中调用子组件地·1方法，现在直接在子组件中使用 */}
-      {/*<div id={"subList"} className={styles.sliderMesh}>*/}
-      {/*    <span className={styles.avaterItem}>*/}
-      {/*     <Badge count={1}>*/}
-      {/*       <Tooltip title="皮肤" color={"lime"} placement="right">*/}
-      {/*          <Avatar*/}
-      {/*            size={{xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100}}*/}
-      {/*            icon={<AntDesignOutlined/>}*/}
-      {/*            onClick={() => enlargeItem("Body002")}*/}
-      {/*          />*/}
-      {/*       </Tooltip>*/}
-
-      {/*    </Badge>*/}
-      {/*    </span>*/}
-
-      {/*  <span className={styles.avaterItem}>*/}
-      {/*     <Badge count={1}>*/}
-      {/*       <Tooltip title="骨骼" color={"lime"} placement="right">*/}
-      {/*          <Avatar*/}
-      {/*            size={{xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100}}*/}
-      {/*            icon={<AntDesignOutlined/>}*/}
-      {/*            onClick={() => enlargeItem("Skeletal001")}*/}
-      {/*          />*/}
-      {/*       </Tooltip>*/}
-      {/*    </Badge>*/}
-      {/*    </span>*/}
-      {/*  <span className={styles.avaterItem}>*/}
-      {/*     <Badge count={1}>*/}
-      {/*       <Tooltip title="器官" color={"lime"} placement="right">*/}
-      {/*          <Avatar*/}
-      {/*            size={{xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100}}*/}
-      {/*            icon={<AntDesignOutlined/>}*/}
-      {/*            onClick={() => enlargeItem("Circulatory_Heart001")}*/}
-      {/*          />*/}
-      {/*       </Tooltip>*/}
-      {/*    </Badge>*/}
-      {/*    </span>*/}
-
-      {/*</div>*/}
-      {/*<div id={"testAnt"} className={styles.infoCard}>*/}
-      {/*  <Row className={styles.infoTitle}>*/}
-      {/*    <Col id={"orgaName"}>{orgaName}</Col>*/}
-      {/*    <Col>*/}
-      {/*      <CloseCircleOutlined onClick={closeInfoWindow}/>*/}
-      {/*    </Col>*/}
-      {/*  </Row>*/}
-      {/*  <Divider className={styles.infoDivider}/>*/}
-      {/*  <Row id={"orgaDesc"} className={styles.organDesc}>*/}
-      {/*    {orgaDesc}*/}
-      {/*  </Row>*/}
-
-      {/*  <Row gutter={24} id={"illCarousel"} className={styles.illCarousel}>*/}
-
-
-      {/*    <Carousel className={"carousel"}>*/}
-      {/*      {renderCarsoule()}*/}
-      {/*    </Carousel>*/}
-
-      {/*  </Row>*/}
-
-      {/*</div>*/}
 
 
     </div>

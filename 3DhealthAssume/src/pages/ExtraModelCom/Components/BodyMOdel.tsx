@@ -139,10 +139,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * 在这里啊加入一个2d的图片到场景中，该2D图片作为人体模型底部的转盘，
      * 不在模型引入的时候加入是因为，模型会变
      * */
-
-
-
-
     const circleGeometry = new THREE.CircleGeometry(4, 1000);
     const circleMaterial = new THREE.MeshBasicMaterial({
       transparent: true,
@@ -209,13 +205,13 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     // 定位相机，并且指向场景中心
     camera.position.x = 0;
-    camera.position.y = 0;
+    camera.position.y = 2;
     camera.position.z = 15;
     camera.lookAt(0, 0, 0);
 
 
     let model;
-    loader.load('./img/joker.gltf', function (gltf) {
+    loader.load('./img/joker.gltf', function (gltf: any) {
         model = gltf.scene;
         model.scale.setScalar(5, 5, 5);
         model.position.setY(-4);
@@ -1060,8 +1056,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     const infoWindow = document.querySelector("#testAnt");
 
     const earthLabel = new CSS2DObject(infoWindow);
-    earthLabel.name="infoWindow";
-    earthLabel.position.set(position.x - radius/2 , position.y-radius / 4, position.z);
+    earthLabel.name = "infoWindow";
+    earthLabel.position.set(position.x - radius / 2, position.y - radius / 4, position.z);
     setCurrentInfoWindow(earthLabel);
     threeScence.add(earthLabel);
   }
@@ -1099,12 +1095,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
   const closeInfoWindow = () => {
 
-    currentInfoWindow.visible=false;
+    currentInfoWindow.visible = false;
     setDisplayType("none");
 
 
     new TWEEN.Tween(threeCamera.position)
-      .to({x: 0, y: 0, z: 15}, 1500)
+      .to({x: 0, y: 2, z: 15}, 1500)
       .easing(TWEEN.Easing.Quadratic.InOut)
       .start();
     new TWEEN.Tween(threeControls.target)

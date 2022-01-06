@@ -15,7 +15,7 @@ export default {
   'menu.scanCity':'城市',
   'menu.pointsMove':'粒子运动',
   'menu.normalProject':'正式项目',
-  'menu.extraModeCom':'抽离模型组件',
+  'menu.extraModeCom':'3D健康评估系统',
   'menu.register-result': '注册结果',
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',

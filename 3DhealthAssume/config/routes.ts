@@ -24,7 +24,9 @@
     path: '/extraModeCom',
     name: 'extraModeCom',
     icon: 'smile',
+
     component: './ExtraModelCom',
+    hideInMenu:true,
   },
 
   {

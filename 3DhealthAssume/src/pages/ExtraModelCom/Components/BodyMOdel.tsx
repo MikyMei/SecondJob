@@ -106,6 +106,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const [threeChoosenMesh, setThreeChoosenMesh] = useState<any>();// 主要用来存放body地material为的是能够更改流光
 
   const [displayType, setDisplayType] = useState<any>("none");
+  const [currentInfoWindow, setCurrentInfoWindow] = useState<any>(); // 在选定器官的时候打开指定的信息窗口，
 
 
   const initModel = () => {
@@ -142,19 +143,20 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
 
-    const circleGeometry = new THREE.CircleGeometry( 4, 1000 );
-    const circleMaterial = new THREE.MeshBasicMaterial( {
-      transparent:true,
-      opacity:0.8,
+    const circleGeometry = new THREE.CircleGeometry(4, 1000);
+    const circleMaterial = new THREE.MeshBasicMaterial({
+      transparent: true,
+      opacity: 0.8,
       // backgroundColor: "#ffffff",
       // color: "#000000",
 
       side: THREE.DoubleSide,
-      map:textureLoader.load('./img/downCircle3.svg') } );
-    const circle = new THREE.Mesh( circleGeometry, circleMaterial );
-    circle.rotateX(-Math.PI/2);
-    circle.position.set(0,-4,0);
-    scene.add( circle );
+      map: textureLoader.load('./img/downCircle3.svg')
+    });
+    const circle = new THREE.Mesh(circleGeometry, circleMaterial);
+    circle.rotateX(-Math.PI / 2);
+    circle.position.set(0, -4, 0);
+    scene.add(circle);
 
 
     // 2d渲染器
@@ -163,8 +165,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     // this.labelRenderer.domElement.style.position = 'absolute';
     // this.labelRenderer.domElement.style.top = 0;
     labelRenderer.domElement.style = "pointer-events: auto;position: absolute;top: 0px;"  // 处理新的渲染器
-
-
 
 
     const axes = new THREE.AxisHelper(20);
@@ -226,7 +226,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
          * */
 
 
-
         scene.add(model);
         model.traverse((child: any) => {
             objects.push(child);
@@ -267,7 +266,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     setThreeMainCanvas(mainCanvas);
 
 
-
   }
 
   /**
@@ -301,17 +299,13 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     render();
     window.addEventListener('resize', onWindowResize);
 
-     document.querySelector("#webgl-output");
-
+    document.querySelector("#webgl-output");
 
 
   }
 
 
-
-
   const onWindowResize = () => {
-    console.log("调用");
 
     if (threeMainCanvas) {
       threeCamera.aspect = threeMainCanvas.offsetWidth / threeMainCanvas.offsetHeight;
@@ -379,10 +373,10 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     threeRenderer.render(threeScence, threeCamera);
     threeLabelRenderer.render(threeScence, threeCamera);
 
-    if (threeChoosenMesh) {
-      OpenInfoWindow();
-
-    }
+    // if (threeChoosenMesh) {
+    //   OpenInfoWindow();
+    //
+    // }
 
     requestAnimationFrame(render);
 
@@ -948,11 +942,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           centroid.multiplyScalar(0.5);
           centroid.applyMatrix4(object.matrixWorld);
 
-          // const geometry = new THREE.SphereGeometry(0.1, 32, 16);
-          // const material = new THREE.MeshBasicMaterial({color: 0xffff00});
-          // const sphere = new THREE.Mesh(geometry, material);
-          // sphere.position.copy(centroid)
-          // threeScence.add(sphere);
 
           new TWEEN.Tween(threeCamera.position)
             .to({x: centroid.x, y: centroid.y * 1.1, z: centroid.z + radius * 1.3}, 3000)
@@ -966,15 +955,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
           choosenMesh = object;
           setThreeChoosenMesh(choosenMesh);
-          setDisplayType("inline")
+          // setDisplayType("inline")
           /**
            * 在这里动态生成信息窗口地内容
            * */
-          // document.getElementById('orgaName').innerText = name;
-          // document.getElementById('orgaDesc').innerText = bodyPart[`${name}`];
-          // setInfoTitle(name);
-          // setInfoDesc(bodyPart[`${name}`]);
-          GenerateCarousel(name);
+
+          GenerateCarousel(name, centroid, radius);
 
         }
       }
@@ -1009,7 +995,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   /**
    * 根据器官或者身体地某部分生成一个走马灯中的元素
    * */
-  const GenerateCarousel = (name: any) => {
+  const GenerateCarousel = (name: any, position: any, radius: any) => {
 
     const orgaRelatedInfo = {
       Body002: {
@@ -1060,28 +1046,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     }
 
-    //
-    // const contentlist1: any = [];
-    // contentlist1.push(
-    //   <div key={"1"}>
-    //     <Row className={styles.illType}>
-    //       <Tag color="orange">肺占位性病变{name ? name : ""}</Tag>
-    //     </Row>
-    //     <Row className={styles.illDesc}>占位性病变通常泛指肿瘤（良性的、恶性的）、寄生虫等，而不涉及疾病的病因。
-    //       人和高等动物的呼吸器官。人的肺在胸腔内,左右各一,和支气管相连。
-    //       人和高等动物的呼吸器官。人的肺在胸腔内,左右各一,和支气管相连。 人和高等动物的呼吸器官。人的肺在胸腔内,左右各一,和支气管相连。</Row>
-    //   </div>
-    // )
-    // contentlist1.push(
-    //   <div key={"1"}>
-    //     <Row className={styles.illType}>
-    //       <Tag color="orange">肺占位性病变</Tag>
-    //     </Row>
-    //     <Row className={styles.illDesc}>占位性病变通常泛指肿瘤（良性的、恶性的）、寄生虫等，而不涉及疾病的病因。
-    //       人和高等动物的呼吸器官。人的肺在胸腔内,左右各一,和支气管相连。
-    //     </Row>
-    //   </div>
-    // )
     if (dispatch) {
       dispatch({
         type: "bodyModel/initIllList",
@@ -1089,9 +1053,17 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       })
     }
 
-    // setContentList(contentlist1);
 
+    /**
+     * 在这里将信息船体元素作为css2Dobject加入场景
+     * */
+    const infoWindow = document.querySelector("#testAnt");
 
+    const earthLabel = new CSS2DObject(infoWindow);
+    earthLabel.name="infoWindow";
+    earthLabel.position.set(position.x - radius/2 , position.y-radius / 4, position.z);
+    setCurrentInfoWindow(earthLabel);
+    threeScence.add(earthLabel);
   }
 
   /**
@@ -1100,7 +1072,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
   useEffect(() => {
     structIllList();
-  }, [illList])
+  }, [illList]);
+
   const structIllList = async () => {
     setInfoTitle(illList.name);
     setInfoDesc(illList.desc);
@@ -1126,11 +1099,9 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
   const closeInfoWindow = () => {
 
-    choosenMesh = null;
-    setThreeChoosenMesh(choosenMesh);
-    // const testAnd = document.getElementById("testAnt");
-    // testAnd.style.display = 'none';
-    setDisplayType("none")
+    currentInfoWindow.visible=false;
+    setDisplayType("none");
+
 
     new TWEEN.Tween(threeCamera.position)
       .to({x: 0, y: 0, z: 15}, 1500)
@@ -1140,6 +1111,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       .to({x: 0, y: 0, z: 0}, 1500)
       .easing(TWEEN.Easing.Quadratic.InOut)
       .start();
+    choosenMesh = null;
+    setThreeChoosenMesh(choosenMesh);
   }
 
 

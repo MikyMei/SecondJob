@@ -143,9 +143,26 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     downCircle.className = 'downCircle';
     downCircle.src = './img/downCircle.png';
     // downCircle.style.marginTop = '-1em';
-    const earthLabel = new CSS2DObject( downCircle );
-    earthLabel.position.set( 0, -5, 0 );
-    scene.add(earthLabel)
+
+    // console.log(document.getElementById("testAnt"));
+    // const earthLabel = new CSS2DObject( downCircle );
+    // earthLabel.position.set( 0, -5, 0 );
+    // scene.add(earthLabel);
+
+
+    const circleGeometry = new THREE.CircleGeometry( 3, 1000 );
+    const circleMaterial = new THREE.MeshBasicMaterial( {
+      transparent:true,
+      opacity:0.6,
+      // backgroundColor: "#ffffff",
+      // color: "#000000",
+
+      side: THREE.DoubleSide,
+      map:textureLoader.load('./img/downCircle2.png') } );
+    const circle = new THREE.Mesh( circleGeometry, circleMaterial );
+    circle.rotateX(-Math.PI/2);
+    circle.position.set(0,-5,0);
+    scene.add( circle );
 
 
     // 2d渲染器

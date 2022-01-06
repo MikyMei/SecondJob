@@ -139,18 +139,10 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * 不在模型引入的时候加入是因为，模型会变
      * */
 
-    const downCircle = document.createElement( 'img' );
-    downCircle.className = 'downCircle';
-    downCircle.src = './img/downCircle.png';
-    // downCircle.style.marginTop = '-1em';
-
-    // console.log(document.getElementById("testAnt"));
-    // const earthLabel = new CSS2DObject( downCircle );
-    // earthLabel.position.set( 0, -5, 0 );
-    // scene.add(earthLabel);
 
 
-    const circleGeometry = new THREE.CircleGeometry( 3, 1000 );
+
+    const circleGeometry = new THREE.CircleGeometry( 4, 1000 );
     const circleMaterial = new THREE.MeshBasicMaterial( {
       transparent:true,
       opacity:0.6,
@@ -158,7 +150,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       // color: "#000000",
 
       side: THREE.DoubleSide,
-      map:textureLoader.load('./img/downCircle2.png') } );
+      map:textureLoader.load('./img/downCircle3.svg') } );
     const circle = new THREE.Mesh( circleGeometry, circleMaterial );
     circle.rotateX(-Math.PI/2);
     circle.position.set(0,-5,0);
@@ -226,7 +218,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     loader.load('./img/joker.gltf', function (gltf) {
         model = gltf.scene;
         model.scale.setScalar(5, 5, 5);
-        model.position.setY(-5);
         model.position.setY(-5);
 
         /**

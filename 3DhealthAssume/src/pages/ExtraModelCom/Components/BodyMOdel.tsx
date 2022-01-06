@@ -145,7 +145,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     const circleGeometry = new THREE.CircleGeometry( 4, 1000 );
     const circleMaterial = new THREE.MeshBasicMaterial( {
       transparent:true,
-      opacity:0.6,
+      opacity:0.8,
       // backgroundColor: "#ffffff",
       // color: "#000000",
 
@@ -153,7 +153,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       map:textureLoader.load('./img/downCircle3.svg') } );
     const circle = new THREE.Mesh( circleGeometry, circleMaterial );
     circle.rotateX(-Math.PI/2);
-    circle.position.set(0,-5,0);
+    circle.position.set(0,-4,0);
     scene.add( circle );
 
 
@@ -197,7 +197,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     plane.rotation.x = -0.5 * Math.PI;
     plane.position.x = 0;
-    plane.position.y = -5;
+    plane.position.y = -4;
     plane.position.z = 0;
     plane.castShadow = true;
     plane.receiveShadow = true;
@@ -218,7 +218,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     loader.load('./img/joker.gltf', function (gltf) {
         model = gltf.scene;
         model.scale.setScalar(5, 5, 5);
-        model.position.setY(-5);
+        model.position.setY(-4);
 
         /**
          * beIntersectObjects是用来存放需要射线检测的物体数组。

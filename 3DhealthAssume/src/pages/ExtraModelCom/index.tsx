@@ -108,6 +108,14 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     return contentList
   }
 
+  useEffect(()=>{
+    const listenerDom = document.getElementsByClassName(styles.mainContainer);
+    listenerDom[0].addEventListener('resize', (evt => {
+      console.log("调用");
+    }))
+  },[])
+
+
   return (
     <div className={styles.mainContainer}>
       {bodyModel}

@@ -16,6 +16,7 @@ import * as THREE from "three";
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 
 import {CSS2DObject, CSS2DRenderer} from 'three/examples/jsm/renderers/CSS2DRenderer.js';
+import {CSS3DObject, CSS3DRenderer} from 'three/examples/jsm/renderers/CSS3DRenderer.js';
 
 
 import styles from './index.less';
@@ -129,15 +130,32 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     // 获得渲染器所在的标签元素，作为渲染器的尺寸
     renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setClearColor(new THREE.Color("#eeeeee"));
-    renderer.setSize(mainCanvas.offsetWidth, window.innerHeight);
+    renderer.setSize(mainCanvas.offsetWidth, mainCanvas.offsetHeight);
     renderer.shadowMap.enabled = true;
+
+
+    /**
+     * 在这里啊加入一个2d的图片到场景中，该2D图片作为人体模型底部的转盘，
+     * 不在模型引入的时候加入是因为，模型会变
+     * */
+
+    const downCircle = document.createElement( 'img' );
+    downCircle.className = 'downCircle';
+    downCircle.src = './img/downCircle.png';
+    // downCircle.style.marginTop = '-1em';
+    const earthLabel = new CSS2DObject( downCircle );
+    earthLabel.position.set( 0, -5, 0 );
+    scene.add(earthLabel)
+
 
     // 2d渲染器
     labelRenderer = new CSS2DRenderer();  // 新增的渲染器
-    labelRenderer.setSize(mainCanvas.offsetWidth, window.innerHeight);
+    labelRenderer.setSize(mainCanvas.offsetWidth, mainCanvas.offsetHeight);
     // this.labelRenderer.domElement.style.position = 'absolute';
     // this.labelRenderer.domElement.style.top = 0;
     labelRenderer.domElement.style = "pointer-events: auto;position: absolute;top: 0px;"  // 处理新的渲染器
+
+
 
 
     const axes = new THREE.AxisHelper(20);
@@ -177,8 +195,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     // scene.add(plane);
 
 
-    // mainCanvas.offsetWidth,window.innerHeight
-    camera = new THREE.PerspectiveCamera(45, mainCanvas.offsetWidth / window.innerHeight, 0.1, 2000);
+    // mainCanvas.offsetWidth,mainCanvas.offsetHeight
+    camera = new THREE.PerspectiveCamera(45, mainCanvas.offsetWidth / mainCanvas.offsetHeight, 0.1, 2000);
 
     // 定位相机，并且指向场景中心
     camera.position.x = 0;
@@ -193,14 +211,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         model.scale.setScalar(5, 5, 5);
         model.position.setY(-5);
         model.position.setY(-5);
-        // const box = new THREE.Box3();
-        // box.setFromObject(model);
-        // var helper = new THREE.Box3Helper(box, 0xffff00);
-        // gltf.scene.attach(helper);
+
         /**
          * beIntersectObjects是用来存放需要射线检测的物体数组。
          * transformControl可以方便调节物体位置大小。
          * */
+
 
 
         scene.add(model);
@@ -230,22 +246,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       });
 
 
-    // @ts-ignore
-    // window.document.getElementById('webgl-output').appendChild(renderer.domElement);
-    // window.document.getElementById("webgl-output").appendChild(labelRenderer.domElement);
-    // // generatePointsCircle();
-    //
-    //
-    // render();
-
-
-    // setTimeout(() => {
-    //   isStart = true;
-    //
-    //
-    // }, 200)
-
-    // controls = new OrbitControls(camera, labelRenderer.domElement);
     controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
 
@@ -258,10 +258,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     setThreeObjects(objects);
     setThreeMainCanvas(mainCanvas);
 
-    // 点击事件，
-    // document.getElementById('webgl-output').addEventListener('click', (event) => choose(event));
 
-    // window.addEventListener('resize', onWindowResize);
 
   }
 
@@ -295,15 +292,24 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     render();
     window.addEventListener('resize', onWindowResize);
+
+     document.querySelector("#webgl-output");
+
+
+
   }
 
+
+
+
   const onWindowResize = () => {
+    console.log("调用");
 
     if (threeMainCanvas) {
-      threeCamera.aspect = threeMainCanvas.offsetWidth / window.innerHeight;
+      threeCamera.aspect = threeMainCanvas.offsetWidth / threeMainCanvas.offsetHeight;
       threeCamera.updateProjectionMatrix();
 
-      threeRenderer.setSize(threeMainCanvas.offsetWidth, window.innerHeight);
+      threeRenderer.setSize(threeMainCanvas.offsetWidth, threeMainCanvas.offsetHeight);
       // threeLabelRenderer.setSize(window.innerWidth, threeMainCanvas.offsetHeight);
 
 
@@ -897,14 +903,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     var standardVector1 = newWorldVector.project(threeCamera);
     // var standardVector1 = new THREE.Vector3(0,0,1);
     var a1 = threeMainCanvas.offsetWidth / 2;
-    var b1 = window.innerHeight / 2;
+    var b1 = threeMainCanvas.offsetHeight / 2;
 
 
     var x1 = Math.round((standardVector1.x) * a1 + a1);
     var y1 = Math.round(-standardVector1.y * b1 + b1);
 
-    // console.log("展示",displayType);
-    // testAnt.style.display = displayType;
     testAnt.style.top = y1 + 'px';
     testAnt.style.right = (threeMainCanvas.offsetWidth - x1) + 'px';
 
@@ -1132,38 +1136,38 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
   return (
-    <div>
-      <div className={styles.output} id="webgl-output">
+    <div className={styles.output}>
+      <div className={styles.webglOutput} id="webgl-output">
 
+        <div id={"testAnt"} style={{display: displayType}} className={styles.infoCard}>
+          <Row className={styles.infoTitle}>
+            <Col id={"orgaName"}>
+
+              {infoTitle}
+            </Col>
+            <Col>
+              <CloseCircleOutlined onClick={closeInfoWindow}/>
+            </Col>
+          </Row>
+          <Divider className={styles.infoDivider}/>
+          <Row id={"orgaDesc"} className={styles.organDesc}>
+            {infoDesc}
+          </Row>
+
+          <Row gutter={24} id={"illCarousel"} className={styles.illCarousel}>
+
+
+            <Carousel className={"carousel"} effect={"fade"}>
+              {contentList}
+              {/*{illList}*/}
+            </Carousel>
+
+          </Row>
+
+        </div>
 
       </div>
 
-      <div id={"testAnt"} style={{display: displayType}} className={styles.infoCard}>
-        <Row className={styles.infoTitle}>
-          <Col id={"orgaName"}>
-
-            {infoTitle}
-          </Col>
-          <Col>
-            <CloseCircleOutlined onClick={closeInfoWindow}/>
-          </Col>
-        </Row>
-        <Divider className={styles.infoDivider}/>
-        <Row id={"orgaDesc"} className={styles.organDesc}>
-          {infoDesc}
-        </Row>
-
-        <Row gutter={24} id={"illCarousel"} className={styles.illCarousel}>
-
-
-          <Carousel className={"carousel"} effect={"fade"}>
-            {contentList}
-            {/*{illList}*/}
-          </Carousel>
-
-        </Row>
-
-      </div>
       <div id={"subList"} className={styles.sliderMesh}>
           <span className={styles.avaterItem}>
            <Badge count={1}>

@@ -54,6 +54,14 @@ export async function GetAllOrgaList(params: any) {
   // });
 }
 
+export async function GetPersonalScoreHistory(params: any) {
+
+  return request('/api2/health/health/user_year_score_chart/', {
+    method: 'GET',
+    params,
+  });
+}
+
 
 export async function AddNewRole(params: any) {
   // return request('/api2/account/permission/manage/', {

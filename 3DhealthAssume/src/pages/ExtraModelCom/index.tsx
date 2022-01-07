@@ -105,6 +105,9 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
         personalHealthInfoParams:{
           user_id:"2017014713"
         },
+        personalScoreHistoryParams:{
+          user_id:"2017014713"
+        },
       }
       dispatch({
         type:"bodyModel/getAllPersonalHealthInformation",

@@ -72,11 +72,85 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * 在这里存储可以使用滑块控制的，在忽快中展示的文本，以及对应数值调整地对应模型的名字（后期可以使用className进而控制一类地mesh）
    * 这个需要先确定有哪几类，在确定每一类中的所包含的器官名字，
    * */
-  const matchType = ["皮肤", "器官", "骨骼", ""];
+  const matchType = ["皮肤",  "骨骼","内脏", ""];
   const matchMesh = [["Body002"], ["Circulatory_Heart001"], ["Skeletal001"], []];
 
-  const orgaNameList=[];
-  const orgaTypeList=[];  // 根据器官将他们分为不同的部分，首先要知道他有几类
+  const orgaNameList=["Retopo_跟骨",
+  "Retopo_腕骨",
+  "Retopo_颈椎",
+  "Retopo_锁骨",
+  "Retopo_颅骨",
+  "Retopo_牙齿_上",
+  "Retopo_股骨",
+  "Retopo_腓骨",
+  "Retopo_肱骨",
+  "Retopo_踝关节",
+  "Retopo_下颌骨",
+  "Retopo_牙齿_下",
+  "Retopo_手",
+  "Retopo_脚",
+  "Retopo_骨盆",
+  "Retopo_桡骨",
+  "Retopo_肋骨",
+  "Retopo_骶骨",
+  "Retopo_肩胛骨",
+  "Retopo_胸骨",
+  "Retopo_跗骨",
+  "Retopo_胫骨",
+  "Retopo_尺骨",
+  "Retopo_脊柱",
+  "Retopo_生殖系统",
+  "Retopo_静脉",
+  "Retopo_动脉",
+  "Retopo_大脑",
+  "Retopo_消化系统",
+  "Retopo_小肠",
+  "Retopo_胃部",
+  "Retopo_肝脏",
+  "Retopo_支气管",
+  "Retopo_肺",
+  "Retopo_肾脏",
+  "Retopo_心脏",
+  "Retopo_皮肤"];  //
+  const orgaTypeList=[["Retopo_皮肤"],
+    ["Retopo_跟骨",
+  "Retopo_腕骨",
+  "Retopo_颈椎",
+  "Retopo_锁骨",
+  "Retopo_颅骨",
+  "Retopo_牙齿_上",
+  "Retopo_股骨",
+  "Retopo_腓骨",
+  "Retopo_肱骨",
+  "Retopo_踝关节",
+  "Retopo_下颌骨",
+  "Retopo_牙齿_下",
+  "Retopo_手",
+  "Retopo_脚",
+  "Retopo_骨盆",
+  "Retopo_桡骨",
+  "Retopo_肋骨",
+  "Retopo_骶骨",
+  "Retopo_肩胛骨",
+  "Retopo_胸骨",
+  "Retopo_跗骨",
+  "Retopo_胫骨",
+  "Retopo_尺骨",
+  "Retopo_脊柱"],
+  ["Retopo_生殖系统",
+  "Retopo_静脉",
+  "Retopo_动脉",
+  "Retopo_大脑",
+  "Retopo_消化系统",
+  "Retopo_小肠",
+  "Retopo_胃部",
+  "Retopo_肝脏",
+  "Retopo_支气管",
+  "Retopo_肺",
+  "Retopo_肾脏",
+  "Retopo_心脏"],
+    []
+  ];  // 根据器官将他们分为不同的部分，首先要知道他有几类
 
   let choosenMesh: any;
 
@@ -750,14 +824,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       if (child.isMesh) {
         objects.push(child);
 
-        // console.log(child.name);
-        // 有的child.material 类型是 Array, 有的是 Object
+
         switch (child.name) {
           case "Body002":
           case "Retopo_皮肤":
             child.material = setCityMaterial(child).materialBody;
 
-            setBodyMaterial(child.material)
             child.castShadow = true;
 
             break;

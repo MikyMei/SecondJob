@@ -93,27 +93,27 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     </BodyModel>)
   }, [])
 
-  const renderCarsoule = () => {
-    const contentList: any = [];
-    illList.map((illList: any) => {
-      contentList.push(<div key={2}>
-        <Row className={styles.illType}>
-          <Tag color="orange">肺占位性病变</Tag>
-        </Row>
-        <Row className={styles.illDesc}>占位性病变通常泛指肿瘤（良性的、恶性的）、寄生虫等，而不涉及疾病的病因。
-          人和高等动物的呼吸器官。人的肺在胸腔内,左右各一,和支气管相连。
-        </Row>
-      </div>)
-    })
-    return contentList
-  }
 
   useEffect(()=>{
-    const listenerDom = document.getElementsByClassName(styles.mainContainer);
-    listenerDom[0].addEventListener('resize', (evt => {
-      console.log("调用");
-    }))
+    GetAllBodyHealth();
   },[])
+
+
+  const GetAllBodyHealth=()=>{
+    if (dispatch){
+      const params={
+        personalHealthInfoParams:{
+          user_id:"2017014713"
+        },
+      }
+      dispatch({
+        type:"bodyModel/getAllPersonalHealthInformation",
+        payload:{
+          params,
+        }
+      })
+    }
+  }
 
 
   return (

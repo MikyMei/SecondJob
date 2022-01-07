@@ -45,7 +45,19 @@ export default defineConfig({
   esbuild: {},
   title: false,
   ignoreMomentLocale: true,
-  proxy: proxy[REACT_APP_ENV || 'dev'],
+  proxy: {
+    '/api2': {
+      target:'http://111.229.63.2:9008/api/',  // 履约后台服务
+      // target: 'http://122.51.155.188:8006', // 后台服务地址以及端口号 (郭哥的)
+      // target: 'http://81.68.184.44:8000', // 后台服务地址以及端口号 (郭哥的)
+      // target: 'http://101.34.135.102:8011', // 后台服务地址以及端口号 (zzz)/
+      // target: 'http://101.34.135.102:8010', // 后台服务地址以及端口号 (家辉)/
+
+      ws: true, // websoket 服务
+      changeOrigin: true, //是否跨域
+      pathRewrite: { '/api2': '' }
+    },
+    proxy:[REACT_APP_ENV || 'dev']},
   manifest: {
     basePath: '/',
   },

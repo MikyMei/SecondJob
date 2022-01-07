@@ -1094,6 +1094,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
   const closeInfoWindow = () => {
+    console.log(threeScence);
 
     currentInfoWindow.visible = false;
     setDisplayType("none");

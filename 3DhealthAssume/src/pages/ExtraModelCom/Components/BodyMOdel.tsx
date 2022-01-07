@@ -74,12 +74,9 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * */
   const matchType = ["皮肤", "器官", "骨骼", ""];
   const matchMesh = [["Body002"], ["Circulatory_Heart001"], ["Skeletal001"], []];
-  const bodyPart = {
-    Body002: "包在身体表面，直接同外界环境接触，具有保护、排泄、调节体温和感受外界刺激等作用的一种器官，是人的身体器官中最大的器官",
-    Circulatory_Heart001: "心脏主要功能是为血液流动提供动力，把血液运行至身体各个部分。人类的心脏位于胸腔中部偏左下方，体积约相当于一个拳头大小，重量约250克。女性的心脏通常要比男性的体积小且重量轻",
-    Skeletal001: "人或动物体内或体表坚硬的组织。分内骨骼和外骨骼两种，人和高等动物的骨骼在体内，由许多块骨头组成，叫内骨骼；软体动物体外的硬壳以及某些脊椎动物（如鱼、龟等）体表的鳞、甲等叫外骨骼。",
 
-  }
+  const orgaNameList=[];
+  const orgaTypeList=[];  // 根据器官将他们分为不同的部分，首先要知道他有几类
 
   let choosenMesh: any;
 
@@ -211,7 +208,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
     let model;
-    loader.load('./img/joker.gltf', function (gltf: any) {
+    loader.load('./img/body04.gltf', function (gltf: any) {
         model = gltf.scene;
         model.scale.setScalar(5, 5, 5);
         model.position.setY(-4);
@@ -224,7 +221,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
         scene.add(model);
         model.traverse((child: any) => {
-            objects.push(child);
+
             /**
              * 在这里将不同模型根据他的名字，将
              * */
@@ -328,21 +325,21 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     if (dt > 1) return false;
 
-    if (time.value >= 2.6 || addTimer === true) {
-      time.value -= dt;
+    if (time.value >= 0.48 || addTimer === true) {
+      time.value -= dt/5;
       if (time.value <= 0.0) {
         addTimer = false
       }
     } else if (time.value <= 0.0 || addTimer === false) {
-      time.value += dt;
-      if (time.value >= 2.6) {
+      time.value += dt/5;
+      if (time.value >= 0.48) {
         addTimer = true
       }
     }
     setThreeAddTimer(addTimer);
     setThreeTime(time);
-    if (threeObjects.length > 0) {
-      threeObjects[1].material.uniforms.time = time;
+    if (threeObjects.length>0) {
+      threeObjects[threeObjects.length-1].material.uniforms.time = time;
 
     }
     if (isStart) {
@@ -571,6 +568,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       max.z - min.z,
     );
 
+    console.log(radius);
 
     Utils.forMaterial(object.material, (material: any) => {
       material.transparent = true;
@@ -599,15 +597,15 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             value: new THREE.Vector3(
               1, // 0 1开关
               4, // 范围
-              8, // 速度
+              0.1, // 速度
             ),
           },
 
           uFlow: {
             value: new THREE.Vector3(
               1, // 0 1开关
-              4, // 范围
-              8 // 速度
+              0.4, // 范围
+              4 // 速度
             )
           },
 
@@ -622,7 +620,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             value: 1,
           },
           uRadius: {
-            value: radius,
+            value: radius/10,
           },
           coeficient: {
             type: 'f',
@@ -715,12 +713,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
             if (uFlow.x > 0.5) {
                 // 扩散速度
-                float dTime = mod(time * uFlow.z, uSize.z);
+                float dTime = mod(time * uFlow.z , uSize.y);
                 // 流动范围
-                float topY = vPosition.z + uFlow.y;
-                if (dTime > vPosition.z && dTime < topY) {
+                float topY = vPosition.y + uFlow.y;
+                if (dTime > vPosition.y && dTime < topY) {
                     // 颜色渐变
-                    float dIndex = sin((topY - dTime) / uFlow.y * 3.14);
+                    float dIndex = sin((topY - dTime) / uFlow.y *3.14);
 
                     distColor = mix(distColor, uFlowColor,  dIndex);
                 }
@@ -750,13 +748,16 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     try {
       if (child.isMesh) {
+        objects.push(child);
 
-
+        // console.log(child.name);
         // 有的child.material 类型是 Array, 有的是 Object
         switch (child.name) {
           case "Body002":
+          case "Retopo_皮肤":
             child.material = setCityMaterial(child).materialBody;
 
+            setBodyMaterial(child.material)
             child.castShadow = true;
 
             break;

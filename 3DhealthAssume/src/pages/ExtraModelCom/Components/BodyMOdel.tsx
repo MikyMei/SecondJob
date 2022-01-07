@@ -72,85 +72,100 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * 在这里存储可以使用滑块控制的，在忽快中展示的文本，以及对应数值调整地对应模型的名字（后期可以使用className进而控制一类地mesh）
    * 这个需要先确定有哪几类，在确定每一类中的所包含的器官名字，
    * */
-  const matchType = ["皮肤",  "骨骼","内脏", ""];
+  const matchType = ["皮肤", "骨骼", "内脏", ""];
   const matchMesh = [["Body002"], ["Circulatory_Heart001"], ["Skeletal001"], []];
 
-  const orgaNameList=["Retopo_跟骨",
-  "Retopo_腕骨",
-  "Retopo_颈椎",
-  "Retopo_锁骨",
-  "Retopo_颅骨",
-  "Retopo_牙齿_上",
-  "Retopo_股骨",
-  "Retopo_腓骨",
-  "Retopo_肱骨",
-  "Retopo_踝关节",
-  "Retopo_下颌骨",
-  "Retopo_牙齿_下",
-  "Retopo_手",
-  "Retopo_脚",
-  "Retopo_骨盆",
-  "Retopo_桡骨",
-  "Retopo_肋骨",
-  "Retopo_骶骨",
-  "Retopo_肩胛骨",
-  "Retopo_胸骨",
-  "Retopo_跗骨",
-  "Retopo_胫骨",
-  "Retopo_尺骨",
-  "Retopo_脊柱",
-  "Retopo_生殖系统",
-  "Retopo_静脉",
-  "Retopo_动脉",
-  "Retopo_大脑",
-  "Retopo_消化系统",
-  "Retopo_小肠",
-  "Retopo_胃部",
-  "Retopo_肝脏",
-  "Retopo_支气管",
-  "Retopo_肺",
-  "Retopo_肾脏",
-  "Retopo_心脏",
-  "Retopo_皮肤"];  //
-  const orgaTypeList=[["Retopo_皮肤"],
+  const orgaNameList = ["Retopo_跟骨",
+    "Retopo_腕骨",
+    "Retopo_颈椎",
+    "Retopo_锁骨",
+    "Retopo_颅骨",
+    "Retopo_牙齿_上",
+    "Retopo_股骨",
+    "Retopo_腓骨",
+    "Retopo_肱骨",
+    "Retopo_踝关节",
+    "Retopo_下颌骨",
+    "Retopo_牙齿_下",
+    "Retopo_手",
+    "Retopo_脚",
+    "Retopo_骨盆",
+    "Retopo_桡骨",
+    "Retopo_肋骨",
+    "Retopo_骶骨",
+    "Retopo_肩胛骨",
+    "Retopo_胸骨",
+    "Retopo_跗骨",
+    "Retopo_胫骨",
+    "Retopo_尺骨",
+    "Retopo_脊柱",
+    "Retopo_生殖系统",
+    "Retopo_静脉",
+    "Retopo_动脉",
+    "Retopo_大脑",
+    "Retopo_消化系统",
+    "Retopo_小肠",
+    "Retopo_胃部",
+    "Retopo_肝脏",
+    "Retopo_支气管",
+    "Retopo_肺",
+    "Retopo_肾脏",
+    "Retopo_心脏",
+    "Retopo_皮肤"];  //
+  const orgaTypeList = [["Retopo_皮肤"],
     ["Retopo_跟骨",
-  "Retopo_腕骨",
-  "Retopo_颈椎",
-  "Retopo_锁骨",
-  "Retopo_颅骨",
-  "Retopo_牙齿_上",
-  "Retopo_股骨",
-  "Retopo_腓骨",
-  "Retopo_肱骨",
-  "Retopo_踝关节",
-  "Retopo_下颌骨",
-  "Retopo_牙齿_下",
-  "Retopo_手",
-  "Retopo_脚",
-  "Retopo_骨盆",
-  "Retopo_桡骨",
-  "Retopo_肋骨",
-  "Retopo_骶骨",
-  "Retopo_肩胛骨",
-  "Retopo_胸骨",
-  "Retopo_跗骨",
-  "Retopo_胫骨",
-  "Retopo_尺骨",
-  "Retopo_脊柱"],
-  ["Retopo_生殖系统",
-  "Retopo_静脉",
-  "Retopo_动脉",
-  "Retopo_大脑",
-  "Retopo_消化系统",
-  "Retopo_小肠",
-  "Retopo_胃部",
-  "Retopo_肝脏",
-  "Retopo_支气管",
-  "Retopo_肺",
-  "Retopo_肾脏",
-  "Retopo_心脏"],
+      "Retopo_腕骨",
+      "Retopo_颈椎",
+      "Retopo_锁骨",
+      "Retopo_颅骨",
+      "Retopo_牙齿_上",
+      "Retopo_股骨",
+      "Retopo_腓骨",
+      "Retopo_肱骨",
+      "Retopo_踝关节",
+      "Retopo_下颌骨",
+      "Retopo_牙齿_下",
+      "Retopo_手",
+      "Retopo_脚",
+      "Retopo_骨盆",
+      "Retopo_桡骨",
+      "Retopo_肋骨",
+      "Retopo_骶骨",
+      "Retopo_肩胛骨",
+      "Retopo_胸骨",
+      "Retopo_跗骨",
+      "Retopo_胫骨",
+      "Retopo_尺骨",
+      "Retopo_脊柱"],
+    ["Retopo_生殖系统",
+      "Retopo_静脉",
+      "Retopo_动脉",
+      "Retopo_大脑",
+      "Retopo_消化系统",
+      "Retopo_小肠",
+      "Retopo_胃部",
+      "Retopo_肝脏",
+      "Retopo_支气管",
+      "Retopo_肺",
+      "Retopo_肾脏",
+      "Retopo_心脏"],
     []
   ];  // 根据器官将他们分为不同的部分，首先要知道他有几类
+
+  const orgaMatchColor={
+    "Retopo_生殖系统":"#fcafaf",
+    "Retopo_静脉":"#b8c7bf",
+    "Retopo_动脉":"#fb7f68",
+    "Retopo_大脑":"#caadb1",
+    "Retopo_消化系统":"#e8e1c0",
+    "Retopo_小肠":"#fff1d2",
+    "Retopo_胃部":"#f78b7a",
+    "Retopo_肝脏":"#ee934c",
+    "Retopo_支气管":"#cc594b",
+    "Retopo_肺":"#ea5d69",
+    "Retopo_肾脏":"#e04903",
+    "Retopo_心脏":"#f05552",
+  }
 
   let choosenMesh: any;
 
@@ -400,20 +415,20 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     if (dt > 1) return false;
 
     if (time.value >= 0.48 || addTimer === true) {
-      time.value -= dt/5;
+      time.value -= dt / 5;
       if (time.value <= 0.0) {
         addTimer = false
       }
     } else if (time.value <= 0.0 || addTimer === false) {
-      time.value += dt/5;
+      time.value += dt / 5;
       if (time.value >= 0.48) {
         addTimer = true
       }
     }
     setThreeAddTimer(addTimer);
     setThreeTime(time);
-    if (threeObjects.length>0) {
-      threeObjects[threeObjects.length-1].material.uniforms.time = time;
+    if (threeObjects.length > 0) {
+      threeObjects[threeObjects.length - 1].material.uniforms.time = time;
 
     }
     if (isStart) {
@@ -451,7 +466,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   }
 
 
-  function Shaders() {
+  function Shaders(color:any) {
     const vertexShader = [
       'varying vec3	vVertexWorldPosition;',
       'varying vec3	vVertexNormal;',
@@ -478,6 +493,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         glowColor: {
           type: "c",
           value: new THREE.Color("#51AEF4")
+        //  "#51AEF4"
         }
       },
       vertexShader,
@@ -513,7 +529,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         },
         glowColor: {
           type: "c",
-          value: new THREE.Color("#30D2BD")
+          value: new THREE.Color(color)
+        //  #30D2BD
         }
       },
       vertexShader,
@@ -551,7 +568,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         },
         glowColor: {
           type: "c",
-          value: new THREE.Color("red")
+          value: new THREE.Color(color)
         }
       },
       vertexShader,
@@ -694,7 +711,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             value: 1,
           },
           uRadius: {
-            value: radius/10,
+            value: radius / 10,
           },
           coeficient: {
             type: 'f',
@@ -818,6 +835,19 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     return {materialBody};
   };
 
+
+  const JudgeOrgaType = (orgaName: any) => {
+    let result=-1;
+    orgaTypeList.map((item: any, index: any) => {
+      if (item.indexOf(orgaName)!=-1){
+        result=index;
+      }
+
+    })
+    return result;
+  }
+
+
   const processGLTFChild = (child: any) => {
 
     try {
@@ -825,25 +855,27 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         objects.push(child);
 
 
-        switch (child.name) {
-          case "Body002":
-          case "Retopo_皮肤":
+        // 根据器官属于在哪个数组，判断属于哪一类，选择哪一类着色器材质
+        const type=JudgeOrgaType(child.name);
+
+        switch (type) {
+          case 0:
             child.material = setCityMaterial(child).materialBody;
 
             child.castShadow = true;
 
             break;
-          case "Skeletal001":
-            child.material = Shaders().material2;
+          case 1:
+            child.material = Shaders("#30D2BD").material2;
             child.castShadow = true;
             break;
-          case "Circulatory_Heart001":
-            child.material = Shaders().material3;
+          case 2:
+            child.material = Shaders(orgaMatchColor[`${child.name}`]).material3;
             child.castShadow = true
 
             break;
           default:
-            child.material = Shaders().material2;
+            child.material = Shaders("#30D2BD").material2;
             child.castShadow = true;
             break;
         }
@@ -889,7 +921,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * 把index地剔除剩下的拿出来，挨个进行设置
      * */
 
-    const oldObjects = matchMesh.slice(0);
+    const oldObjects = orgaTypeList.slice(0);
     const beforeObjects = oldObjects.slice(0, index);
     const afterObjects = oldObjects.slice(index + 1, oldObjects.length - 1);
 
@@ -925,15 +957,15 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   }
 
   const sliderChange = (value: any) => {
-    //  matchMesh
+    //  orgaTypeList
     // 获取当前需要被一起控制的一类mesh
-    const nowMesh = matchMesh[Math.floor(value)];
+    const nowMesh = orgaTypeList[Math.floor(value)];
     changeBeforeOpacity(Math.floor(value))
     publicOpacity = value;
     threeObjects.map((object: any, index: any) => {
       if (nowMesh.includes(object.name)) {
 
-        const needOpacity = Math.abs(publicOpacity - index > 1 ? 1.0 : publicOpacity - index).toFixed(1);
+        const needOpacity = Math.abs(publicOpacity - Math.floor(value) > 1 ? 1.0 : publicOpacity - Math.floor(value)).toFixed(1);
 
         if (needOpacity === "0.1") {
 
@@ -1013,7 +1045,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
           new TWEEN.Tween(threeCamera.position)
-            .to({x: centroid.x, y: centroid.y * 1.1, z: centroid.z + radius * 1.3}, 3000)
+            .to({x: centroid.x, y: centroid.y * 1.1, z: centroid.z + radius * 13}, 3000)
             .easing(TWEEN.Easing.Quadratic.InOut)
             .start();
 
@@ -1067,7 +1099,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const GenerateCarousel = (name: any, position: any, radius: any) => {
 
     const orgaRelatedInfo = {
-      Body002: {
+      "Retopo_皮肤": {
         name: "皮肤",
         desc: "包在身体表面，直接同外界环境接触，具有保护、排泄、调节体温和感受外界刺激等作用的一种器官，是人的身体器官中最大的器官",
         illType: [
@@ -1083,7 +1115,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
       },
 
-      Skeletal001: {
+      "Retopo_股骨": {
         name: "骨骼",
         desc: "人或动物体内或体表坚硬的组织。分内骨骼和外骨骼两种，人和高等动物的骨骼在体内，由许多块骨头组成，叫内骨骼；软体动物体外的硬壳以及某些脊椎动物（如鱼、龟等）体表的鳞、甲等叫外骨骼",
         illType: [
@@ -1098,8 +1130,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         ]
 
       },
-      Circulatory_Heart001: {
-        name: "心脏",
+      "Retopo_生殖系统": {
+        name: "生殖系统",
         desc: "心脏主要功能是为血液流动提供动力，把血液运行至身体各个部分。人类的心脏位于胸腔中部偏左下方，体积约相当于一个拳头大小，重量约250克。女性的心脏通常要比男性的体积小且重量轻",
         illType: [
           {
@@ -1130,7 +1162,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     const earthLabel = new CSS2DObject(infoWindow);
     earthLabel.name = "infoWindow";
-    earthLabel.position.set(position.x - radius / 2, position.y - radius / 4, position.z);
+    earthLabel.position.set(position.x - radius * 10 / 2, position.y - radius * 10 / 4, position.z);
     setCurrentInfoWindow(earthLabel);
     threeScence.add(earthLabel);
   }
@@ -1226,20 +1258,19 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
                 <Avatar
                   size={{xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100}}
                   icon={<AntDesignOutlined/>}
-                  onClick={() => enlargeItem("Body002")}
+                  onClick={() => enlargeItem("Retopo_皮肤")}
                 />
              </Tooltip>
 
           </Badge>
           </span>
-
         <span className={styles.avaterItem}>
            <Badge count={1}>
              <Tooltip title="骨骼" color={"lime"} placement="right">
                 <Avatar
                   size={{xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100}}
                   icon={<AntDesignOutlined/>}
-                  onClick={() => enlargeItem("Skeletal001")}
+                  onClick={() => enlargeItem("Retopo_股骨")}
                 />
              </Tooltip>
           </Badge>
@@ -1250,11 +1281,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
                 <Avatar
                   size={{xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100}}
                   icon={<AntDesignOutlined/>}
-                  onClick={() => enlargeItem("Circulatory_Heart001")}
+                  onClick={() => enlargeItem("Retopo_生殖系统")}
                 />
              </Tooltip>
           </Badge>
           </span>
+
 
       </div>
 

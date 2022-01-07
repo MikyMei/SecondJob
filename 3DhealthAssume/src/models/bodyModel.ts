@@ -2,7 +2,12 @@ import {Effect, Reducer} from 'umi';
 import {Row, Tag} from "antd";
 import styles from "@/pages/ExtraModelCom/index.less";
 import React from "react";
-import {GetAllOrgaList, GetPersonalHealthInfo, GetPersonalScoreHistory} from "@/services/healthEvaluate";
+import {
+  GetAllOrgaList,
+  GetCommonScoreHistory, GetKeyHealthIndex,
+  GetPersonalHealthInfo,
+  GetPersonalScoreHistory
+} from "@/services/healthEvaluate";
 
 
 export type StateType = {
@@ -82,8 +87,11 @@ const Model: ModelType = {
       const newPersonalHealthInfo=yield call(GetPersonalHealthInfo,payload.params.personalHealthInfoParams);
       const newAllOrgaList=yield call(GetAllOrgaList,payload.params.allOrgaListParams);
       const newPersonalScoreHistory=yield call(GetPersonalScoreHistory,payload.params.personalScoreHistoryParams);
+      const newCommonScoreHistory=yield call(GetCommonScoreHistory,payload.params.personalScoreHistoryParams);// 个人的历年参数一样
+      const newKeyHealthIndex=yield call(GetKeyHealthIndex,payload.params.keyHealthIndexParams);// 个人的历年参数一样
+
       // personalHealthScore在基本信息接口，中可以用last_check_score来代替
-      console.log("请求的数据",newPersonalScoreHistory);
+      // console.log("请求的数据",newKeyHealthIndex);
 
 
     }

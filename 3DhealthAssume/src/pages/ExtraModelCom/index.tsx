@@ -108,6 +108,10 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
         personalScoreHistoryParams:{
           user_id:"2017014713"
         },
+
+        keyHealthIndexParams:{
+          user_id:"2017014713"
+        },
       }
       dispatch({
         type:"bodyModel/getAllPersonalHealthInformation",

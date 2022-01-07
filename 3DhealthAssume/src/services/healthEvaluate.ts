@@ -9,6 +9,9 @@
 
 import { request } from 'umi';
 
+const headers={
+    Authorization:'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQyMTQ1MzM1LCJqdGkiOiIyMmNkM2Q3M2M2OTc0OWY3ODBlNTc4N2IxY2QzNDM4MyIsInVzZXJfaWQiOjN9.ICsegk7iRf4Mv9Orlp4bl_tOlXNFIm_gBOmpwxXpsXQ'
+  }
 
 
 /**
@@ -23,6 +26,7 @@ export async function GetPersonalHealthInfo(params: any) {
   return request('/api2/health/3d/user_basic_info/', {
     method: 'GET',
     params,
+    headers
 
   });
 }
@@ -59,9 +63,56 @@ export async function GetPersonalScoreHistory(params: any) {
   return request('/api2/health/health/user_year_score_chart/', {
     method: 'GET',
     params,
+    headers
   });
 }
 
+//
+export async function GetCommonScoreHistory(params: any) {
+
+  return request('/api2/health/health/avg_score_total/', {
+    method: 'GET',
+    params,
+    headers
+  });
+}
+//
+export async function GetKeyHealthIndex(params: any) {
+
+  const data=[
+    {
+    name: "心率得分",
+    min:55,
+    max:105,
+    score:55,
+  },
+    {
+      name: "血压得分",
+      max:120/50,
+      min:100/80,
+      score:120/80,
+    },
+    {
+      name: "血糖得分",
+      min:4.0,
+      max:7.0,
+      score:6.5,
+    },
+    {
+      name: "BMI",
+      min:4.0,
+      max:7.0,
+      score:6.5,
+    },
+  ]
+
+  return data;
+
+  // return request('/api2/health/health/avg_score_total/', {
+  //   method: 'GET',
+  //   params,
+  // });
+}
 
 export async function AddNewRole(params: any) {
   // return request('/api2/account/permission/manage/', {

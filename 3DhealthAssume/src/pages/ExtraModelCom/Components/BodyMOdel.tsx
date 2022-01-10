@@ -659,7 +659,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       max.z - min.z,
     );
 
-    console.log(radius);
 
     Utils.forMaterial(object.material, (material: any) => {
       material.transparent = true;
@@ -965,7 +964,9 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     threeObjects.map((object: any, index: any) => {
       if (nowMesh.includes(object.name)) {
 
-        const needOpacity = Math.abs(publicOpacity - Math.floor(value) > 1 ? 1.0 : publicOpacity - Math.floor(value)).toFixed(1);
+        const needOpacity = Math.abs(publicOpacity - Math.floor(value) > 1 ? 1.0 : 1.0-(publicOpacity - Math.floor(value))).toFixed(1);
+
+        console.log("pppp",needOpacity, publicOpacity, Math.floor(value));
 
         if (needOpacity === "0.1") {
 

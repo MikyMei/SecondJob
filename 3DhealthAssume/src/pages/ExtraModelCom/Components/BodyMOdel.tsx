@@ -193,6 +193,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
   const [displayType, setDisplayType] = useState<any>("none");
   const [currentInfoWindow, setCurrentInfoWindow] = useState<any>(); // 在选定器官的时候打开指定的信息窗口，
+  const [controlMaterial, setControlMaterial] = useState<any>(); // 保存起初就是不展示的器官，在点击之后再显示
 
 
   const initModel = () => {
@@ -617,7 +618,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       fragmentShader: AeroSphere3.fragmentShader,
       blending: THREE.NormalBlending,
       transparent: true,
-      depthWrite: false
+      depthWrite: false,
+      visible:true,
     });
     return {material1, material2, material3}
   }
@@ -966,7 +968,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
         const needOpacity = Math.abs(publicOpacity - Math.floor(value) > 1 ? 1.0 : 1.0-(publicOpacity - Math.floor(value))).toFixed(1);
 
-        console.log("pppp",needOpacity, publicOpacity, Math.floor(value));
 
         if (needOpacity === "0.1") {
 
@@ -1036,6 +1037,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         if (name === object.name) {
 
           const {radius, center} = object.geometry.boundingSphere;
+          if (!object.material.visible){
+            console.log("控制显示隐藏");
+            setControlMaterial(object.material);
+            object.material.visible=true;
+          }
+
           /**
            * centeroid是活得地最准确的模型中心坐标
            * */
@@ -1200,7 +1207,11 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
   const closeInfoWindow = () => {
-    console.log(threeScence);
+
+    if (controlMaterial){
+      controlMaterial.visible=false;
+      setControlMaterial(null);
+    }
 
     currentInfoWindow.visible = false;
     setDisplayType("none");

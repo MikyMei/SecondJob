@@ -4,10 +4,11 @@ import styles from "@/pages/ExtraModelCom/index.less";
 import React from "react";
 import {
   GetAllOrgaList,
-  GetCommonScoreHistory, GetKeyHealthIndex,
+  GetCommonScoreHistory, GetKeyHealthIndex, GetOrgaCommonScoreHistory, GetOrgaScoreHistory,
   GetPersonalHealthInfo,
   GetPersonalScoreHistory
 } from "@/services/healthEvaluate";
+import {GetTop4AbnormalOrga} from "@/utils/dataReStructure";
 
 
 export type StateType = {
@@ -22,19 +23,18 @@ export type StateType = {
    * 1，刚进入页面的请求
    * */
 
-  personalInfo?:any;
-  allOrgaList?:any; // 所有有的异常器官，包括异常器官内部的得分，异常指标数目， 包括全身性的异常标识
-  personalHealthScore?:any; // 个人健康的分
-  personalScoreHistory?:any; // 个人健康历史的分，以年为单位，
-  commonScoreHistory?:any; // 同质人群健康历史的分，以年为单位，
-  keyHealthIndex?:any;// 四种人体健康指标，BMI,心率，血糖，血压
-  abnormalOrgaTop4?:any;// 异常器官中最差的四个
+  personalInfo?: any;
+  allOrgaList?: any; // 所有有的异常器官，包括异常器官内部的得分，异常指标数目， 包括全身性的异常标识
+  personalHealthScore?: any; // 个人健康的分
+  personalScoreHistory?: any; // 个人健康历史的分，以年为单位，
+  commonScoreHistory?: any; // 同质人群健康历史的分，以年为单位，
+  keyHealthIndex?: any;// 四种人体健康指标，BMI,心率，血糖，血压
+  abnormalOrgaTop4?: any;// 异常器官中最差的四个
+  abnormalOrgaTop4Detail?: any; // 异常器官中最差四个地详细信息，包括他们的历史的分和同质人群得分
 
   /**
    * 2,点击器官需要的请求
    * */
-
-
 
 
 };
@@ -45,7 +45,7 @@ export type ModelType = {
   effects: {
     changeOrgaInfo: Effect;
 
-    getAllPersonalHealthInformation:Effect;  // 刚进入页面时，请求所有的个人健康相关信息接口
+    getAllPersonalHealthInformation: Effect;  // 刚进入页面时，请求所有的个人健康相关信息接口
 
   };
   reducers: {
@@ -53,7 +53,7 @@ export type ModelType = {
     initInfoWindow: Reducer<StateType>;
     initIllList: Reducer<StateType>;
 
-    initAllPersonalHealthInformation:Reducer<StateType>; // 初始化所有的个人健康信息
+    initAllPersonalHealthInformation: Reducer<StateType>; // 初始化所有的个人健康信息
 
   };
 };
@@ -65,17 +65,18 @@ const Model: ModelType = {
     orgaName: '55',
     orgaDesc: '55',
     illList: {},
-    infoDisplay:'none',
+    infoDisplay: 'none',
     infoTop: "50px",
     infoRight: "50px",
 
-    personalInfo:{},
-    allOrgaList:{}, // 以部位进行器官分类， 部位为属性名，value为数组，数组中的元素为器官的相关信息对象
-    personalHealthScore:'', // 个人健康的分, 字符串即可
-    personalScoreHistory:[], // 数组里面的元素为对象如：{2015:78}, 需要注意个人与同质人群的一致性，当数据缺失的时候补齐
-    commonScoreHistory:[], // 同质人群健康历史的分，以年为单位，
-    keyHealthIndex:{},// 四种人体健康指标，key值为指标的名字如： BMI:{score：55， min:30, max:65}
-    abnormalOrgaTop4:[], // 异常器官中最差的四个, "心脏":{score:55, commonHistory:[], scoreHistory:[]}
+    personalInfo: {},
+    allOrgaList: {}, // 以部位进行器官分类， 部位为属性名，value为数组，数组中的元素为器官的相关信息对象
+    personalHealthScore: '', // 个人健康的分, 字符串即可
+    personalScoreHistory: [], // 数组里面的元素为对象如：{2015:78}, 需要注意个人与同质人群的一致性，当数据缺失的时候补齐
+    commonScoreHistory: [], // 同质人群健康历史的分，以年为单位，
+    keyHealthIndex: {},// 四种人体健康指标，key值为指标的名字如： BMI:{score：55， min:30, max:65}
+    abnormalOrgaTop4: [], // 异常器官中最差的四个,
+    abnormalOrgaTop4Detail: [], // 异常器官中最差的四个, "心脏":{score:55, commonHistory:[], scoreHistory:[]}， 在第二次调用的时候调用·
   },
 
   effects: {
@@ -83,18 +84,61 @@ const Model: ModelType = {
 
     },
 
-    *getAllPersonalHealthInformation({payload}, {call, put}){
-      const newPersonalHealthInfo=yield call(GetPersonalHealthInfo,payload.params.personalHealthInfoParams);
-      const newAllOrgaList=yield call(GetAllOrgaList,payload.params.allOrgaListParams);
-      const newPersonalScoreHistory=yield call(GetPersonalScoreHistory,payload.params.personalScoreHistoryParams);
-      const newCommonScoreHistory=yield call(GetCommonScoreHistory,payload.params.personalScoreHistoryParams);// 个人的历年参数一样
-      const newKeyHealthIndex=yield call(GetKeyHealthIndex,payload.params.keyHealthIndexParams);// 个人的历年参数一样
-
-      // personalHealthScore在基本信息接口，中可以用last_check_score来代替
-      // console.log("请求的数据",newKeyHealthIndex);
+    * getAllPersonalHealthInformation({payload}, {call, put}) {
+      const newPersonalHealthInfo = yield call(GetPersonalHealthInfo, payload.params.personalHealthInfoParams);
+      const newAllOrgaList = yield call(GetAllOrgaList, payload.params.allOrgaListParams);
+      const newPersonalScoreHistory = yield call(GetPersonalScoreHistory, payload.params.personalScoreHistoryParams);
+      const newCommonScoreHistory = yield call(GetCommonScoreHistory, payload.params.personalScoreHistoryParams);// 个人的历年参数一样
+      const newKeyHealthIndex = yield call(GetKeyHealthIndex, payload.params.keyHealthIndexParams);// 个人的历年参数一样
 
 
-    }
+      /**
+       * 获取四个，top4地器官的相关信息
+       * */
+      const newAbnormalTop4 = GetTop4AbnormalOrga(newAllOrgaList.data[0]);
+      const tempList = JSON.parse(JSON.stringify(newAbnormalTop4));
+      // payload.abnormalTop4
+
+      tempList[0].historyScore = (yield call(GetOrgaScoreHistory, tempList[0].name)).data;
+      tempList[0].commonScore = (yield call(GetOrgaCommonScoreHistory, tempList[0].name)).data;
+
+      tempList[1] ? tempList[1].historyScore = (yield call(GetOrgaScoreHistory, tempList[1].name)).data : null;
+      tempList[1] ? tempList[1].commonScore = (yield call(GetOrgaCommonScoreHistory, tempList[1].name)).data : null;
+
+      tempList[2] ? tempList[2].historyScore = (yield call(GetOrgaScoreHistory, tempList[2].name)).data : null;
+      tempList[2] ? tempList[2].commonScore = (yield call(GetOrgaCommonScoreHistory, tempList[2].name)).data : null;
+
+      tempList[3] ? tempList[3].historyScore = (yield call(GetOrgaScoreHistory, tempList[3].name)).data : null;
+      tempList[3] ? tempList[3].commonScore = (yield call(GetOrgaCommonScoreHistory, tempList[3].name)).data : null;
+
+
+      if (newPersonalHealthInfo[0]
+        && newAllOrgaList.data[0]
+        && newPersonalScoreHistory[0]
+        && newCommonScoreHistory
+        && newKeyHealthIndex.data) {
+
+
+
+        yield put({
+          type: "initAllPersonalHealthInformation",
+          payload: {
+            PersonalHealthInfo: newPersonalHealthInfo[0],
+            AllOrgaList: newAllOrgaList.data[0],
+            PersonalScoreHistory: newPersonalScoreHistory[0],
+            CommonScoreHistory: newCommonScoreHistory,
+            KeyHealthIndex: newKeyHealthIndex.data,
+            AbnorMalTop4: newAbnormalTop4,
+            PersonalHealthScore: newPersonalHealthInfo[0].last_check_score || 0,
+            AbnormalTop4Detail:tempList,
+
+          }
+        })
+      }
+
+
+    },
+
   },
 
   reducers: {
@@ -122,12 +166,12 @@ const Model: ModelType = {
       }
       const contentlist1: any = [];
       contentlist1.push({
-        illType:"肺占位性病变",
-        illDesc:"占位性病变通常泛指肿瘤（良性的、恶性的）、寄生虫等，而不涉及疾病的病因。"
+        illType: "肺占位性病变",
+        illDesc: "占位性病变通常泛指肿瘤（良性的、恶性的）、寄生虫等，而不涉及疾病的病因。"
       })
       contentlist1.push({
-        illType:"肺占位性病变",
-        illDesc:"占位性病变通常泛指肿瘤（良性的、恶性的）、寄生虫等，而不涉及疾病的病因。"
+        illType: "肺占位性病变",
+        illDesc: "占位性病变通常泛指肿瘤（良性的、恶性的）、寄生虫等，而不涉及疾病的病因。"
       })
 
 
@@ -140,6 +184,21 @@ const Model: ModelType = {
         orgaDesc: bodyPart[`${payload.newOrgaName}`],
         illList: contentlist1,
       };
+    },
+    initAllPersonalHealthInformation(state, {payload}) {
+      return {
+        ...state,
+        personalInfo: payload.PersonalHealthInfo,
+        allOrgaList: payload.AllOrgaList,
+        personalHealthScore: payload.PersonalHealthScore,
+        personalScoreHistory: payload.PersonalScoreHistory,
+        commonScoreHistory: payload.CommonScoreHistory,
+        keyHealthIndex: payload.KeyHealthIndex,
+        abnormalOrgaTop4: payload.AbnorMalTop4,
+        abnormalOrgaTop4Detail: payload.AbnormalTop4Detail
+
+
+      }
     },
 
   },

@@ -6,6 +6,11 @@
 
 */
 
+@font-face{
+  font-family: 'PingFang_SC';
+  src : url('https://test-1253940515.cos.ap-shanghai.myqcloud.com/PingFang_SC.ttf');
+}
+
 .sliderBar {
   left: 10%;
   top: 20%;
@@ -100,7 +105,7 @@
       margin: 11px 0px;
       /* padding: 12px; */
       color: rgba(0, 0, 0, 0.85);
-      font-size: 14px;
+      font-size: 0.875rem;
       font-variant: tabular-nums;
       line-height: 1.5715;
       list-style: none;
@@ -185,7 +190,7 @@
       margin: 0;
       padding: 0;
       color: rgba(0, 0, 0, 0.85);
-      font-size: 14px;
+      font-size: 0.875rem;
       font-variant: tabular-nums;
       line-height: 1.5715;
       list-style: none;
@@ -206,7 +211,7 @@
       padding: 0;
       color: #ffffff;
       background: rgba(255, 243, 221, 0.5) !important;
-      font-size: 14px;
+      font-size:0.875rem;
       font-variant: tabular-nums;
       line-height: 1.5715;
       list-style: none;
@@ -215,7 +220,7 @@
       height: auto;
       margin-right: 8px;
       padding: 0 7px;
-      font-size: 14px;
+      font-size: 0.875rem;
       line-height: 32px;
       white-space: nowrap;
       border: 1px solid #ff9e00;
@@ -237,7 +242,7 @@
   flex-direction: row;
   justify-content: space-between;
   color: #FFFFFF;
-  font-size: 18px;
+  font-size:1.125rem;
 }
 
 .organDesc{
@@ -254,6 +259,7 @@
 .mainContainer{
   width: 100%;
   height:94vh;
+  font-family: "PingFang_SC";
 }
 
 
@@ -270,14 +276,20 @@
 }
 
 .userCard{
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-
+  //border: 1px dashed rgba(255, 255, 255, 0.2);
+  //border-radius: 1px;
   width: 100%;
-  height:12.5%;
+  height:14%;
   margin-top: auto;
   margin-bottom: auto;
-
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  background-image: url('../../../public/img/infoCardBorder.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  align-items: center;
 
 }
 
@@ -288,7 +300,252 @@
   border-radius: 4px;
 
   width: 100%;
-  height:84%;
+  height:81%;
 
 
+}
+
+.avaterIcon{
+  width: 35%;
+  height:75%;
+  margin-bottom: auto;
+  margin-top: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.infoDetail{
+  height: 75%;
+  width: 55%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.avaterContent{
+  //width: 4.8rem;
+  //height: 4.8rem;
+  background-color: #00FFF1;
+  color: rgba(255, 255, 255, 0.9);
+  //font-size: 1.125rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+
+.checkTime{
+  font-size: 0.65rem;
+  font-family: "PingFang_SC";
+  font-weight: 400;
+  color: #FFFFFF;
+  line-height: 1.125rem;
+  padding: 0 !important;
+  text-align: center;
+}
+
+
+.topRow{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.bottomRow{
+  width:100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.personHeight{
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+  align-items: center;
+  :global{
+    .ant-tag {
+      margin: 0;
+      background: #686868;
+      border: 0px solid #686868;
+      border-radius: 10px;
+      color: #FFFFFF;
+    }
+  }
+}
+
+.genderIcon{
+  height:1.5rem;
+  padding: 0!important;
+}
+
+
+.countTag{
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.partName{
+  width: 100%;
+  height:2.5rem;
+  background-image: url('../../../public/img/partNmaeImg.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  :global{
+    .ant-select {
+      width: 100%;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 1rem;
+      font-weight: 600;
+      font-variant: tabular-nums;
+      line-height: 1.5715;
+      list-style: none;
+      font-feature-settings: 'tnum', "tnum";
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+      background: rgb(240 248 255 / 0%);
+    }
+
+    .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+      position: relative;
+      background-color: rgba(255, 255, 255,  0);
+      border: 0px solid #d9d9d9;
+      border-radius: 2px;
+      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
+    .ant-select-arrow {
+      display: inline-block;
+      color: inherit;
+      font-style: normal;
+      line-height: 0;
+      text-transform: none;
+      vertical-align: -0.125em;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      position: absolute;
+      top: 50%;
+      right: 11px;
+      width: 12px;
+      height: 12px;
+      margin-top: -6px;
+      color: rgba(0, 0, 0, 1);
+      font-size: 0.875rem;
+      line-height: 1;
+      text-align: center;
+      pointer-events: none;
+    }
+    .ant-select-single .ant-select-selection-item{
+      color:black;
+      margin-left: 13%;
+    }
+
+    .ant-select-item-option-selected {
+      color: rgba(0, 0, 0, 0.85);
+      font-weight: 600;
+      background-color: #03a4ec;
+    }
+
+
+  }
+}
+
+
+.partBackImage{
+  width: 100%;
+  position: absolute;
+
+}
+
+
+.partText{
+  color:white;
+  position: absolute;
+  ;
+}
+
+.dropdownClassName{
+  background: #02494F;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+  font-family: "PingFang_SC";
+  :global{
+    .ant-select-dropdown {
+      margin: 0;
+      padding: 0;
+      color: rgba(0, 0, 0, 0.85);
+      font-variant: tabular-nums;
+      line-height: 1.5715;
+      list-style: none;
+      font-feature-settings: 'tnum', "tnum",;
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+      z-index: 1050;
+      box-sizing: border-box;
+      padding: 4px 0;
+      overflow: hidden;
+      font-size: 14px;
+      font-variant: initial;
+      background-color: #02494F;
+      border-radius: 2px;
+      outline: none;
+      box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%), 0 9px 28px 8px rgb(0 0 0 / 5%);
+    }
+
+
+    .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+      color: #00FCEE;
+      font-weight: 600;
+      background-color: rgba(2, 73, 79, 0.05);
+    }
+
+    .ant-select-item {
+      position: relative;
+      display: block;
+      min-height: 32px;
+      padding: 5px 12px;
+      color: #FFFFFF;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 22px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+      background-color: #00FCEE;
+      color:white;
+    }
+  }
+}
+
+.orgaOptions{
+  width: 100%;
+  height:35rem;
+  overflow-y: auto;
+}
+
+
+.signleOption{
+  width: 100%;
+  height:5rem;
+  border-radius: 4px;
+  border:1px solid rgba(28, 224, 205, 0.2);
+  box-shadow: 0px 0px 10px #d2a845 inset;
 }

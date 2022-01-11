@@ -18,6 +18,8 @@ export type StateType = {
   infoDisplay?: any;
   infoTop?: any;
   infoRight?: any;
+
+  loadStatus?:any; // 定义一个全局地变量，用于页面加载状态，主要是根据模型地加载地完成度
   /**
    * 下面的变量均为请求接口得来的数据
    * 1，刚进入页面的请求
@@ -55,6 +57,7 @@ export type ModelType = {
 
     initAllPersonalHealthInformation: Reducer<StateType>; // 初始化所有的个人健康信息
 
+    changeLoadStatus:Reducer<StateType>;
   };
 };
 
@@ -68,6 +71,7 @@ const Model: ModelType = {
     infoDisplay: 'none',
     infoTop: "50px",
     infoRight: "50px",
+    loadStatus:false,
 
     personalInfo: {},
     allOrgaList: {}, // 以部位进行器官分类， 部位为属性名，value为数组，数组中的元素为器官的相关信息对象
@@ -196,10 +200,12 @@ const Model: ModelType = {
         keyHealthIndex: payload.KeyHealthIndex,
         abnormalOrgaTop4: payload.AbnorMalTop4,
         abnormalOrgaTop4Detail: payload.AbnormalTop4Detail
-
-
       }
     },
+
+    changeLoadStatus(state, {payload}){
+      return {...state, loadStatus: payload.newLoadStatus}
+    }
 
   },
 };

@@ -298,7 +298,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
     let model;
-    loader.load('./img/body04.gltf', function (gltf: any) {
+    loader.load('./img/bodyMale.gltf', function (gltf: any) {
         model = gltf.scene;
         model.scale.setScalar(5, 5, 5);
         model.position.setY(-4);
@@ -312,7 +312,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         scene.add(model);
         model.traverse((child: any) => {
 
-            /**
+          /**
              * 在这里将不同模型根据他的名字，将
              * */
             if (child.geometry) {
@@ -368,6 +368,17 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     }
   }, [threeChoosenMesh])
 
+  const changeLoading=(value:any)=>{
+    if (dispatch){
+      dispatch({
+        type:"bodyModel/changeLoadStatus",
+        payload:{
+          newLoadStatus:value
+        }
+      })
+    }
+  }
+
   const BuildScene = () => {
     window.document.getElementById('webgl-output').appendChild(threeRenderer.domElement);
     window.document.getElementById("webgl-output").appendChild(threeLabelRenderer.domElement);
@@ -378,6 +389,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
     }, 200)
+
+
+    setTimeout(() => {
+     changeLoading(false)
+
+    }, 1000)
 
     render();
     window.addEventListener('resize', onWindowResize);

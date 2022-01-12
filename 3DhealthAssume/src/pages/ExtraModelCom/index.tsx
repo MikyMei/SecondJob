@@ -10,7 +10,7 @@
 import React, {useEffect, useState, useRef} from 'react';
 import styles from './index.less'
 import BodyModel from "@/pages/ExtraModelCom/Components/BodyMOdel";
-import {Avatar, Badge, Carousel, Col, Divider, Row, Tag, Tooltip, Spin, Select} from "antd";
+import {Avatar, Badge, Carousel, Col, Divider, Row, Tag, Tooltip, Spin, Select, Empty} from "antd";
 import {AntDesignOutlined, CloseCircleOutlined} from "@ant-design/icons";
 import {connect, Dispatch} from "umi";
 
@@ -100,13 +100,59 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
   const GenerateOrgaRelated = () => {
     const partList = Object.keys(allOrgaList);
     const partOptionsTemp: any[] = [];
-    partList.map(item => {
+    if (partList.length>0){
+      partList.map(item => {
+        partOptionsTemp.push(
+          <Option key={item} value={item}>{item}</Option>
+        )
+      })
+    }else{
+      console.log("进入");
       partOptionsTemp.push(
-        <Option key={item} value={item}>{item}</Option>
+        <Option key={"暂无异常部位"} value={"暂无异常部位"}>暂无异常部位</Option>
       )
-    })
+    }
+
     setPartOptions(partOptionsTemp);
     partList[0] ? setChoosenPart(partList[0]) : null;
+
+    /**
+     * 在这里生成具体的器官带点击功能的卡片
+     * */
+    const orgaCardList: any = {};
+
+    if (partList.length > 0) {
+      for (let key in allOrgaList) {
+        orgaCardList[`${key}`] = [];
+        allOrgaList[`${key}`].map((item: any) => {
+
+          orgaCardList[`${key}`].push(
+            <div className={styles.signleOption_unchecked}>
+              <Row gutter={24} className={styles.optionContent}>
+                <Col className={styles.optionIcon}>
+                  <Badge className={styles.badgeIcon} count={item.exceptionCount||0} size="small" offset={[-6, 6]} color={"#ff9c01"}>
+                    <img className={styles.optionIconImg} src={"./img/allOrgaIcon/greenOne/icon_胃.png"}/>
+                  </Badge>
+
+
+                </Col>
+                <Col className={styles.optionDesc}>
+                  <Row className={styles.optionName}>{item.name||''}</Row>
+                  <Row className={styles.indexCount}><span className={styles.yellowText}>{item.exceptionCount||0}</span>&nbsp;种异常标识</Row>
+                </Col>
+                <Col className={styles.optionScore}>
+                  {item.score||0}
+                </Col>
+              </Row>
+            </div>
+          )
+
+        })
+      }
+    }
+
+    setOrgaOptions(orgaCardList);
+
 
 
 
@@ -177,17 +223,16 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
                       defaultValue={choosenPart}
                       autoFocus={true}
                       bordered={false}
+                      onChange={(value:any)=>setChoosenPart(value)}
                       dropdownClassName={styles.dropdownClassName}
               >
                 {partOptions}
               </Select>
             </div>
             <div className={styles.orgaOptions}>
-              <div className={styles.signleOption}>
-                79
-              </div>
-            </div>
+              {choosenPart?orgaOptions[`${choosenPart}`]:<Empty/>}
 
+            </div>
 
 
           </div>

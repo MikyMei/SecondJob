@@ -103,17 +103,20 @@ const Model: ModelType = {
       const tempList = JSON.parse(JSON.stringify(newAbnormalTop4));
       // payload.abnormalTop4
 
-      tempList[0].historyScore = (yield call(GetOrgaScoreHistory, tempList[0].name)).data;
-      tempList[0].commonScore = (yield call(GetOrgaCommonScoreHistory, tempList[0].name)).data;
+      if (tempList.length>0){
+        tempList[0].historyScore = (yield call(GetOrgaScoreHistory, tempList[0].name)).data;
+        tempList[0].commonScore = (yield call(GetOrgaCommonScoreHistory, tempList[0].name)).data;
 
-      tempList[1] ? tempList[1].historyScore = (yield call(GetOrgaScoreHistory, tempList[1].name)).data : null;
-      tempList[1] ? tempList[1].commonScore = (yield call(GetOrgaCommonScoreHistory, tempList[1].name)).data : null;
+        tempList[1] ? tempList[1].historyScore = (yield call(GetOrgaScoreHistory, tempList[1].name)).data : null;
+        tempList[1] ? tempList[1].commonScore = (yield call(GetOrgaCommonScoreHistory, tempList[1].name)).data : null;
 
-      tempList[2] ? tempList[2].historyScore = (yield call(GetOrgaScoreHistory, tempList[2].name)).data : null;
-      tempList[2] ? tempList[2].commonScore = (yield call(GetOrgaCommonScoreHistory, tempList[2].name)).data : null;
+        tempList[2] ? tempList[2].historyScore = (yield call(GetOrgaScoreHistory, tempList[2].name)).data : null;
+        tempList[2] ? tempList[2].commonScore = (yield call(GetOrgaCommonScoreHistory, tempList[2].name)).data : null;
 
-      tempList[3] ? tempList[3].historyScore = (yield call(GetOrgaScoreHistory, tempList[3].name)).data : null;
-      tempList[3] ? tempList[3].commonScore = (yield call(GetOrgaCommonScoreHistory, tempList[3].name)).data : null;
+        tempList[3] ? tempList[3].historyScore = (yield call(GetOrgaScoreHistory, tempList[3].name)).data : null;
+        tempList[3] ? tempList[3].commonScore = (yield call(GetOrgaCommonScoreHistory, tempList[3].name)).data : null;
+
+      }
 
 
       if (newPersonalHealthInfo[0]

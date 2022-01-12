@@ -296,7 +296,6 @@
 .orgaList{
   margin-top: auto;
   margin-bottom: auto;
-  border: 1px solid rgba(184, 184, 184, 0.2);
   border-radius: 4px;
 
   width: 100%;
@@ -326,12 +325,13 @@
 }
 
 .avaterContent{
-  //width: 4.8rem;
-  //height: 4.8rem;
+  width: 4rem !important;
+  height: 4rem !important;
   background-color: #00FFF1;
   color: rgba(255, 255, 255, 0.9);
   //font-size: 1.125rem;
   display: flex;
+  font-size: 1.25rem;
   flex-direction: column;
   justify-content: space-evenly;
 }
@@ -345,12 +345,15 @@
   line-height: 1.125rem;
   padding: 0 !important;
   text-align: center;
+  opacity:0.6;
 }
 
 
 .topRow{
   width: 100%;
   display: flex;
+  font-size: 0.875rem;
+
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
@@ -358,6 +361,7 @@
 
 .bottomRow{
   width:100%;
+  font-size: 0.875rem;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -375,6 +379,7 @@
       background: #686868;
       border: 0px solid #686868;
       border-radius: 10px;
+      padding: 0 3px;
       color: #FFFFFF;
     }
   }
@@ -539,13 +544,126 @@
   width: 100%;
   height:35rem;
   overflow-y: auto;
+  :global{
+    .ant-scroll-number {
+      overflow: hidden;
+      background: rgb(255, 156, 1);
+      color: black;
+      font-style: italic;
+      font-family: fantasy;
+    }
+    .ant-scroll-number.ant-badge-count.ant-badge-count-sm{
+      box-shadow: 0 0 0 1px rgba(255, 156, 1,0.2);
+    }
+
+  }
 }
 
 
-.signleOption{
+
+.signleOption_checked{
   width: 100%;
   height:5rem;
   border-radius: 4px;
   border:1px solid rgba(28, 224, 205, 0.2);
   box-shadow: 0px 0px 10px #d2a845 inset;
+  display: flex;
+}
+
+
+.signleOption_unchecked{
+  width: 100%;
+  height:4.8rem;
+  margin-top: 1rem;
+  border-radius: 4px;
+  border:1px solid rgba(28, 224, 205, 0.2);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  :global{
+    .ant-col{
+      padding: 0 !important;
+    }
+  }
+
+  .optionContent{
+    margin: 0 !important;
+    margin: 0 !important;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  .optionIconImg{
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .optionName{
+    font-size: 0.875rem;
+
+    color: #FFFFFF;
+    opacity: 0.7;
+  }
+  .indexCount{
+    color: #FFFFFF;
+    opacity: 0.4;
+    font-size: 0.65rem;
+  }
+  .optionScore{
+    color:#00FFDE;
+    opacity: 0.8;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+}
+
+
+.yellowText{
+  color:#FF9C00;
+}
+
+
+
+.optionDesc{
+ left: -3%;
+}
+
+
+
+// 定义滚动条隐藏
+::-webkit-scrollbar {
+  //width: 10px; /*对垂直流动条有效*/
+  //height: 10px; /*对水平流动条有效*/
+
+  display: none;
+}
+
+/*定义滚动条的轨道颜色、内阴影及圆角*/
+::-webkit-scrollbar-track{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  background-color: rosybrown;
+  border-radius: 3px;
+}
+
+
+/*定义滑块颜色、内阴影及圆角*/
+::-webkit-scrollbar-thumb{
+  border-radius: 7px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  background-color: #E8E8E8;
+}
+
+/*定义两端按钮的样式*/
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+/*定义右下角汇合处的样式*/
+::-webkit-scrollbar-corner {
+  background:khaki;
 }

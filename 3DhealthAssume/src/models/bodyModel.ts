@@ -4,7 +4,7 @@ import styles from "@/pages/ExtraModelCom/index.less";
 import React from "react";
 import {
   GetAllOrgaList,
-  GetCommonScoreHistory, GetKeyHealthIndex, GetOrgaCommonScoreHistory, GetOrgaScoreHistory,
+  GetCommonScoreHistory, GetKeyHealthIndex, GetOrgaCommonScoreHistory, GetOrgaDetailInfo, GetOrgaScoreHistory,
   GetPersonalHealthInfo,
   GetPersonalScoreHistory
 } from "@/services/healthEvaluate";
@@ -19,7 +19,7 @@ export type StateType = {
   infoTop?: any;
   infoRight?: any;
 
-  loadStatus?:any; // 定义一个全局地变量，用于页面加载状态，主要是根据模型地加载地完成度
+  loadStatus?: any; // 定义一个全局地变量，用于页面加载状态，主要是根据模型地加载地完成度
   /**
    * 下面的变量均为请求接口得来的数据
    * 1，刚进入页面的请求
@@ -49,6 +49,8 @@ export type ModelType = {
 
     getAllPersonalHealthInformation: Effect;  // 刚进入页面时，请求所有的个人健康相关信息接口
 
+    getOrgaDetail: Effect;
+
   };
   reducers: {
     initOrgaInfo: Reducer<StateType>;
@@ -57,7 +59,7 @@ export type ModelType = {
 
     initAllPersonalHealthInformation: Reducer<StateType>; // 初始化所有的个人健康信息
 
-    changeLoadStatus:Reducer<StateType>;
+    changeLoadStatus: Reducer<StateType>;
   };
 };
 
@@ -71,7 +73,7 @@ const Model: ModelType = {
     infoDisplay: 'none',
     infoTop: "50px",
     infoRight: "50px",
-    loadStatus:false,
+    loadStatus: false,
 
     personalInfo: {},
     allOrgaList: {}, // 以部位进行器官分类， 部位为属性名，value为数组，数组中的元素为器官的相关信息对象
@@ -103,7 +105,7 @@ const Model: ModelType = {
       const tempList = JSON.parse(JSON.stringify(newAbnormalTop4));
       // payload.abnormalTop4
 
-      if (tempList.length>0){
+      if (tempList.length > 0) {
         tempList[0].historyScore = (yield call(GetOrgaScoreHistory, tempList[0].name)).data;
         tempList[0].commonScore = (yield call(GetOrgaCommonScoreHistory, tempList[0].name)).data;
 
@@ -126,7 +128,6 @@ const Model: ModelType = {
         && newKeyHealthIndex.data) {
 
 
-
         yield put({
           type: "initAllPersonalHealthInformation",
           payload: {
@@ -137,7 +138,7 @@ const Model: ModelType = {
             KeyHealthIndex: newKeyHealthIndex.data,
             AbnorMalTop4: newAbnormalTop4,
             PersonalHealthScore: newPersonalHealthInfo[0].last_check_score || 0,
-            AbnormalTop4Detail:tempList,
+            AbnormalTop4Detail: tempList,
 
           }
         })
@@ -145,6 +146,18 @@ const Model: ModelType = {
 
 
     },
+
+    * getOrgaDetail({payload}, {call, put}) {
+      const detailResponse=yield call(GetOrgaDetailInfo,payload.orgaParams);
+      if (detailResponse.code===200){
+        yield put({
+          type:"initIllList",
+          payload:{
+            newIllList:detailResponse.data[0],
+          }
+        })
+      }
+    }
 
   },
 
@@ -206,7 +219,7 @@ const Model: ModelType = {
       }
     },
 
-    changeLoadStatus(state, {payload}){
+    changeLoadStatus(state, {payload}) {
       return {...state, loadStatus: payload.newLoadStatus}
     }
 

@@ -37,48 +37,48 @@ export async function GetAllOrgaList(params: any) {
     data: [
       {
         "上身部位": [
-          {name: "Retopo_皮肤", exceptionCount: 4, score: 68}
+          {name: "皮肤", exceptionCount: 4, score: 68}
         ],
         "骨骼部位": [
-          {name: "Retopo_跟骨", exceptionCount: 1, score: 51},
-          {name: "Retopo_腕骨", exceptionCount: 2, score: 52},
-          {name: "Retopo_颈椎", exceptionCount: 3, score: 53},
-          {name: "Retopo_锁骨", exceptionCount: 4, score: 54},
-          {name: "Retopo_颅骨", exceptionCount: 5, score: 55},
-          {name: "Retopo_牙齿_上", exceptionCount: 6, score: 56},
-          {name: "Retopo_股骨", exceptionCount: 7, score: 57},
-          {name: "Retopo_腓骨", exceptionCount: 8, score: 58},
-          {name: "Retopo_肱骨", exceptionCount: 9, score: 59},
-          {name: "Retopo_踝关节", exceptionCount: 1, score: 60},
-          {name: "Retopo_下颌骨", exceptionCount: 2, score: 61},
-          {name: "Retopo_牙齿_下", exceptionCount: 3, score: 62},
-          {name: "Retopo_手", exceptionCount: 4, score: 63},
-          {name: "Retopo_脚", exceptionCount: 5, score: 64},
-          {name: "Retopo_骨盆", exceptionCount: 6, score: 65},
-          {name: "Retopo_桡骨", exceptionCount: 7, score: 66},
-          {name: "Retopo_肋骨", exceptionCount: 8, score: 67},
-          {name: "Retopo_骶骨", exceptionCount: 9, score: 68},
-          {name: "Retopo_肩胛骨", exceptionCount: 1, score: 69},
-          {name: "Retopo_胸骨", exceptionCount: 2, score: 70},
-          {name: "Retopo_跗骨", exceptionCount: 3, score: 71},
-          {name: "Retopo_胫骨", exceptionCount: 4, score: 72},
-          {name: "Retopo_尺骨", exceptionCount: 5, score: 73},
-          {name: "Retopo_脊柱", exceptionCount: 6, score: 74},
+          {name: "跟骨", exceptionCount: 1, score: 51},
+          {name: "腕骨", exceptionCount: 2, score: 52},
+          {name: "颈椎", exceptionCount: 3, score: 53},
+          {name: "锁骨", exceptionCount: 4, score: 54},
+          {name: "颅骨", exceptionCount: 5, score: 55},
+          {name: "牙齿_上", exceptionCount: 6, score: 56},
+          {name: "股骨", exceptionCount: 7, score: 57},
+          {name: "腓骨", exceptionCount: 8, score: 58},
+          {name: "肱骨", exceptionCount: 9, score: 59},
+          {name: "踝关节", exceptionCount: 1, score: 60},
+          {name: "下颌骨", exceptionCount: 2, score: 61},
+          {name: "牙齿_下", exceptionCount: 3, score: 62},
+          {name: "手", exceptionCount: 4, score: 63},
+          {name: "脚", exceptionCount: 5, score: 64},
+          {name: "骨盆", exceptionCount: 6, score: 65},
+          {name: "桡骨", exceptionCount: 7, score: 66},
+          {name: "肋骨", exceptionCount: 8, score: 67},
+          {name: "骶骨", exceptionCount: 9, score: 68},
+          {name: "肩胛骨", exceptionCount: 1, score: 69},
+          {name: "胸骨", exceptionCount: 2, score: 70},
+          {name: "跗骨", exceptionCount: 3, score: 71},
+          {name: "胫骨", exceptionCount: 4, score: 72},
+          {name: "尺骨", exceptionCount: 5, score: 73},
+          {name: "脊柱", exceptionCount: 6, score: 74},
 
         ],
         "内脏部位": [
-          {name: "Retopo_生殖系统", exceptionCount: 1, score: 51},
-          {name: "Retopo_静脉", exceptionCount: 2, score: 52},
-          {name: "Retopo_动脉", exceptionCount: 3, score: 53},
-          {name: "Retopo_大脑", exceptionCount: 4, score: 54},
-          {name: "Retopo_消化系统", exceptionCount: 5, score: 55},
-          {name: "Retopo_小肠", exceptionCount: 6, score: 56},
-          {name: "Retopo_胃部", exceptionCount: 7, score: 57},
-          {name: "Retopo_肝脏", exceptionCount: 8, score: 58},
-          {name: "Retopo_支气管", exceptionCount: 9, score: 59},
-          {name: "Retopo_肺", exceptionCount: 1, score: 60},
-          {name: "Retopo_肾脏", exceptionCount: 2, score: 61},
-          {name: "Retopo_心脏", exceptionCount: 3, score: 62},
+          {name: "生殖系统", exceptionCount: 1, score: 51},
+          {name: "静脉", exceptionCount: 2, score: 52},
+          {name: "动脉", exceptionCount: 3, score: 53},
+          {name: "大脑", exceptionCount: 4, score: 54},
+          {name: "消化系统", exceptionCount: 5, score: 55},
+          {name: "小肠", exceptionCount: 6, score: 56},
+          {name: "胃部", exceptionCount: 7, score: 57},
+          {name: "肝脏", exceptionCount: 8, score: 58},
+          {name: "支气管", exceptionCount: 9, score: 59},
+          {name: "肺", exceptionCount: 1, score: 60},
+          {name: "肾脏", exceptionCount: 2, score: 61},
+          {name: "心脏", exceptionCount: 3, score: 62},
 
 
         ]
@@ -209,3 +209,42 @@ export async function GetOrgaCommonScoreHistory() {
   }
 }
 
+
+export async function GetOrgaDetailInfo(params: any) {
+  return {
+    code: 200,
+    data: [
+      {
+        name: params.orgaName,
+        desc: "这是一段相关的器官描述，有后台传过来",
+        orgaPicture: [
+          "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fnimg.ws.126.net%2F%3Furl%3Dhttp%253A%252F%252Fdingyue.ws.126.net%252F2021%252F1101%252F04b2a765j00r1v3t0000kc000cy00cyc.jpg%26thumbnail%3D650x2147483647%26quality%3D80%26type%3Djpg&refer=http%3A%2F%2Fnimg.ws.126.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644569985&t=f21fa8d0b5c762e2828aa76c5ba08869",
+          "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Finews.gtimg.com%2Fnewsapp_bt%2F0%2F10474177116%2F1000.jpg&refer=http%3A%2F%2Finews.gtimg.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644570012&t=d0ecd4ca78873c88cadb40eab6215047",
+          "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fp9.itc.cn%2Fimages01%2F20210611%2Fa2ad1613d0944d55ab1f462f4105f877.png&refer=http%3A%2F%2Fp9.itc.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644570058&t=f1916a151febb1f6359dd9a71c613cce"
+
+        ],
+        illType: [
+          {
+            illName: "异常指标1",
+            illDesc: "这是一段有关异常标识一的描述"
+          },
+          {
+            illName: "异常指标2",
+            illDesc: "这是一段有关异常标识二的描述"
+          }
+        ],
+
+      }
+    ]
+  }
+
+  /*
+  *
+  *   return request('/api2/health/health/avg_score_total/', {
+    method: 'GET',
+    params,
+    headers
+  });
+  *
+  * */
+}

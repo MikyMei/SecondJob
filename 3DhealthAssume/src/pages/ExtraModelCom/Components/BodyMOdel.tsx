@@ -20,7 +20,7 @@ import {CSS3DObject, CSS3DRenderer} from 'three/examples/jsm/renderers/CSS3DRend
 
 
 import styles from './index.less';
-import {Avatar, Badge, Button, Slider, Tooltip, Row, Col, Divider, Tag, Carousel} from "antd";
+import {Avatar, Badge, Button, Slider, Tooltip, Row, Col, Divider, Tag, Carousel, Tabs, Image} from "antd";
 import Utils from "@/pages/ExtraModelCom/utils";
 import * as TWEEN from '@tweenjs/tween.js';
 import {AntDesignOutlined, CloseCircleOutlined, UserOutlined} from "@ant-design/icons";
@@ -29,6 +29,7 @@ import {AntDesignOutlined, CloseCircleOutlined, UserOutlined} from "@ant-design/
 const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescription: any, illTypeList: any, dispatch: Dispatch, bodyModelInfo: any }) => {
 
 
+  const { TabPane } = Tabs;
   const {onRef, currentOrga, orgaDescription, illTypeList, dispatch, bodyModelInfo} = props;
 
 
@@ -152,19 +153,19 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     []
   ];  // 根据器官将他们分为不同的部分，首先要知道他有几类
 
-  const orgaMatchColor={
-    "Retopo_生殖系统":"#fcafaf",
-    "Retopo_静脉":"#b8c7bf",
-    "Retopo_动脉":"#fb7f68",
-    "Retopo_大脑":"#caadb1",
-    "Retopo_消化系统":"#e8e1c0",
-    "Retopo_小肠":"#fff1d2",
-    "Retopo_胃部":"#f78b7a",
-    "Retopo_肝脏":"#ee934c",
-    "Retopo_支气管":"#cc594b",
-    "Retopo_肺":"#ea5d69",
-    "Retopo_肾脏":"#e04903",
-    "Retopo_心脏":"#f05552",
+  const orgaMatchColor = {
+    "Retopo_生殖系统": "#fcafaf",
+    "Retopo_静脉": "#b8c7bf",
+    "Retopo_动脉": "#fb7f68",
+    "Retopo_大脑": "#caadb1",
+    "Retopo_消化系统": "#e8e1c0",
+    "Retopo_小肠": "#fff1d2",
+    "Retopo_胃部": "#f78b7a",
+    "Retopo_肝脏": "#ee934c",
+    "Retopo_支气管": "#cc594b",
+    "Retopo_肺": "#ea5d69",
+    "Retopo_肾脏": "#e04903",
+    "Retopo_心脏": "#f05552",
   }
 
   let choosenMesh: any;
@@ -172,6 +173,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const [infoTitle, setInfoTitle] = useState<any>('');
   const [infoDesc, setInfoDesc] = useState<any>('');
   const [contentList, setContentList] = useState<any>([]);
+  const [orgaPicture, setOrgaPicture] = useState<any>([]);
   const [threeScence, setThreeScene] = useState<any>();
   const [threeCamera, setThreeCamera] = useState<any>();
   const [threeControls, setThreeControls] = useState<any>();
@@ -312,7 +314,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         scene.add(model);
         model.traverse((child: any) => {
 
-          /**
+            /**
              * 在这里将不同模型根据他的名字，将
              * */
             if (child.geometry) {
@@ -368,12 +370,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     }
   }, [threeChoosenMesh])
 
-  const changeLoading=(value:any)=>{
-    if (dispatch){
+  const changeLoading = (value: any) => {
+    if (dispatch) {
       dispatch({
-        type:"bodyModel/changeLoadStatus",
-        payload:{
-          newLoadStatus:value
+        type: "bodyModel/changeLoadStatus",
+        payload: {
+          newLoadStatus: value
         }
       })
     }
@@ -392,7 +394,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
     setTimeout(() => {
-     changeLoading(false)
+      changeLoading(false)
 
     }, 1000)
 
@@ -484,7 +486,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   }
 
 
-  function Shaders(color:any) {
+  function Shaders(color: any) {
     const vertexShader = [
       'varying vec3	vVertexWorldPosition;',
       'varying vec3	vVertexNormal;',
@@ -511,7 +513,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         glowColor: {
           type: "c",
           value: new THREE.Color("#51AEF4")
-        //  "#51AEF4"
+          //  "#51AEF4"
         }
       },
       vertexShader,
@@ -548,7 +550,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         glowColor: {
           type: "c",
           value: new THREE.Color(color)
-        //  #30D2BD
+          //  #30D2BD
         }
       },
       vertexShader,
@@ -627,7 +629,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       fragmentShader: AeroSphere1.fragmentShader,
       blending: THREE.NormalBlending,
       transparent: true,
-      depthWrite: false
+      depthWrite: false,
+      visible: true,
     });
     const material3 = new THREE.ShaderMaterial({
       uniforms: AeroSphere3.uniforms,
@@ -636,7 +639,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       blending: THREE.NormalBlending,
       transparent: true,
       depthWrite: false,
-      visible:true,
+      visible: false,
     });
     return {material1, material2, material3}
   }
@@ -855,10 +858,10 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
   const JudgeOrgaType = (orgaName: any) => {
-    let result=-1;
+    let result = -1;
     orgaTypeList.map((item: any, index: any) => {
-      if (item.indexOf(orgaName)!=-1){
-        result=index;
+      if (item.indexOf(orgaName) != -1) {
+        result = index;
       }
 
     })
@@ -874,7 +877,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
         // 根据器官属于在哪个数组，判断属于哪一类，选择哪一类着色器材质
-        const type=JudgeOrgaType(child.name);
+        const type = JudgeOrgaType(child.name);
 
         switch (type) {
           case 0:
@@ -983,7 +986,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     threeObjects.map((object: any, index: any) => {
       if (nowMesh.includes(object.name)) {
 
-        const needOpacity = Math.abs(publicOpacity - Math.floor(value) > 1 ? 1.0 : 1.0-(publicOpacity - Math.floor(value))).toFixed(1);
+        const needOpacity = Math.abs(publicOpacity - Math.floor(value) > 1 ? 1.0 : 1.0 - (publicOpacity - Math.floor(value))).toFixed(1);
 
 
         if (needOpacity === "0.1") {
@@ -1049,15 +1052,19 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const enlargeItem = async (name: any) => {
 
 
+    if (controlMaterial) {
+      controlMaterial.visible = false;
+      setControlMaterial(null);
+    }
+
     await threeObjects.forEach(object => {
 
         if (name === object.name) {
 
           const {radius, center} = object.geometry.boundingSphere;
-          if (!object.material.visible){
-            console.log("控制显示隐藏");
+          if (!object.material.visible) {
             setControlMaterial(object.material);
-            object.material.visible=true;
+            object.material.visible = true;
           }
 
           /**
@@ -1122,60 +1129,77 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * 根据器官或者身体地某部分生成一个走马灯中的元素
    * */
   const GenerateCarousel = (name: any, position: any, radius: any) => {
-
-    const orgaRelatedInfo = {
-      "Retopo_皮肤": {
-        name: "皮肤",
-        desc: "包在身体表面，直接同外界环境接触，具有保护、排泄、调节体温和感受外界刺激等作用的一种器官，是人的身体器官中最大的器官",
-        illType: [
-          {
-            illName: "病毒性皮肤病",
-            illDesc: "病毒性皮肤病是由病毒感染引起的皮肤黏膜病变，病毒是感染性皮肤病中常见的病原体之一。病毒感染会产生各种临床表现，其症状轻重主要取决于机体的免疫状态，同时，也与病毒的毒力有关。",
-          },
-          {
-            illName: "感染性皮肤病",
-            illDesc: "感染性皮肤病的病原体大部分由皮肤侵入,例如病毒引起的各种疣类,真菌引起的皮肤癣菌病,球菌引起的化脓性皮肤病、杆菌引起的麻风、结核,动物血吸虫尾蚴引起的血吸虫尾蚴性皮炎,疥螨引起的疥疮等",
-          }
-        ]
-
-      },
-
-      "Retopo_股骨": {
-        name: "骨骼",
-        desc: "人或动物体内或体表坚硬的组织。分内骨骼和外骨骼两种，人和高等动物的骨骼在体内，由许多块骨头组成，叫内骨骼；软体动物体外的硬壳以及某些脊椎动物（如鱼、龟等）体表的鳞、甲等叫外骨骼",
-        illType: [
-          {
-            illName: "骨关节炎",
-            illDesc: "骨关节炎是一种最常见的关节病变，骨关节炎的名称极多，如肥大性骨关节炎、退行性关节炎、变性性关节炎、增生性骨关节炎或骨关节病，均指一种病，国内统一使用骨关节炎",
-          },
-          {
-            illName: "类风湿关节炎",
-            illDesc: "类风湿关节炎（rheumatoidarthritis）是一种以关节滑膜炎为特征的慢性全身性自身免疫性疾病。滑膜炎持久反复发作，可导致关节内软骨和骨的破坏，关节功能障碍，甚至残废。",
-          }
-        ]
-
-      },
-      "Retopo_生殖系统": {
-        name: "生殖系统",
-        desc: "心脏主要功能是为血液流动提供动力，把血液运行至身体各个部分。人类的心脏位于胸腔中部偏左下方，体积约相当于一个拳头大小，重量约250克。女性的心脏通常要比男性的体积小且重量轻",
-        illType: [
-          {
-            illName: "心脏病",
-            illDesc: "心脏病是一类比较常见的循环系统疾病。循环系统由心脏、血管和调节血液循环的神经体液组织构成，循环系统疾病也称为心血管病，包括上述所有组织器官的疾病，在内科疾病中属于常见病，其中以心脏病最为多见，能显著地影响患者的劳动力。",
-          },
-          {
-            illName: "心肌梗死",
-            illDesc: "心肌梗死一般指急性心肌梗死。 急性心肌梗死是冠状动脉急性、持续性缺血缺氧所引起的心肌坏死。",
-          }
-        ]
-      },
-
-    }
+    //
+    // const orgaRelatedInfo = {
+    //   "Retopo_皮肤": {
+    //     name: "皮肤",
+    //     desc: "包在身体表面，直接同外界环境接触，具有保护、排泄、调节体温和感受外界刺激等作用的一种器官，是人的身体器官中最大的器官",
+    //     illType: [
+    //       {
+    //         illName: "病毒性皮肤病",
+    //         illDesc: "病毒性皮肤病是由病毒感染引起的皮肤黏膜病变，病毒是感染性皮肤病中常见的病原体之一。病毒感染会产生各种临床表现，其症状轻重主要取决于机体的免疫状态，同时，也与病毒的毒力有关。",
+    //       },
+    //       {
+    //         illName: "感染性皮肤病",
+    //         illDesc: "感染性皮肤病的病原体大部分由皮肤侵入,例如病毒引起的各种疣类,真菌引起的皮肤癣菌病,球菌引起的化脓性皮肤病、杆菌引起的麻风、结核,动物血吸虫尾蚴引起的血吸虫尾蚴性皮炎,疥螨引起的疥疮等",
+    //       }
+    //     ]
+    //
+    //   },
+    //
+    //   "Retopo_股骨": {
+    //     name: "骨骼",
+    //     desc: "人或动物体内或体表坚硬的组织。分内骨骼和外骨骼两种，人和高等动物的骨骼在体内，由许多块骨头组成，叫内骨骼；软体动物体外的硬壳以及某些脊椎动物（如鱼、龟等）体表的鳞、甲等叫外骨骼",
+    //     illType: [
+    //       {
+    //         illName: "骨关节炎",
+    //         illDesc: "骨关节炎是一种最常见的关节病变，骨关节炎的名称极多，如肥大性骨关节炎、退行性关节炎、变性性关节炎、增生性骨关节炎或骨关节病，均指一种病，国内统一使用骨关节炎",
+    //       },
+    //       {
+    //         illName: "类风湿关节炎",
+    //         illDesc: "类风湿关节炎（rheumatoidarthritis）是一种以关节滑膜炎为特征的慢性全身性自身免疫性疾病。滑膜炎持久反复发作，可导致关节内软骨和骨的破坏，关节功能障碍，甚至残废。",
+    //       }
+    //     ]
+    //
+    //   },
+    //   "Retopo_生殖系统": {
+    //     name: "生殖系统",
+    //     desc: "心脏主要功能是为血液流动提供动力，把血液运行至身体各个部分。人类的心脏位于胸腔中部偏左下方，体积约相当于一个拳头大小，重量约250克。女性的心脏通常要比男性的体积小且重量轻",
+    //     illType: [
+    //       {
+    //         illName: "心脏病",
+    //         illDesc: "心脏病是一类比较常见的循环系统疾病。循环系统由心脏、血管和调节血液循环的神经体液组织构成，循环系统疾病也称为心血管病，包括上述所有组织器官的疾病，在内科疾病中属于常见病，其中以心脏病最为多见，能显著地影响患者的劳动力。",
+    //       },
+    //       {
+    //         illName: "心肌梗死",
+    //         illDesc: "心肌梗死一般指急性心肌梗死。 急性心肌梗死是冠状动脉急性、持续性缺血缺氧所引起的心肌坏死。",
+    //       }
+    //     ]
+    //   },
+    //
+    // }
+    //
+    // const commonDesc = {
+    //   name: "生殖系统",
+    //   desc: "心脏主要功能是为血液流动提供动力，把血液运行至身体各个部分。人类的心脏位于胸腔中部偏左下方，体积约相当于一个拳头大小，重量约250克。女性的心脏通常要比男性的体积小且重量轻",
+    //   illType: [
+    //     {
+    //       illName: "心脏病",
+    //       illDesc: "心脏病是一类比较常见的循环系统疾病。循环系统由心脏、血管和调节血液循环的神经体液组织构成，循环系统疾病也称为心血管病，包括上述所有组织器官的疾病，在内科疾病中属于常见病，其中以心脏病最为多见，能显著地影响患者的劳动力。",
+    //     },
+    //     {
+    //       illName: "心肌梗死",
+    //       illDesc: "心肌梗死一般指急性心肌梗死。 急性心肌梗死是冠状动脉急性、持续性缺血缺氧所引起的心肌坏死。",
+    //     }
+    //   ]
+    // };
 
     if (dispatch) {
       dispatch({
-        type: "bodyModel/initIllList",
-        payload: {newIllList: orgaRelatedInfo[`${name}`]}
+        type: "bodyModel/getOrgaDetail",
+        payload: {
+          orgaParams: {orgaName: name}
+    }
       })
     }
 
@@ -1204,6 +1228,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     setInfoTitle(illList.name);
     setInfoDesc(illList.desc);
     const contentTemp: any = [];
+    const imgTemp: any = [];
     if (illList.illType) {
 
       await illList.illType.map((item: any, index: any) => {
@@ -1220,13 +1245,26 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       })
       setContentList(contentTemp)
     }
+
+    if (illList.orgaPicture){
+      await illList.orgaPicture.map((item: any, index: any) => {
+        imgTemp.push(
+          <Image
+            key={index}
+            // width={200}
+            src={item}
+          />
+        );
+      })
+      setOrgaPicture(imgTemp)
+    }
   }
 
 
   const closeInfoWindow = () => {
 
-    if (controlMaterial){
-      controlMaterial.visible=false;
+    if (controlMaterial) {
+      controlMaterial.visible = false;
       setControlMaterial(null);
     }
 
@@ -1252,35 +1290,51 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       <div className={styles.webglOutput} id="webgl-output">
 
         <div id={"testAnt"} style={{display: displayType}} className={styles.infoCard}>
-          <Row className={styles.infoTitle}>
-            <Col id={"orgaName"}>
 
-              {infoTitle}
-            </Col>
-            <Col>
-              <CloseCircleOutlined onClick={closeInfoWindow}/>
-            </Col>
-          </Row>
-          <Divider className={styles.infoDivider}/>
-          <Row id={"orgaDesc"} className={styles.organDesc}>
-            {infoDesc}
-          </Row>
+          <Tabs defaultActiveKey="1" tabBarExtraContent={<CloseCircleOutlined onClick={closeInfoWindow} className={styles.closeIcon} />}>
+            <TabPane tab={infoTitle} key="1">
+              <Row id={"orgaDesc"} className={styles.organDesc}>
+                {infoDesc}
+              </Row>            </TabPane>
+            <TabPane tab={"医学影像"} key="2">
+              <Carousel effect={"fade"}>
+                {orgaPicture}
+              </Carousel>            </TabPane>
+            <TabPane tab={"异常标识"} key="3">
+                <Carousel effect={"fade"}>
+                  {contentList}
+                </Carousel>
+            </TabPane>
+          </Tabs>
+          {/*<Row className={styles.infoTitle}>*/}
+          {/*  <Col id={"orgaName"}>*/}
 
-          <Row gutter={24} id={"illCarousel"} className={styles.illCarousel}>
+          {/*    {infoTitle}*/}
+          {/*  </Col>*/}
+          {/*  <Col>*/}
+          {/*    <CloseCircleOutlined onClick={closeInfoWindow}/>*/}
+          {/*  </Col>*/}
+          {/*</Row>*/}
+          {/*<Divider className={styles.infoDivider}/>*/}
+          {/*<Row id={"orgaDesc"} className={styles.organDesc}>*/}
+          {/*  {infoDesc}*/}
+          {/*</Row>*/}
+
+          {/*<Row gutter={24} id={"illCarousel"} className={styles.illCarousel}>*/}
 
 
-            <Carousel className={"carousel"} effect={"fade"}>
-              {contentList}
-              {/*{illList}*/}
-            </Carousel>
+          {/*  <Carousel className={"carousel"} effect={"fade"}>*/}
+          {/*    {contentList}*/}
+          {/*    /!*{illList}*!/*/}
+          {/*  </Carousel>*/}
 
-          </Row>
+          {/*</Row>*/}
 
         </div>
 
       </div>
 
-      <div id={"subList"} className={styles.sliderMesh}>
+      {/*  <div id={"subList"} className={styles.sliderMesh}>
           <span className={styles.avaterItem}>
            <Badge count={1}>
              <Tooltip title="皮肤" color={"lime"} placement="right">
@@ -1317,7 +1371,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           </span>
 
 
-      </div>
+      </div>*/}
 
 
       <Slider min={0}

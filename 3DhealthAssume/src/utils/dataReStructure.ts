@@ -88,6 +88,10 @@ export function MatchOrga(orgaName: any) {
     "心脏": {orgaName: "心脏", meshName: "Retopo_心脏", iconName: "icon_心脏"},
     "皮肤": {orgaName: "皮肤",  meshName: "Retopo_皮肤",  iconName: "icon_胃"},
 
+    "甲状腺": {orgaName: "甲状腺", meshName: "", iconName: "icon_肾"},
+    "垂体": {orgaName: "垂体", meshName: "", iconName: "icon_心脏"},
+    "胸腺": {orgaName: "胸腺",  meshName: "",  iconName: "icon_胃"},
+
   };
 
   return MatchOrigin[`${orgaName}`]

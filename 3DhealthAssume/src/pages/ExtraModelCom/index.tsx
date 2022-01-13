@@ -50,8 +50,11 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
   }
 
 
-  const closeInfoWindow=()=>{
-    bodyRef.current.testClose();
+  const closeInfoWindow = () => {
+    if (optionsCard.length > 0) {
+      bodyRef.current.testClose();
+
+    }
   }
 
   useEffect(() => {
@@ -99,6 +102,22 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
   }, [abnormalOrgaTop4]);
 
+  const OpenWholeOrga = (e: any, iconName: any) => {
+    e.currentTarget.style.boxShadow = '0px 0px 10px #d2a845 inset';
+    /**
+     * 要改变的项目是当前选中的，框的阴影图， 名字字体颜色，成绩字体颜色高亮, 在关闭信息窗的时候恢复，和点击其他的时候恢复
+     * */
+    e.currentTarget.children[0].children[0].children[0].children[0].src = `./img/allOrgaIcon/yellowOne/${iconName}.png`;
+    e.currentTarget.children[0].children[1].children[0].style.color = "#d2a845";
+    // e.currentTarget.children[0].children[2].style.color = "#d2a845";
+    e.currentTarget.children[0].children[2].style.opacity = 1;
+    e.currentTarget.children[0].children[2].style.textShadow = "0 0 10px currentColor";
+
+    optionsCard.push(e.currentTarget);
+    RestoreStyle();
+    console.log("打开全身性器官");
+  }
+
   /**
    * 渲染器官和申生成器官的卡片
    * */
@@ -134,7 +153,9 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
           const orgaRelated = MatchOrga(item.name)
           orgaCardList[`${key}`].push(
             <div key={item.name} className={styles.signleOption_unchecked}
-                 onClick={(e) => ClickSignleOrga(e, item.name, orgaRelated.meshName, orgaRelated.iconName)}>
+                 onClick={(e) => {
+                   key != "全身性器官" ? ClickSignleOrga(e, item.name, orgaRelated.meshName, orgaRelated.iconName) : OpenWholeOrga(e, orgaRelated.iconName)
+                 }}>
               <Row gutter={24} className={styles.optionContent}>
                 <Col className={styles.optionIcon}>
                   <Badge className={styles.badgeIcon} count={item.exceptionCount || 0} size="small" offset={[-6, 6]}
@@ -169,12 +190,12 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
   const RestoreStyle = () => {
     if (optionsCard.length > 1) {
-      optionsCard[0].children[0].children[0].children[0].children[0].src=optionsCard[0].children[0].children[0].children[0].children[0].src.replace(/yellowOne/, "greenOne");
+      optionsCard[0].children[0].children[0].children[0].children[0].src = optionsCard[0].children[0].children[0].children[0].children[0].src.replace(/yellowOne/, "greenOne");
 
-      optionsCard[0].style.boxShadow='0 0 0px #ffffff';
+      optionsCard[0].style.boxShadow = '0 0 0px #ffffff';
       optionsCard[0].children[0].children[1].children[0].style.color = "#fcfcfc";
       optionsCard[0].children[0].children[1].children[0].style.opacity = 0.8;
-      optionsCard[0].children[0].children[2].style.color = "#00FFDE";
+      // optionsCard[0].children[0].children[2].style.color = "#00FFDE";
       optionsCard[0].children[0].children[2].style.opacity = 0.7;
       optionsCard[0].children[0].children[2].style.textShadow = "0 0 0px #ffffff";
       optionsCard.splice(0, 1);
@@ -193,9 +214,9 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
      * */
     e.currentTarget.children[0].children[0].children[0].children[0].src = `./img/allOrgaIcon/yellowOne/${iconName}.png`;
     e.currentTarget.children[0].children[1].children[0].style.color = "#d2a845";
-    e.currentTarget.children[0].children[2].style.color = "#d2a845";
+    // e.currentTarget.children[0].children[2].style.color = "#d2a845";
     e.currentTarget.children[0].children[2].style.opacity = 1;
-    e.currentTarget.children[0].children[2].style.textShadow = "0 0 10px #d2a845";
+    e.currentTarget.children[0].children[2].style.textShadow = "0 0 10px currentColor";
 
     optionsCard.push(e.currentTarget);
     RestoreStyle();

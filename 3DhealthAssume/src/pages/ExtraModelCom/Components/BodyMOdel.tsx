@@ -1242,73 +1242,11 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
                 </Carousel>
             </TabPane>
           </Tabs>
-          {/*<Row className={styles.infoTitle}>*/}
-          {/*  <Col id={"orgaName"}>*/}
 
-          {/*    {infoTitle}*/}
-          {/*  </Col>*/}
-          {/*  <Col>*/}
-          {/*    <CloseCircleOutlined onClick={closeInfoWindow}/>*/}
-          {/*  </Col>*/}
-          {/*</Row>*/}
-          {/*<Divider className={styles.infoDivider}/>*/}
-          {/*<Row id={"orgaDesc"} className={styles.organDesc}>*/}
-          {/*  {infoDesc}*/}
-          {/*</Row>*/}
-
-          {/*<Row gutter={24} id={"illCarousel"} className={styles.illCarousel}>*/}
-
-
-          {/*  <Carousel className={"carousel"} effect={"fade"}>*/}
-          {/*    {contentList}*/}
-          {/*    /!*{illList}*!/*/}
-          {/*  </Carousel>*/}
-
-          {/*</Row>*/}
 
         </div>
 
       </div>
-
-      {/*  <div id={"subList"} className={styles.sliderMesh}>
-          <span className={styles.avaterItem}>
-           <Badge count={1}>
-             <Tooltip title="皮肤" color={"lime"} placement="right">
-                <Avatar
-                  size={{xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100}}
-                  icon={<AntDesignOutlined/>}
-                  onClick={() => enlargeItem("Retopo_皮肤")}
-                />
-             </Tooltip>
-
-          </Badge>
-          </span>
-        <span className={styles.avaterItem}>
-           <Badge count={1}>
-             <Tooltip title="骨骼" color={"lime"} placement="right">
-                <Avatar
-                  size={{xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100}}
-                  icon={<AntDesignOutlined/>}
-                  onClick={() => enlargeItem("Retopo_股骨")}
-                />
-             </Tooltip>
-          </Badge>
-          </span>
-        <span className={styles.avaterItem}>
-           <Badge count={1}>
-             <Tooltip title="器官" color={"lime"} placement="right">
-                <Avatar
-                  size={{xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100}}
-                  icon={<AntDesignOutlined/>}
-                  onClick={() => enlargeItem("Retopo_生殖系统")}
-                />
-             </Tooltip>
-          </Badge>
-          </span>
-
-
-      </div>*/}
-
 
       <Slider min={0}
               max={3}

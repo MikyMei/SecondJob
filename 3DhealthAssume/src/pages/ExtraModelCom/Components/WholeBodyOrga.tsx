@@ -150,31 +150,7 @@ const WholeBodyOrga: React.FC = (props: any) => {
 
       <Tabs defaultActiveKey="1" tabPosition={"left"} className={styles.modalTabs}>
         {indexContent}
-        {/*<TabPane tab="Tab 1" key="1">*/}
-        {/*  <div className={styles.videoDesc}>*/}
-        {/*    <div id={"videoContent"} className={styles.videoContent}>*/}
 
-        {/*    </div>*/}
-        {/*    /!*<Divider className={styles.videoDivider}/>*!/*/}
-        {/*    <div className={styles.descContent}>*/}
-        {/*      <Tabs defaultActiveKey="1">*/}
-        {/*        <TabPane tab="介绍" key="1">*/}
-        {/*          <div className={styles.tabContent}>*/}
-        {/*            白血病是一类造血干细胞恶性克隆性疾病。克隆性白血病细胞因为增殖失控、分化障碍、凋亡受阻等机制在骨髓和其他造血组织中大量增殖累积，并浸润其他非造血组织和器官，同时抑制正常造血功能。临床可见不同程度的贫血、出血、感染发热以及肝、脾、淋巴结肿大和骨骼疼痛。*/}
-
-        {/*          </div>*/}
-        {/*        </TabPane>*/}
-
-        {/*      </Tabs>*/}
-        {/*    </div>*/}
-        {/*  </div>*/}
-        {/*</TabPane>*/}
-        {/*<TabPane tab="Tab 2" key="2">*/}
-        {/*  Content of Tab Pane 2*/}
-        {/*</TabPane>*/}
-        {/*<TabPane tab="Tab 3" key="3">*/}
-        {/*  Content of Tab Pane 3*/}
-        {/*</TabPane>*/}
       </Tabs>
     </Modal>
   )

@@ -169,9 +169,7 @@ const Model: ModelType = {
     * getWholeOrgaIllDetail({payload},{call, put}){
       const illDetailResponse=yield call(GetSignleWholeOrgaIll,payload.params);
 
-      console.log("进入");
       if (illDetailResponse.code===200){
-        console.log("进入");
 
         yield put({
           type:"initWholeOrgaIll",
@@ -247,7 +245,6 @@ const Model: ModelType = {
     },
 
     initWholeOrgaIll(state,{payload}){
-      console.log("jinru");
       return {
         ...state,
         wholeOrgaIll:payload.newWholeOrgaIll,

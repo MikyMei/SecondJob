@@ -173,7 +173,6 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
         )
       })
     } else {
-      console.log("进入");
       partOptionsTemp.push(
         <Option key={"暂无异常部位"} value={"暂无异常部位"}>暂无异常部位</Option>
       )

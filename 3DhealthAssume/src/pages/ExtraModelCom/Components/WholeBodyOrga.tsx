@@ -12,6 +12,7 @@ import {Modal, Form, Button, Tabs, Divider} from "antd";
 import {connect, Dispatch} from "umi";
 import {CloseCircleOutlined} from "@ant-design/icons";
 import DPlayer from 'dplayer';
+import VideoPlayer from './VideoPlayer'
 
 const {TabPane} = Tabs;
 
@@ -27,7 +28,6 @@ const WholeBodyOrga: React.FC = (props: any) => {
     if (wholeOrgaIll.length > 0) {
       generateLiiList();
     }
-    console.log(wholeOrgaIll);
 
   }, [wholeOrgaIll])
 
@@ -77,7 +77,9 @@ const WholeBodyOrga: React.FC = (props: any) => {
       tempList.push(
         <TabPane tab={item.name||''} key={item.name||''}>
           <div className={styles.videoDesc}>
-            <div id={`${item.name}`} className={styles.videoContent}>
+            <div id={item.name} className={styles.videoContent}>
+
+              <VideoPlayer videoUrl={item.videoUrl||''}/>
 
             </div>
             {/*<Divider className={styles.videoDivider}/>*/}
@@ -99,13 +101,15 @@ const WholeBodyOrga: React.FC = (props: any) => {
     })
 
     setIndexContent(tempList);
-    setTimeout(()=>{
-      playAllVideo();
-    },1000)
+
   }
 
   // 播放视频
   const playAllVideo=()=>{
+    illList.map((item:any, index:any)=>{
+      console.log(document.getElementById(`${index * 1000}`));
+    })
+
     // const dp = new DPlayer({
     //   container: document.getElementById(illList[0].name),
     //   video: {
@@ -113,26 +117,7 @@ const WholeBodyOrga: React.FC = (props: any) => {
     //   },
     // });
     // dp.play();
-    // //
-    // console.log(document.getElementById(`${illList[2].name}`), illList[2].videoUrl);
-    // const dp2 = new DPlayer({
-    //   container: document.getElementById(illList[2].name),
-    //   video: {
-    //     url: illList[2].videoUrl,
-    //   },
-    // });
-    // dp2.play()
-    // illList.map((item:any, index:any)=>{
-    //   console.log(item.name);
-    //   const dp = new DPlayer({
-    //       container: document.getElementById(item.name),
-    //       video: {
-    //         url: item.videoUrl,
-    //       },
-    //     });
-    //     dp.play()
-    //
-    // })
+
 
   }
 

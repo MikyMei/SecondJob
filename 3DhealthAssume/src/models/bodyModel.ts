@@ -6,7 +6,7 @@ import {
   GetAllOrgaList,
   GetCommonScoreHistory, GetKeyHealthIndex, GetOrgaCommonScoreHistory, GetOrgaDetailInfo, GetOrgaScoreHistory,
   GetPersonalHealthInfo,
-  GetPersonalScoreHistory
+  GetPersonalScoreHistory, GetSignleWholeOrgaIll
 } from "@/services/healthEvaluate";
 import {GetTop4AbnormalOrga} from "@/utils/dataReStructure";
 
@@ -34,6 +34,8 @@ export type StateType = {
   abnormalOrgaTop4?: any;// 异常器官中最差的四个
   abnormalOrgaTop4Detail?: any; // 异常器官中最差四个地详细信息，包括他们的历史的分和同质人群得分
 
+  wholeOrgaIll?:any; // 全身性一个异常器官的所有异常标识
+
   /**
    * 2,点击器官需要的请求
    * */
@@ -51,6 +53,8 @@ export type ModelType = {
 
     getOrgaDetail: Effect;
 
+    getWholeOrgaIllDetail: Effect;
+
   };
   reducers: {
     initOrgaInfo: Reducer<StateType>;
@@ -60,6 +64,7 @@ export type ModelType = {
     initAllPersonalHealthInformation: Reducer<StateType>; // 初始化所有的个人健康信息
 
     changeLoadStatus: Reducer<StateType>;
+    initWholeOrgaIll: Reducer<StateType>;
   };
 };
 
@@ -83,6 +88,8 @@ const Model: ModelType = {
     keyHealthIndex: {},// 四种人体健康指标，key值为指标的名字如： BMI:{score：55， min:30, max:65}
     abnormalOrgaTop4: [], // 异常器官中最差的四个,
     abnormalOrgaTop4Detail: [], // 异常器官中最差的四个, "心脏":{score:55, commonHistory:[], scoreHistory:[]}， 在第二次调用的时候调用·
+
+    wholeOrgaIll:[],
   },
 
   effects: {
@@ -157,6 +164,22 @@ const Model: ModelType = {
           }
         })
       }
+    },
+
+    * getWholeOrgaIllDetail({payload},{call, put}){
+      const illDetailResponse=yield call(GetSignleWholeOrgaIll,payload.params);
+
+      console.log("进入");
+      if (illDetailResponse.code===200){
+        console.log("进入");
+
+        yield put({
+          type:"initWholeOrgaIll",
+          payload:{
+            newWholeOrgaIll:illDetailResponse.data[0]
+          }
+        })
+      }
     }
 
   },
@@ -221,6 +244,14 @@ const Model: ModelType = {
 
     changeLoadStatus(state, {payload}) {
       return {...state, loadStatus: payload.newLoadStatus}
+    },
+
+    initWholeOrgaIll(state,{payload}){
+      console.log("jinru");
+      return {
+        ...state,
+        wholeOrgaIll:payload.newWholeOrgaIll,
+      }
     }
 
   },

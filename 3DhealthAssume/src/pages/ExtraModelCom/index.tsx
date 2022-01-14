@@ -14,6 +14,7 @@ import {Avatar, Badge, Carousel, Col, Divider, Row, Tag, Tooltip, Spin, Select, 
 import {AntDesignOutlined, CloseCircleOutlined} from "@ant-design/icons";
 import {connect, Dispatch} from "umi";
 import {MatchOrga} from "@/utils/dataReStructure";
+import WholeBodyOrga from "@/pages/ExtraModelCom/Components/WholeBodyOrga";
 
 const {Option} = Select;
 
@@ -44,6 +45,8 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
   const [orgaOptions, setOrgaOptions] = useState<any>(); // 以身体的部位为key值，value为器官卡片的数组，在数据请求完成后，一次渲染
   const [optionsCard, setOptionsCard] = useState<any>([]); // 主要用于存储已经被高亮的器官卡片样式，当进行其他操作的时候，再恢复，如：关闭器官的信息窗口，点击其他身体部位，选择其他器官卡片
 
+  const [visible, setVisible] = useState<any>(false)
+  const [modalTitle, setModalTitle] = useState<any>('') ;
 
   const enlargeItem = (value: any) => {
     bodyRef.current.testEnlarge(value);
@@ -51,7 +54,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
 
   const closeInfoWindow = () => {
-    if (optionsCard.length > 0) {
+    if (optionsCard.length > 0&&choosenPart!="全身性器官") {
       bodyRef.current.testClose();
 
     }
@@ -102,7 +105,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
   }, [abnormalOrgaTop4]);
 
-  const OpenWholeOrga = (e: any, iconName: any) => {
+  const OpenWholeOrga = (e: any, iconName: any, orgaName:any) => {
     e.currentTarget.style.boxShadow = '0px 0px 10px #d2a845 inset';
     /**
      * 要改变的项目是当前选中的，框的阴影图， 名字字体颜色，成绩字体颜色高亮, 在关闭信息窗的时候恢复，和点击其他的时候恢复
@@ -115,7 +118,45 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
     optionsCard.push(e.currentTarget);
     RestoreStyle();
-    console.log("打开全身性器官");
+
+    //  在这里请求全身性器官的具体病症
+
+    GetWholeOrgaDetail(orgaName);
+  }
+
+  const GetWholeOrgaDetail=(orgaName:any)=>{
+    if (dispatch){
+      console.log("进入");
+
+      dispatch({
+        type:"bodyModel/getWholeOrgaIllDetail",
+        payload:{
+          params:{
+            orgaName
+          }
+        }
+      })
+    }
+
+    setModalTitle(`${orgaName}异常标识`);
+    setVisible(true);
+  }
+  const CloseOrgaModal=()=>{
+    setVisible(false);
+  }
+
+
+  const ScoreColor = (score: any) => {
+
+    if (score>80){
+      return {color:"#FF9C00"}
+    }if (score>60){
+      return {color:"#00FFDE"}
+    }else{
+      return {color:"#e21313"}
+    }
+
+
   }
 
   /**
@@ -154,7 +195,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
           orgaCardList[`${key}`].push(
             <div key={item.name} className={styles.signleOption_unchecked}
                  onClick={(e) => {
-                   key != "全身性器官" ? ClickSignleOrga(e, item.name, orgaRelated.meshName, orgaRelated.iconName) : OpenWholeOrga(e, orgaRelated.iconName)
+                   key != "全身性器官" ? ClickSignleOrga(e, item.name, orgaRelated.meshName, orgaRelated.iconName) : OpenWholeOrga(e, orgaRelated.iconName, item.name)
                  }}>
               <Row gutter={24} className={styles.optionContent}>
                 <Col className={styles.optionIcon}>
@@ -170,7 +211,9 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
                   <Row className={styles.indexCount}><span
                     className={styles.yellowText}>{item.exceptionCount || 0}</span>&nbsp;种异常标识</Row>
                 </Col>
-                <Col className={styles.optionScore}>
+                <Col className={styles.optionScore}
+                     style={ScoreColor(item.score||0)}
+                >
                   {item.score || 0}
                 </Col>
               </Row>
@@ -306,6 +349,14 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
           </div>
 
         </div>
+        <WholeBodyOrga
+        visible={visible}
+        onCancel={CloseOrgaModal}
+        modalTitle={modalTitle}
+        //   visible={true}
+        //   onCancel={CloseOrgaModal}
+        //   modalTitle={"全身性器官异常标识"}
+        />
 
 
       </div>

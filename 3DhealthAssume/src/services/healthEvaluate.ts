@@ -23,12 +23,26 @@ const headers = {
 export async function GetPersonalHealthInfo(params: any) {
 
 
-  return request('/api2/health/3d/user_basic_info/', {
-    method: 'GET',
-    params,
-    headers
+   const data=[
+      {
+        name:"路明明",
+        gender:"男",
+        last_check_score:94,
+        last_check_time:"2017-12-08",
+        user_id:"2017014713",
 
-  });
+
+      }
+    ]
+  return data;
+
+
+  // return request('/api2/health/3d/user_basic_info/', {
+  //   method: 'GET',
+  //   params,
+  //   headers
+  //
+  // });
 }
 
 export async function GetAllOrgaList(params: any) {
@@ -101,21 +115,35 @@ export async function GetAllOrgaList(params: any) {
 
 export async function GetPersonalScoreHistory(params: any) {
 
-  return request('/api2/health/health/user_year_score_chart/', {
-    method: 'GET',
-    params,
-    headers
-  });
+    const data=[
+      {
+        checkup_id:1636690,
+        checkup_time:"2017-12-08",
+        score:94,
+
+      }
+    ]
+
+  return data;
+
+  // return request('/api2/health/health/user_year_score_chart/', {
+  //   method: 'GET',
+  //   params,
+  //   headers
+  // });
 }
 
 //
 export async function GetCommonScoreHistory(params: any) {
 
-  return request('/api2/health/health/avg_score_total/', {
-    method: 'GET',
-    params,
-    headers
-  });
+  return {
+    avg:78.8697
+  }
+  // return request('/api2/health/health/avg_score_total/', {
+  //   method: 'GET',
+  //   params,
+  //   headers
+  // });
 }
 
 //
@@ -253,4 +281,44 @@ export async function GetOrgaDetailInfo(params: any) {
   });
   *
   * */
+}
+
+export async function GetSignleWholeOrgaIll(params: any) {
+
+  return {
+    code: 200,
+    data: [
+
+      [
+        {
+          name: "白血病",
+          videoUrl: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4",
+          illDesc: "	白血病是一类造血干细胞恶性克隆性疾病。克隆性白血病细胞因为增殖失控、分化障碍、凋亡受阻等机制在骨髓和其他造血组织中大量增殖累积，并浸润其他非造血组织和器官，同时抑制正常造血功能。临床可见不同程度的贫血、出血、感染发热以及肝、脾、淋巴结肿大和骨骼疼痛。	"
+        },
+        {
+          name: "系统性红斑狼疮",
+          videoUrl: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4",
+          illDesc: "	系统性红斑狼疮（SLE）是一种多发于青年女性的累及多脏器的自身免疫性炎症性结缔组织病，早期、轻型和不典型的病例日渐增多。	"
+        },
+        {
+          name: "类风湿关节炎",
+          videoUrl: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4",
+          illDesc: "	类风湿关节炎（RA）是一种病因未明的慢性、以炎性滑膜炎为主的系统性疾病。其特征是手、足小关节的多关节、对称性、侵袭性关节炎症，经常伴有关节外器官受累及血清类风湿因子阳性，可以导致关节畸形及功能丧失。	"
+        },
+        {
+          name: "混合性结缔组织病",
+          videoUrl: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4",
+          illDesc: "	1972年Sharp等首先提出一种同时或不同时具有系统性红斑狼疮（SLE）、多发性肌炎（PM）、硬皮病（SSc）、类风湿关节炎（RA）等疾病的混和表现，血中有高滴度效价的斑点型ANA和高滴度U1RNP抗体的疾病，命名为混合性结缔组织病（MCTD）。	"
+        },
+        {
+          name: "贝赫切特综合征",
+          videoUrl: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4",
+          illDesc: "	贝赫切特综合征又称白塞病，是一种全身性免疫系统疾病，属于血管炎的一种。其可侵害人体多个器官，包括口腔、皮肤、关节肌肉、眼睛、血管、心脏、肺和神经系统等，主要表现为反复口腔和会阴部溃疡、皮疹、下肢结节红斑、眼部虹膜炎、食管溃疡、小肠或结肠溃疡及关节肿痛等。	"
+        },
+
+      ]
+
+    ]
+  }
+
 }

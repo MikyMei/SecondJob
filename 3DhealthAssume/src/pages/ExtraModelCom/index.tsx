@@ -15,6 +15,7 @@ import {AntDesignOutlined, CloseCircleOutlined} from "@ant-design/icons";
 import {connect, Dispatch} from "umi";
 import {MatchOrga} from "@/utils/dataReStructure";
 import WholeBodyOrga from "@/pages/ExtraModelCom/Components/WholeBodyOrga";
+import MixLineCharts from "@/pages/ExtraModelCom/Components/MixLineCharts";
 
 const {Option} = Select;
 
@@ -292,7 +293,6 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
   return (
     <Spin spinning={false} size="large">
-
       <div className={styles.mainContainer}>
         {bodyModel}
         <div className={styles.siderColoumn}>
@@ -347,6 +347,28 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
           </div>
 
+        </div>
+        <div className={styles.rightColumn}>
+          <div className={styles.rightTop}>
+            <div className={styles.topTitle}>基本健康信息</div>
+            <div className={styles.topCharts}>
+              <div className={styles.healthScore}>
+                <div className={styles.scoreNumber}>{(personalHealthScore||0).toFixed(1)}</div>
+                <div className={styles.scoreDesc}>健康得分</div>
+              </div>
+              <div className={styles.healthCharts}>
+
+                <MixLineCharts lineData={{Xdata: ["2020","2021","2022","2023","2024"], data:[50,20,30,40,100], data2:[10,30,40,90,20]}}/>
+              </div>
+            </div>
+            <div className={styles.indexFour}></div>
+
+
+          </div>
+          <div className={styles.rightBottom}>
+            <div className={styles.bottomTitle}>异常器官Top4</div>
+            <div className={styles.bottomCharts}></div>
+          </div>
         </div>
         <WholeBodyOrga
         visible={visible}

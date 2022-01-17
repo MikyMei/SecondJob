@@ -6,6 +6,7 @@
 
  */
 
+import moment from "moment";
 
 /**
  * 传入接口请求来的所有部位和其中的器官数据，比较得出四个最小值，传进来的是个对象，其中key为器官所属类别，value为数组
@@ -86,14 +87,49 @@ export function MatchOrga(orgaName: any) {
     "肺": {orgaName: "肺", meshName: "Retopo_肺", iconName: "icon_肺"},
     "肾脏": {orgaName: "肾脏", meshName: "Retopo_肾脏", iconName: "icon_肾"},
     "心脏": {orgaName: "心脏", meshName: "Retopo_心脏", iconName: "icon_心脏"},
-    "皮肤": {orgaName: "皮肤",  meshName: "Retopo_皮肤",  iconName: "icon_胃"},
+    "皮肤": {orgaName: "皮肤", meshName: "Retopo_皮肤", iconName: "icon_胃"},
 
     "甲状腺": {orgaName: "甲状腺", meshName: "", iconName: "icon_肾"},
     "垂体": {orgaName: "垂体", meshName: "", iconName: "icon_心脏"},
-    "胸腺": {orgaName: "胸腺",  meshName: "",  iconName: "icon_胃"},
+    "胸腺": {orgaName: "胸腺", meshName: "", iconName: "icon_胃"},
 
   };
 
   return MatchOrigin[`${orgaName}`]
 
+}
+
+
+/**
+ * 将数组中的数据按要求解析成需要的格式，以下两个方法主要用于混合折线图，为该用户和同质人群
+ * */
+
+export function RestructurePersonalScore(originList: any) {
+
+  console.log(originList);
+  const result: any = {
+    XData:[],
+    Data:[]
+  }
+  originList.map((origin:any)=>{
+    result.XData.push(moment(origin.checkup_time).get("years"));
+    result.Data.push(origin.score);
+
+  })
+
+  return result;
+
+}
+
+
+export function RestructureCommonScore(originList: any) {
+  const result: any = {
+    Data:[]
+  }
+
+  originList.map((origin:any)=>{
+    result.Data.push(origin.avg);
+
+  })
+  return result;
 }

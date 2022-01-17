@@ -47,7 +47,8 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
   const [optionsCard, setOptionsCard] = useState<any>([]); // 主要用于存储已经被高亮的器官卡片样式，当进行其他操作的时候，再恢复，如：关闭器官的信息窗口，点击其他身体部位，选择其他器官卡片
 
   const [visible, setVisible] = useState<any>(false)
-  const [modalTitle, setModalTitle] = useState<any>('') ;
+  const [modalTitle, setModalTitle] = useState<any>('');
+  const [rightColumnContent, setRightColumnContent] = useState<any>();
 
   const enlargeItem = (value: any) => {
     bodyRef.current.testEnlarge(value);
@@ -55,7 +56,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
 
   const closeInfoWindow = () => {
-    if (optionsCard.length > 0&&choosenPart!="全身性器官") {
+    if (optionsCard.length > 0 && choosenPart != "全身性器官") {
       bodyRef.current.testClose();
 
     }
@@ -106,7 +107,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
   }, [abnormalOrgaTop4]);
 
-  const OpenWholeOrga = (e: any, iconName: any, orgaName:any) => {
+  const OpenWholeOrga = (e: any, iconName: any, orgaName: any) => {
     e.currentTarget.style.boxShadow = '0px 0px 10px #d2a845 inset';
     /**
      * 要改变的项目是当前选中的，框的阴影图， 名字字体颜色，成绩字体颜色高亮, 在关闭信息窗的时候恢复，和点击其他的时候恢复
@@ -125,14 +126,14 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     GetWholeOrgaDetail(orgaName);
   }
 
-  const GetWholeOrgaDetail=(orgaName:any)=>{
-    if (dispatch){
+  const GetWholeOrgaDetail = (orgaName: any) => {
+    if (dispatch) {
       console.log("进入");
 
       dispatch({
-        type:"bodyModel/getWholeOrgaIllDetail",
-        payload:{
-          params:{
+        type: "bodyModel/getWholeOrgaIllDetail",
+        payload: {
+          params: {
             orgaName
           }
         }
@@ -142,19 +143,20 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     setModalTitle(`${orgaName}异常标识`);
     setVisible(true);
   }
-  const CloseOrgaModal=()=>{
+  const CloseOrgaModal = () => {
     setVisible(false);
   }
 
 
   const ScoreColor = (score: any) => {
 
-    if (score>80){
-      return {color:"#FF9C00"}
-    }if (score>60){
-      return {color:"#00FFDE"}
-    }else{
-      return {color:"#e21313"}
+    if (score > 80) {
+      return {color: "#FF9C00"}
+    }
+    if (score > 60) {
+      return {color: "#00FFDE"}
+    } else {
+      return {color: "#e21313"}
     }
 
 
@@ -212,7 +214,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
                     className={styles.yellowText}>{item.exceptionCount || 0}</span>&nbsp;种异常标识</Row>
                 </Col>
                 <Col className={styles.optionScore}
-                     style={ScoreColor(item.score||0)}
+                     style={ScoreColor(item.score || 0)}
                 >
                   {item.score || 0}
                 </Col>
@@ -291,6 +293,54 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
   }
 
 
+  /**
+   * 主要用于右侧动态生成内容
+   * */
+
+  useEffect(() => {
+    if (personalHealthScore && personalScoreHistory && commonScoreHistory && keyHealthIndex && abnormalOrgaTop4) {
+      GenerateRightPerson()
+    }
+
+  }, [personalHealthScore, personalScoreHistory, commonScoreHistory, keyHealthIndex, abnormalOrgaTop4,])
+
+  const GenerateRightPerson = () => {
+
+
+    setRightColumnContent(
+      <div className={styles.rightColumn}>
+        <div className={styles.rightTop}>
+          <div className={styles.topTitle}>基本健康信息</div>
+          <div className={styles.topCharts}>
+            <div className={styles.healthScore}>
+              <div className={styles.scoreNumber}>{(personalHealthScore || 0).toFixed(1)}</div>
+              <div className={styles.scoreDesc}>健康得分</div>
+            </div>
+            <div className={styles.healthCharts}>
+
+              <MixLineCharts
+                mainlyScoreHistory={[personalScoreHistory]}
+                commonScoreHistory={[commonScoreHistory]}
+                lineData={{
+                  Xdata: ["2016", "2017", "2018", "2019", "2020"],
+                  data: [50, 20, 30, 40, 100],
+                  data2: [10, 30, 40, 90, 20]
+                }}/>
+            </div>
+          </div>
+          <div className={styles.indexFour}></div>
+
+
+        </div>
+        <div className={styles.rightBottom}>
+          <div className={styles.bottomTitle}>异常器官Top4</div>
+          <div className={styles.bottomCharts}></div>
+        </div>
+      </div>
+    )
+  }
+
+
   return (
     <Spin spinning={false} size="large">
       <div className={styles.mainContainer}>
@@ -348,35 +398,14 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
           </div>
 
         </div>
-        <div className={styles.rightColumn}>
-          <div className={styles.rightTop}>
-            <div className={styles.topTitle}>基本健康信息</div>
-            <div className={styles.topCharts}>
-              <div className={styles.healthScore}>
-                <div className={styles.scoreNumber}>{(personalHealthScore||0).toFixed(1)}</div>
-                <div className={styles.scoreDesc}>健康得分</div>
-              </div>
-              <div className={styles.healthCharts}>
-
-                <MixLineCharts lineData={{Xdata: ["2020","2021","2022","2023","2024"], data:[50,20,30,40,100], data2:[10,30,40,90,20]}}/>
-              </div>
-            </div>
-            <div className={styles.indexFour}></div>
-
-
-          </div>
-          <div className={styles.rightBottom}>
-            <div className={styles.bottomTitle}>异常器官Top4</div>
-            <div className={styles.bottomCharts}></div>
-          </div>
-        </div>
+        {rightColumnContent}
         <WholeBodyOrga
-        visible={visible}
-        onCancel={CloseOrgaModal}
-        modalTitle={modalTitle}
-        //   visible={true}
-        //   onCancel={CloseOrgaModal}
-        //   modalTitle={"全身性器官异常标识"}
+          visible={visible}
+          onCancel={CloseOrgaModal}
+          modalTitle={modalTitle}
+          //   visible={true}
+          //   onCancel={CloseOrgaModal}
+          //   modalTitle={"全身性器官异常标识"}
         />
 
 

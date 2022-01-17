@@ -213,14 +213,18 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     const textureLoader = new THREE.TextureLoader();
     scene = new THREE.Scene();
     /**
-     *  只是将图片作为北京图片贴了上去，并没有实现3d效果，尤其是在进行旋转的时候感觉尤为明显
+     *  只是将图片作为北京图片贴了上去，并没有实现3d效果，尤其是在进行旋转的时候感觉尤为明显,
+     *  设置背景透明，仅仅使用父级html元素的背景图片作为背景
      *  */
-    scene.background = textureLoader.load('./img/sceneBackground.png');
+    // scene.background = textureLoader.load('./img/sceneBackground.png');
+    scene.background = null;
+
 
     // 获得渲染器所在的标签元素，作为渲染器的尺寸
-    renderer = new THREE.WebGLRenderer({antialias: true});
-    renderer.setClearColor(new THREE.Color("#eeeeee"));
-    renderer.setSize(mainCanvas.offsetWidth, mainCanvas.offsetHeight);
+    renderer = new THREE.WebGLRenderer({antialias: true, alpha:true});
+    renderer.setClearAlpha(0);
+    // renderer.setClearColor(new THREE.Color("#eeeeee"));
+    renderer.setSize(mainCanvas.offsetWidth*0.8, mainCanvas.offsetHeight);
     renderer.shadowMap.enabled = true;
 
 
@@ -240,13 +244,13 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     });
     const circle = new THREE.Mesh(circleGeometry, circleMaterial);
     circle.rotateX(-Math.PI / 2);
-    circle.position.set(0, -4, 0);
+    circle.position.set(0, -4.5, 0);
     scene.add(circle);
 
 
     // 2d渲染器
     labelRenderer = new CSS2DRenderer();  // 新增的渲染器
-    labelRenderer.setSize(mainCanvas.offsetWidth, mainCanvas.offsetHeight);
+    labelRenderer.setSize(mainCanvas.offsetWidth*0.8, mainCanvas.offsetHeight);
     // this.labelRenderer.domElement.style.position = 'absolute';
     // this.labelRenderer.domElement.style.top = 0;
     labelRenderer.domElement.style = "pointer-events: auto;position: absolute;top: 0px;"  // 处理新的渲染器
@@ -274,23 +278,10 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     scene.add(point);
 
 
-    const planeGemometry = new THREE.PlaneGeometry(50, 30);
-    const planeMeterial = new THREE.MeshStandardMaterial({
-      color: 0xcccccc
-    })
-    plane = new THREE.Mesh(planeGemometry, planeMeterial);
-
-    plane.rotation.x = -0.5 * Math.PI;
-    plane.position.x = 0;
-    plane.position.y = -4;
-    plane.position.z = 0;
-    plane.castShadow = true;
-    plane.receiveShadow = true;
-    // scene.add(plane);
 
 
-    // mainCanvas.offsetWidth,mainCanvas.offsetHeight
-    camera = new THREE.PerspectiveCamera(45, mainCanvas.offsetWidth / mainCanvas.offsetHeight, 0.1, 2000);
+
+    camera = new THREE.PerspectiveCamera(45, mainCanvas.offsetWidth*0.8 / mainCanvas.offsetHeight, 0.1, 2000);
 
     // 定位相机，并且指向场景中心
     camera.position.x = 0;
@@ -302,8 +293,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     let model;
     loader.load('./img/bodyMale.gltf', function (gltf: any) {
         model = gltf.scene;
-        model.scale.setScalar(5, 5, 5);
-        model.position.setY(-4);
+        model.scale.setScalar(5.5, 5.5, 5.5);
+        model.position.setY(-4.5);
 
         /**
          * beIntersectObjects是用来存放需要射线检测的物体数组。
@@ -410,10 +401,10 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const onWindowResize = () => {
 
     if (threeMainCanvas) {
-      threeCamera.aspect = threeMainCanvas.offsetWidth / threeMainCanvas.offsetHeight;
+      threeCamera.aspect = threeMainCanvas.offsetWidth*0.8 / threeMainCanvas.offsetHeight;
       threeCamera.updateProjectionMatrix();
 
-      threeRenderer.setSize(threeMainCanvas.offsetWidth, threeMainCanvas.offsetHeight);
+      threeRenderer.setSize(threeMainCanvas.offsetWidth*0.8, threeMainCanvas.offsetHeight);
       // threeLabelRenderer.setSize(window.innerWidth, threeMainCanvas.offsetHeight);
 
 
@@ -1022,12 +1013,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     const testAnt = document.getElementById("testAnt");
     // testAnt.style.display = "none";
 
-    let newWorldVector = new THREE.Vector3(centroid.x - radius / 3, centroid.y, centroid.z);
+    let newWorldVector = new THREE.Vector3(centroid.x - radius / 5, centroid.y, centroid.z);
 
 
     var standardVector1 = newWorldVector.project(threeCamera);
     // var standardVector1 = new THREE.Vector3(0,0,1);
-    var a1 = threeMainCanvas.offsetWidth / 2;
+    var a1 = threeMainCanvas.offsetWidth*0.8 / 2;
     var b1 = threeMainCanvas.offsetHeight / 2;
 
 
@@ -1035,7 +1026,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     var y1 = Math.round(-standardVector1.y * b1 + b1);
 
     testAnt.style.top = y1 + 'px';
-    testAnt.style.right = (threeMainCanvas.offsetWidth - x1) + 'px';
+    testAnt.style.right = (threeMainCanvas.offsetWidth*0.8 - x1) + 'px';
 
 
   }
@@ -1147,7 +1138,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     const earthLabel = new CSS2DObject(infoWindow);
     earthLabel.name = "infoWindow";
-    earthLabel.position.set(position.x - radius * 10 / 2, position.y - radius * 10 / 4, position.z);
+    earthLabel.position.set(position.x - radius * 7 / 2, position.y - radius * 10 / 4, position.z);
     setCurrentInfoWindow(earthLabel);
     threeScence.add(earthLabel);
   }

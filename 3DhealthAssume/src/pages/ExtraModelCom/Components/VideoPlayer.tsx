@@ -12,7 +12,7 @@ import React, {useEffect, useState, useRef} from 'react';
 import {connect} from "umi";
 
 const VideoPlayer: React.FC = (props: any) => {
-  const {videoUrl}=props;
+  const {videoUrl, playerList}=props;
   const inputEl = useRef(null);
 
   useEffect(()=>{
@@ -22,7 +22,9 @@ const VideoPlayer: React.FC = (props: any) => {
             url: videoUrl,
           },
         });
-        dp.play()
+        // dp.play();
+    playerList.push(dp);
+
   },[])
 
   return (

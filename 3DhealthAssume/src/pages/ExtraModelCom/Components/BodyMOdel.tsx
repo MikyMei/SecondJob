@@ -291,7 +291,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
     let model;
-    loader.load('./img/bodyMale.gltf', function (gltf: any) {
+    loader.load('./img/allKindsOfModel/MaleModel/standardFigure.gltf', function (gltf: any) {
         model = gltf.scene;
         model.scale.setScalar(5.5, 5.5, 5.5);
         model.position.setY(-4.5);

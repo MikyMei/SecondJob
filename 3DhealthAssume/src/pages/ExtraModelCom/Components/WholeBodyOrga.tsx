@@ -8,7 +8,7 @@
 
 import React, {useEffect, useState, useRef} from 'react';
 import styles from './WholeBody.less';
-import {Modal, Form, Button, Tabs, Divider} from "antd";
+import {Modal, Form, Button, Tabs, Divider, Tooltip} from "antd";
 import {connect, Dispatch} from "umi";
 import {CloseCircleOutlined} from "@ant-design/icons";
 import DPlayer from 'dplayer';
@@ -59,7 +59,11 @@ const WholeBodyOrga: React.FC = (props: any) => {
 
     wholeOrgaIll.map((item: any, index: any) => {
       tempList.push(
-        <TabPane tab={item.name||''} key={item.name||''}>
+        <TabPane tab={
+          <Tooltip placement="right" title={item.name||''}>
+            {item.name||''}
+          </Tooltip>
+        } key={item.name||''}>
           <div className={styles.videoDesc}>
             <div id={item.name} className={styles.videoContent}>
 

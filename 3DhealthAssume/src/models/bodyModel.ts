@@ -4,9 +4,15 @@ import styles from "@/pages/ExtraModelCom/index.less";
 import React from "react";
 import {
   GetAllOrgaList,
-  GetCommonScoreHistory, GetKeyHealthIndex, GetOrgaCommonScoreHistory, GetOrgaDetailInfo, GetOrgaScoreHistory,
+  GetCommonScoreHistory,
+  GetKeyHealthIndex,
+  GetOrgaCommonScoreHistory,
+  GetOrgaDetailInfo,
+  GetOrgaHealthAdvice,
+  GetOrgaScoreHistory,
   GetPersonalHealthInfo,
-  GetPersonalScoreHistory, GetSignleWholeOrgaIll
+  GetPersonalScoreHistory,
+  GetSignleWholeOrgaIll, GetSpecificIndexDetail
 } from "@/services/healthEvaluate";
 import {GetTop4AbnormalOrga} from "@/utils/dataReStructure";
 
@@ -34,13 +40,13 @@ export type StateType = {
   abnormalOrgaTop4?: any;// 异常器官中最差的四个
   abnormalOrgaTop4Detail?: any; // 异常器官中最差四个地详细信息，包括他们的历史的分和同质人群得分
 
-  wholeOrgaIll?:any; // 全身性一个异常器官的所有异常标识
+  wholeOrgaIll?: any; // 全身性一个异常器官的所有异常标识
 
-  selectedOrga?:any; // 当前选中的器官，里面会包含当前器官的再初次进入页面请求道的基础信息，如，健康得分，异常标识
-  currentOrgaScoreHistory?:any; // 当前器官的历史的分
-  currentOrgaCommonHistory?:any; // 当前器官的同质人群历史的分
-  currentOrgaHealthAdvice?:any; // 当前器官的医生建议，数组，
-  currentIindexDetail?:any; // 当前一场表示地异常指标
+  selectedOrga?: any; // 当前选中的器官，里面会包含当前器官的再初次进入页面请求道的基础信息，如，健康得分，异常标识
+  currentOrgaScoreHistory?: any; // 当前器官的历史的分
+  currentOrgaCommonHistory?: any; // 当前器官的同质人群历史的分
+  currentOrgaHealthAdvice?: any; // 当前器官的医生建议，数组，
+  currentIindexDetail?: any; // 当前一场表示地异常指标
 
 
   /**
@@ -61,6 +67,7 @@ export type ModelType = {
     getOrgaDetail: Effect;
 
     getWholeOrgaIllDetail: Effect;
+    getSelectedOrgaDetail: Effect;
 
   };
   reducers: {
@@ -72,6 +79,9 @@ export type ModelType = {
 
     changeLoadStatus: Reducer<StateType>;
     initWholeOrgaIll: Reducer<StateType>;
+
+    initSelectedOrga: Reducer<StateType>;
+    initSelectedOrgaDetail: Reducer<StateType>
   };
 };
 
@@ -96,7 +106,14 @@ const Model: ModelType = {
     abnormalOrgaTop4: [], // 异常器官中最差的四个,
     abnormalOrgaTop4Detail: [], // 异常器官中最差的四个, "心脏":{score:55, commonHistory:[], scoreHistory:[]}， 在第二次调用的时候调用·
 
-    wholeOrgaIll:[],
+    wholeOrgaIll: [],
+
+
+    selectedOrga: null, // 当前选中的器官，里面会包含当前器官的再初次进入页面请求道的基础信息，如，健康得分，异常标识
+    currentOrgaScoreHistory: [], // 当前器官的历史的分
+    currentOrgaCommonHistory: [], // 当前器官的同质人群历史的分
+    currentOrgaHealthAdvice: [], // 当前器官的医生建议，数组，
+    currentIindexDetail: [], // 当前一场表示地异常指标
   },
 
   effects: {
@@ -162,29 +179,47 @@ const Model: ModelType = {
     },
 
     * getOrgaDetail({payload}, {call, put}) {
-      const detailResponse=yield call(GetOrgaDetailInfo,payload.orgaParams);
-      if (detailResponse.code===200){
+      const detailResponse = yield call(GetOrgaDetailInfo, payload.orgaParams);
+      if (detailResponse.code === 200) {
         yield put({
-          type:"initIllList",
-          payload:{
-            newIllList:detailResponse.data[0],
+          type: "initIllList",
+          payload: {
+            newIllList: detailResponse.data[0],
           }
         })
       }
     },
 
-    * getWholeOrgaIllDetail({payload},{call, put}){
-      const illDetailResponse=yield call(GetSignleWholeOrgaIll,payload.params);
+    * getWholeOrgaIllDetail({payload}, {call, put}) {
+      const illDetailResponse = yield call(GetSignleWholeOrgaIll, payload.params);
 
-      if (illDetailResponse.code===200){
+      if (illDetailResponse.code === 200) {
 
         yield put({
-          type:"initWholeOrgaIll",
-          payload:{
-            newWholeOrgaIll:illDetailResponse.data[0]
+          type: "initWholeOrgaIll",
+          payload: {
+            newWholeOrgaIll: illDetailResponse.data[0]
           }
         })
       }
+    },
+
+    * getSelectedOrgaDetail({payload}, {call, put}) {
+      const scoreHistoryResponse = yield call(GetOrgaScoreHistory, payload.orgaParams);
+      const commonHistoryResponse = yield call(GetOrgaCommonScoreHistory, payload.orgaParams);
+      const healthAdviceResponse = yield call(GetOrgaHealthAdvice, payload.orgaParams);
+    // 在初始化的时候，请求第一个异常标识地异常项目
+
+      const indexDetailResponse=yield call(GetSpecificIndexDetail, payload.indexParams)
+      yield put({
+        type:"initSelectedOrgaDetail",
+        payload:{
+          newOrgaHistory:scoreHistoryResponse.data||[],
+          newCommonHistory:commonHistoryResponse.data||[],
+          newHealthAdvice:healthAdviceResponse.data||[],
+          newIndexDetail:indexDetailResponse.data||[],
+        }
+      })
     }
 
   },
@@ -251,10 +286,25 @@ const Model: ModelType = {
       return {...state, loadStatus: payload.newLoadStatus}
     },
 
-    initWholeOrgaIll(state,{payload}){
+    initWholeOrgaIll(state, {payload}) {
       return {
         ...state,
-        wholeOrgaIll:payload.newWholeOrgaIll,
+        wholeOrgaIll: payload.newWholeOrgaIll,
+      }
+    },
+    initSelectedOrga(state, {payload}) {
+      return {
+        ...state,
+        selectedOrga: payload.newSelectedOrga,
+      }
+    },
+    initSelectedOrgaDetail(state, {payload}){
+      return {
+        ...state,
+        currentOrgaScoreHistory: payload.newOrgaHistory, // 当前器官的历史的分
+        currentOrgaCommonHistory: payload.newCommonHistory, // 当前器官的同质人群历史的分
+        currentOrgaHealthAdvice: payload.newHealthAdvice, // 当前器官的医生建议，数组，
+        currentIindexDetail: payload.newIndexDetail, // 当前一场表示地异常指标
       }
     }
 

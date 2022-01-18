@@ -23,17 +23,17 @@ const headers = {
 export async function GetPersonalHealthInfo(params: any) {
 
 
-   const data=[
-      {
-        name:"路明明",
-        gender:"男",
-        last_check_score:94,
-        last_check_time:"2017-12-08",
-        user_id:"2017014713",
+  const data = [
+    {
+      name: "路明明",
+      gender: "男",
+      last_check_score: 94,
+      last_check_time: "2017-12-08",
+      user_id: "2017014713",
 
 
-      }
-    ]
+    }
+  ]
   return data;
 
 
@@ -115,14 +115,14 @@ export async function GetAllOrgaList(params: any) {
 
 export async function GetPersonalScoreHistory(params: any) {
 
-    const data=[
-      {
-        checkup_id:1636690,
-        checkup_time:"2017-12-08",
-        score:94,
+  const data = [
+    {
+      checkup_id: 1636690,
+      checkup_time: "2017-12-08",
+      score: 94,
 
-      }
-    ]
+    }
+  ]
 
   return data;
 
@@ -137,7 +137,7 @@ export async function GetPersonalScoreHistory(params: any) {
 export async function GetCommonScoreHistory(params: any) {
 
   return {
-    avg:78.8697
+    avg: 78.8697
   }
   // return request('/api2/health/health/avg_score_total/', {
   //   method: 'GET',
@@ -158,7 +158,7 @@ export async function GetKeyHealthIndex(params: any) {
     },
     {
       name: "血压",
-      max:120,
+      max: 120,
       min: 50,
       score: "120 / 80",
     },
@@ -321,4 +321,37 @@ export async function GetSignleWholeOrgaIll(params: any) {
     ]
   }
 
+}
+
+export async function GetOrgaHealthAdvice(params: any) {
+
+  return {
+    code: 200,
+    data: [
+      "饮食宜软，易消化，少食刺激性及过冷、过热、过硬的食物，定时定量进餐，细嚼慢咽，戒烟酒，少用对胃有刺激的药物，必要时检查胃镜。",
+      "（奥美拉唑/埃索美拉唑20mg　Bid＋阿莫西林1000mg Bid＋克拉霉素0.5　Bid ＋枸橼酸铋钾220mg Bid，正规服用14天，停药一月后复查呼气试验），随访胃镜。",
+      "每年随访胃镜，消化科随诊。"
+    ]
+  }
+}
+
+export async function GetSpecificIndexDetail(params: any) {
+  return {
+    code: 200,
+    data: [
+      {projectName: "电子胃镜全套1", resultKeyWords: {content: "“贲门”增生性息肉", direction: ""}, normalRank: "--", careDegree: 4},
+      {
+        projectName: "胃蛋白酶原Ⅰ",
+        resultKeyWords: {content: 249, direction: "up"},
+        normalRank: "70～200ng/ml",
+        careDegree: 4
+      },
+      {
+        projectName: "胃蛋白酶原Ⅱ",
+        resultKeyWords: {content: 33.1, direction: "down"},
+        normalRank: "1～28.2ng/ml",
+        careDegree: 2
+      },
+    ]
+  }
 }

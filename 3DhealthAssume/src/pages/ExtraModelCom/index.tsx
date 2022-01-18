@@ -302,7 +302,8 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
   useEffect(() => {
     if (personalHealthScore && personalScoreHistory && commonScoreHistory && keyHealthIndex && abnormalOrgaTop4) {
-      GenerateRightPerson();
+      // GenerateRightPerson();
+      GeneratRightOrga()
     }
 
   }, [personalHealthScore, personalScoreHistory, commonScoreHistory, keyHealthIndex, abnormalOrgaTop4,])
@@ -495,6 +496,12 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
   const GeneratRightOrga = () => {
 
+    setRightColumnContent(
+      <div className={styles.rightColumn}>
+        <div className={styles.rightOrgaTop}></div>
+        <div className={styles.rightOrgaBottom}></div>
+      </div>
+    )
   }
 
 

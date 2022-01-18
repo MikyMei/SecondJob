@@ -16,6 +16,8 @@ import {connect, Dispatch} from "umi";
 import {JudgeHealthRelationship, MatchOrga} from "@/utils/dataReStructure";
 import WholeBodyOrga from "@/pages/ExtraModelCom/Components/WholeBodyOrga";
 import MixLineCharts from "@/pages/ExtraModelCom/Components/MixLineCharts";
+import MixLineCharts2 from "@/pages/ExtraModelCom/Components/MixLineCharts2";
+import MixLineCharts3 from "@/pages/ExtraModelCom/Components/MixLineCharts3";
 
 const {Option} = Select;
 
@@ -297,7 +299,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
   useEffect(() => {
     if (personalHealthScore && personalScoreHistory && commonScoreHistory && keyHealthIndex && abnormalOrgaTop4) {
-      GenerateRightPerson()
+      GenerateRightPerson();
     }
 
   }, [personalHealthScore, personalScoreHistory, commonScoreHistory, keyHealthIndex, abnormalOrgaTop4,])
@@ -314,7 +316,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
        * 在这里将每个item进行判断当前得分与给定的健康范围地关系，判读关系文本和展示图标
        * */
 
-      const healthRelation=JudgeHealthRelationship(top);
+      const healthRelation = JudgeHealthRelationship(top);
 
       cardlist.push(
         <div key={top.name} className={styles.singleTop}>
@@ -340,6 +342,102 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
           </div>
         </div>
       );
+    })
+
+    result.push(
+      <div className={styles.topResult}>
+        <div className={styles.top2Card}>{cardlist.slice(0, Math.floor(cardlist.length / 2))}</div>
+        <div className={styles.bottom2Card}>{cardlist.slice(Math.floor(cardlist.length / 2), cardlist.length)}</div>
+
+      </div>
+    );
+    return result;
+
+  };
+
+  const GenerateTop4Orga = (top4list: any) => {
+    const cardlist: any = [];
+    const result: any = [];
+
+    const oldList = top4list.concat();
+
+
+    /**
+     * 进行选择排序，从第二个开始遍历，知道遇到比第一个低的，就交换位置
+     * */
+    if (oldList.length > 1) {
+      for (let i = 1; i < oldList.length; i++) {
+        if (oldList[i].score < oldList[0].score) {
+          const tempTop = oldList[i];
+          oldList[i] = oldList[0];
+          oldList[0] = tempTop
+
+        }
+      }
+    }
+
+
+    oldList.map((top: any, index: any) => {
+      const orgaRelated = MatchOrga(top.name);
+      if (index === 0) {
+        // 最低地，要黄色
+        cardlist.push(
+          <div key={top.name} className={styles.abnormalOrga}>
+            <div className={styles.leftCardColumn}>
+              <Row className={styles.topOrgaName1}>
+                <Tooltip placement="right" title={`Top1${top.name}`}>
+                  Top1{top.name}
+                </Tooltip>
+              </Row>
+              <Row className={styles.orgaIconRow}>
+                <img className={styles.abnormalOrgaIcon}
+                     src={`./img/allOrgaIcon/yellowOne/${orgaRelated.iconName}.png`}/>
+                {/*<span className={styles.abnormalScoreNumber}>{top.score}</span>*/}
+              </Row>
+
+
+            </div>
+            <div className={styles.RightCardColumn}>
+              <MixLineCharts3
+                mainlyScoreHistory={[...top.historyScore]}
+                commonScoreHistory={[...top.commonScore]}
+                lineData={{
+                  XData: ["2016", "2017", "2018", "2019", "2020"],
+                  data: [50, 20, 30, 40, 100], data2: [10, 30, 40, 90, 20]
+                }}/>
+            </div>
+
+          </div>
+        )
+      } else {
+        cardlist.push(
+          <div key={top.name} className={styles.abnormalOrga}>
+            <div className={styles.leftCardColumn}>
+              <Row className={styles.topOrgaName}>{top.name}</Row>
+              <Row className={styles.orgaIconRow}>
+                <img className={styles.abnormalOrgaIcon}
+                     src={`./img/allOrgaIcon/greenOne/${orgaRelated.iconName}.png`}/>
+                {/*<span className={styles.abnormalScoreNumber}>{top.score}</span>*/}
+              </Row>
+
+
+            </div>
+            <div className={styles.RightCardColumn}>
+              <MixLineCharts2
+                mainlyScoreHistory={[...top.historyScore]}
+                commonScoreHistory={[...top.commonScore]}
+                lineData={{
+                  XData: ["2016", "2017", "2018", "2019", "2020"],
+                  data: [50, 20, 30, 40, 100], data2: [10, 30, 40, 90, 20]
+                }}/>
+            </div>
+
+          </div>
+        )
+        ;
+      }
+
+
     })
 
     result.push(
@@ -384,7 +482,9 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
         </div>
         <div className={styles.rightBottom}>
           <div className={styles.bottomTitle}>异常器官Top4</div>
-          <div className={styles.bottomCharts}></div>
+          <div className={styles.bottomCharts}>
+            {GenerateTop4Orga(abnormalOrgaTop4Detail)}
+          </div>
         </div>
       </div>
     )

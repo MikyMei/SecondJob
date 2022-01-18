@@ -54,7 +54,7 @@ export async function GetAllOrgaList(params: any) {
           {name: "皮肤", exceptionCount: 4, score: 68}
         ],
         "骨骼部位": [
-          {name: "跟骨", exceptionCount: 1, score: 51},
+          {name: "跟骨", exceptionCount: 1, score: 50},
           {name: "腕骨", exceptionCount: 2, score: 52},
           {name: "颈椎", exceptionCount: 3, score: 53},
           {name: "锁骨", exceptionCount: 4, score: 54},
@@ -81,7 +81,7 @@ export async function GetAllOrgaList(params: any) {
 
         ],
         "内脏部位": [
-          {name: "生殖系统", exceptionCount: 1, score: 51},
+          {name: "生殖系统", exceptionCount: 1, score: 46},
           {name: "静脉", exceptionCount: 2, score: 52},
           {name: "动脉", exceptionCount: 3, score: 53},
           {name: "大脑", exceptionCount: 4, score: 54},
@@ -96,7 +96,7 @@ export async function GetAllOrgaList(params: any) {
 
         ],
         "全身性器官": [
-          {name: "甲状腺", exceptionCount: 1, score: 51},
+          {name: "甲状腺", exceptionCount: 1, score: 47},
           {name: "垂体", exceptionCount: 2, score: 52},
           {name: "胸腺", exceptionCount: 3, score: 53},
 
@@ -203,27 +203,27 @@ export async function GetOrgaScoreHistory() {
       {
         "checkup_id": 1636690,
         "checkup_time": "2017-12-08",
-        "score": 94,
+        "score": 54,
       },
       {
         "checkup_id": 1636691,
         "checkup_time": "2018-12-08",
-        "score": 91,
+        "score": 61,
       },
       {
         "checkup_id": 1636692,
         "checkup_time": "2019-12-08",
-        "score": 92,
+        "score": 90,
       },
       {
         "checkup_id": 1636692,
         "checkup_time": "2020-12-08",
-        "score": 93,
+        "score": 50,
       },
       {
         "checkup_id": 1636692,
         "checkup_time": "2021-12-08",
-        "score": 96,
+        "score": 46,
       }
     ]
   }

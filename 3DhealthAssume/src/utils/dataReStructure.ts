@@ -117,7 +117,7 @@ export function RestructurePersonalScore(originList: any) {
   }
   originList.map((origin: any) => {
     result.XData.push(moment(origin.checkup_time).get("years"));
-    result.Data.push(origin.score);
+    result.Data.push(origin.score.toFixed(2));
 
   })
 
@@ -126,21 +126,22 @@ export function RestructurePersonalScore(originList: any) {
 }
 
 
-export function RestructureCommonScore(originList: any) {
+export function RestructureCommonScore(originList: any, length: any) {
   const result: any = {
     Data: []
   }
 
-  originList.map((origin: any) => {
-    result.Data.push(origin.avg);
+  for (let i = 0; i < length; i++) {
+    result.Data[i]=originList[0].avg
+  }
 
-  })
+
   return result;
 }
 
 
 export function JudgeHealthRelationship(healthIndex: any) {
-  let result: any = {text: "in",desc:"处于", iconType:"greenOne"};
+  let result: any = {text: "in", desc: "处于", iconType: "greenOne"};
   let flag = 0;
 
   /**
@@ -177,15 +178,15 @@ export function JudgeHealthRelationship(healthIndex: any) {
 
   switch (flag) {
     case 0:
-      result ={text: "in",desc:"处于", iconType:"greenOne"};
+      result = {text: "in", desc: "处于", iconType: "greenOne"};
       break;
     case -1:
     case-2:
-      result = {text: "under",desc:"低于", iconType:"yellowOne"};
+      result = {text: "under", desc: "低于", iconType: "yellowOne"};
       break;
     case 1:
     case 2:
-      result ={text: "over",desc:"高于", iconType:"yellowOne"};
+      result = {text: "over", desc: "高于", iconType: "yellowOne"};
       break;
 
   }

@@ -151,28 +151,28 @@ export async function GetKeyHealthIndex(params: any) {
 
   const data = [
     {
-      name: "心率得分",
+      name: "心率",
       min: 55,
       max: 105,
       score: 55,
     },
     {
-      name: "血压得分",
-      max: 120 / 50,
-      min: 100 / 80,
-      score: 120 / 80,
+      name: "血压",
+      max:120,
+      min: 50,
+      score: "120 / 80",
     },
     {
-      name: "血糖得分",
+      name: "血糖",
       min: 4.0,
       max: 7.0,
-      score: 6.5,
+      score: 7.5,
     },
     {
       name: "BMI",
       min: 4.0,
       max: 7.0,
-      score: 6.5,
+      score: 3.5,
     },
   ]
 

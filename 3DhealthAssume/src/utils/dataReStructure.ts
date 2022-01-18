@@ -93,6 +93,11 @@ export function MatchOrga(orgaName: any) {
     "垂体": {orgaName: "垂体", meshName: "", iconName: "icon_心脏"},
     "胸腺": {orgaName: "胸腺", meshName: "", iconName: "icon_胃"},
 
+    "心率": {orgaName: "心率", meshName: "", iconName: "icon_心率"},
+    "血压": {orgaName: "血压", meshName: "", iconName: "icon_血压"},
+    "血糖": {orgaName: "血糖", meshName: "", iconName: "icon_血糖"},
+    "BMI": {orgaName: "BMI", meshName: "", iconName: "icon_bmi"},
+
   };
 
   return MatchOrigin[`${orgaName}`]
@@ -106,12 +111,11 @@ export function MatchOrga(orgaName: any) {
 
 export function RestructurePersonalScore(originList: any) {
 
-  console.log(originList);
   const result: any = {
-    XData:[],
-    Data:[]
+    XData: [],
+    Data: []
   }
-  originList.map((origin:any)=>{
+  originList.map((origin: any) => {
     result.XData.push(moment(origin.checkup_time).get("years"));
     result.Data.push(origin.score);
 
@@ -124,12 +128,69 @@ export function RestructurePersonalScore(originList: any) {
 
 export function RestructureCommonScore(originList: any) {
   const result: any = {
-    Data:[]
+    Data: []
   }
 
-  originList.map((origin:any)=>{
+  originList.map((origin: any) => {
     result.Data.push(origin.avg);
 
   })
   return result;
+}
+
+
+export function JudgeHealthRelationship(healthIndex: any) {
+  let result: any = {text: "in",desc:"处于", iconType:"greenOne"};
+  let flag = 0;
+
+  /**
+   * 设定一个flag变量，大于最小就加一，大于最大也加一，小于最大就减一，小于最小-1，为0就是健康的，负数和正数就是不健康
+   * */
+  if (typeof (healthIndex.score) === "string") {
+    let scoreList = healthIndex.score.split("/");
+    if (healthIndex.max && scoreList[0] <= healthIndex.max) {
+      flag = flag - 1;
+    } else {
+      flag = flag + 1;
+    }
+
+    if (healthIndex.max && scoreList[1] >= healthIndex.min) {
+      flag = flag + 1;
+    } else {
+      flag = flag - 1;
+    }
+
+  } else {
+    if (healthIndex.min && healthIndex.score >= healthIndex.min) {
+      flag = flag + 1;
+    } else {
+      flag = flag - 1
+    }
+
+    if (healthIndex.max && healthIndex.score <= healthIndex.max) {
+      flag = flag - 1;
+    } else {
+      flag = flag + 1
+    }
+
+  }
+
+  switch (flag) {
+    case 0:
+      result ={text: "in",desc:"处于", iconType:"greenOne"};
+      break;
+    case -1:
+    case-2:
+      result = {text: "under",desc:"低于", iconType:"yellowOne"};
+      break;
+    case 1:
+    case 2:
+      result ={text: "over",desc:"高于", iconType:"yellowOne"};
+      break;
+
+  }
+
+
+  return result;
+
 }

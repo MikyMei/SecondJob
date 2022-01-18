@@ -13,7 +13,7 @@ import BodyModel from "@/pages/ExtraModelCom/Components/BodyMOdel";
 import {Avatar, Badge, Carousel, Col, Divider, Row, Tag, Tooltip, Spin, Select, Empty} from "antd";
 import {AntDesignOutlined, CloseCircleOutlined} from "@ant-design/icons";
 import {connect, Dispatch} from "umi";
-import {MatchOrga} from "@/utils/dataReStructure";
+import {JudgeHealthRelationship, MatchOrga} from "@/utils/dataReStructure";
 import WholeBodyOrga from "@/pages/ExtraModelCom/Components/WholeBodyOrga";
 import MixLineCharts from "@/pages/ExtraModelCom/Components/MixLineCharts";
 
@@ -128,8 +128,6 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
   const GetWholeOrgaDetail = (orgaName: any) => {
     if (dispatch) {
-      console.log("进入");
-
       dispatch({
         type: "bodyModel/getWholeOrgaIllDetail",
         payload: {
@@ -304,9 +302,58 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
   }, [personalHealthScore, personalScoreHistory, commonScoreHistory, keyHealthIndex, abnormalOrgaTop4,])
 
+
+  const Generate4Index = (topList: any) => {
+
+    const cardlist: any = [];
+    const result: any = [];
+
+    topList.map(top => {
+      const orgaRelated = MatchOrga(top.name);
+      /**
+       * 在这里将每个item进行判断当前得分与给定的健康范围地关系，判读关系文本和展示图标
+       * */
+
+      const healthRelation=JudgeHealthRelationship(top);
+
+      cardlist.push(
+        <div key={top.name} className={styles.singleTop}>
+
+          <img
+            key={orgaRelated.iconName}
+            className={styles.topIcon}
+            src={`./img/indexIcon/${healthRelation.iconType}/${orgaRelated.iconName}.png`}
+          />
+          <div
+            key={orgaRelated.name}
+            className={styles.descText}
+          >
+            <div className={styles.topText}>{orgaRelated.orgaName}得分&nbsp;
+              <span className={styles.rankType}>
+                {healthRelation.desc}
+              </span>
+            </div>
+            <div className={styles.bottomText}>健康范围</div>
+          </div>
+          <div className={styles.indexScore}>
+            {top.score}
+          </div>
+        </div>
+      );
+    })
+
+    result.push(
+      <div className={styles.topResult}>
+        <div className={styles.top2Card}>{cardlist.slice(0, Math.floor(cardlist.length / 2))}</div>
+        <div className={styles.bottom2Card}>{cardlist.slice(Math.floor(cardlist.length / 2), cardlist.length)}</div>
+
+      </div>
+    );
+    return result;
+
+  }
+
   const GenerateRightPerson = () => {
-
-
     setRightColumnContent(
       <div className={styles.rightColumn}>
         <div className={styles.rightTop}>
@@ -322,13 +369,16 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
                 mainlyScoreHistory={[personalScoreHistory]}
                 commonScoreHistory={[commonScoreHistory]}
                 lineData={{
-                  Xdata: ["2016", "2017", "2018", "2019", "2020"],
+                  XData: ["2016", "2017", "2018", "2019", "2020"],
                   data: [50, 20, 30, 40, 100],
                   data2: [10, 30, 40, 90, 20]
                 }}/>
             </div>
           </div>
-          <div className={styles.indexFour}></div>
+          <div className={styles.indexFour}>
+
+            {Generate4Index(keyHealthIndex)}
+          </div>
 
 
         </div>

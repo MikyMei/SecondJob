@@ -22,8 +22,7 @@ const MixLineChart: React.FC<any> = (props) => {
 
   const personalResult = RestructurePersonalScore(mainlyScoreHistory);
   const commonResult = RestructureCommonScore(commonScoreHistory);
-  console.log(personalResult,
-    commonResult,)
+
 
   useEffect(() => {
     // eslint-disable-next-line global-require
@@ -40,7 +39,7 @@ const MixLineChart: React.FC<any> = (props) => {
         x: 40,
         y: 30,
         x2: 15,
-        y2: 20,
+        y2: 25,
 
       },
 
@@ -110,7 +109,12 @@ const MixLineChart: React.FC<any> = (props) => {
 
       },
       tooltip: {
-        trigger: 'axis'
+        trigger: 'axis',
+        backgroundColor:null,
+        textStyle: {
+          color:'rgba(255,255,255,0.8)',
+        }
+
       },
       // lineStyle:{
       //   color:'#0066FF'

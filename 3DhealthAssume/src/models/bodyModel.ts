@@ -36,6 +36,13 @@ export type StateType = {
 
   wholeOrgaIll?:any; // 全身性一个异常器官的所有异常标识
 
+  selectedOrga?:any; // 当前选中的器官，里面会包含当前器官的再初次进入页面请求道的基础信息，如，健康得分，异常标识
+  currentOrgaScoreHistory?:any; // 当前器官的历史的分
+  currentOrgaCommonHistory?:any; // 当前器官的同质人群历史的分
+  currentOrgaHealthAdvice?:any; // 当前器官的医生建议，数组，
+  currentIindexDetail?:any; // 当前一场表示地异常指标
+
+
   /**
    * 2,点击器官需要的请求
    * */

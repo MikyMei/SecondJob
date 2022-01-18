@@ -265,6 +265,9 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
     optionsCard.push(e.currentTarget);
     RestoreStyle();
+    /**
+     * 在这里判断是否已经打开，如果是，就关闭
+     * */
     enlargeItem(meshName);
   }
 
@@ -490,6 +493,10 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     )
   }
 
+  const GeneratRightOrga = () => {
+
+  }
+
 
   return (
     <Spin spinning={false} size="large">
@@ -543,19 +550,14 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
               {choosenPart ? orgaOptions[`${choosenPart}`] : <Empty/>}
 
             </div>
-
-
           </div>
-
         </div>
         {rightColumnContent}
         <WholeBodyOrga
           visible={visible}
           onCancel={CloseOrgaModal}
           modalTitle={modalTitle}
-          //   visible={true}
-          //   onCancel={CloseOrgaModal}
-          //   modalTitle={"全身性器官异常标识"}
+
         />
 
 

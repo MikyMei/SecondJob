@@ -1162,7 +1162,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         contentTemp.push(
           <div key={index}>
             <Row className={styles.illType}>
-              <Tag color="orange">{item.illName}</Tag>
+              {item.illName}
             </Row>
             <Row className={styles.illDesc}>
               {item.illDesc}

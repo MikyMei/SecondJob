@@ -7,6 +7,7 @@
  */
 
 import moment from "moment";
+import Icon, { HomeOutlined } from '@ant-design/icons';
 
 /**
  * 传入接口请求来的所有部位和其中的器官数据，比较得出四个最小值，传进来的是个对象，其中key为器官所属类别，value为数组
@@ -195,3 +196,6 @@ export function JudgeHealthRelationship(healthIndex: any) {
   return result;
 
 }
+
+
+

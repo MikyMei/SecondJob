@@ -866,24 +866,25 @@
 }
 
 
-.singleTop{
+.singleTop {
   height: 100%;
   display: flex;
   width: 48%;
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
-  background: rgba(8, 180, 158,  0.06);
+  background: rgba(8, 180, 158, 0.06);
 
 }
-.topIcon{
+
+.topIcon {
   width: 3.25rem;
   height: 3.25rem;
 }
 
-.descText{
+.descText {
   width: 6rem;
-  height:3rem;
+  height: 3rem;
   font-size: 14px;
   font-family: "PingFang_SC";
   font-weight: 400;
@@ -894,9 +895,10 @@
   align-items: flex-start;
   align-content: flex-start;
 }
-.indexScore{
-  width:6.5rem;
-  height:1.75rem;
+
+.indexScore {
+  width: 6.5rem;
+  height: 1.75rem;
   font-size: 1.5rem;
   font-weight: bold;
   color: #FFFFFF;
@@ -907,9 +909,9 @@
   justify-content: flex-end;
 }
 
-.topResult{
+.topResult {
   width: 100%;
-  height:100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -917,9 +919,9 @@
 }
 
 
-.top2Card,.bottom2Card{
-  width:100%;
-  height:45%;
+.top2Card, .bottom2Card {
+  width: 100%;
+  height: 45%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -927,7 +929,7 @@
 }
 
 
-.rankType{
+.rankType {
   font-size: 14px;
   font-family: 'PingFang SC';
   font-weight: 600;
@@ -935,32 +937,32 @@
 }
 
 
-.abnormalOrga{
-  width:48%;
-  height:100%;
+.abnormalOrga {
+  width: 48%;
+  height: 100%;
   border-radius: 4px;
   background: rgba(8, 180, 158, 0.06);
   display: flex
 
 }
 
-.chartsTopRow{
+.chartsTopRow {
   padding: 0;
   margin: 0;
   width: 100%;
-  height:1.75rem;
+  height: 1.75rem;
 
   color: white;
 
 }
 
-.topOrgaName{
+.topOrgaName {
   padding: 0;
   margin: 0;
-  height:1.75rem;
+  height: 1.75rem;
   width: 100%;
   background: rgba(0, 255, 226, 0.65);
-  border-radius:4px 0px 13px 0px ;
+  border-radius: 4px 0px 13px 0px;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
@@ -971,16 +973,16 @@
   color: #FFFFFF;
 }
 
-.topOrgaName1{
+.topOrgaName1 {
   padding: 0;
   margin: 0;
-  height:1.75rem;
+  height: 1.75rem;
   width: 100%;
   background: #FF9C00;
-  white-space: nowrap;/*设置不换行*/
-    overflow: hidden; /*设置隐藏*/
-   text-overflow: ellipsis;
-  border-radius:4px 0px 13px 0px ;
+  white-space: nowrap; /*设置不换行*/
+  overflow: hidden; /*设置隐藏*/
+  text-overflow: ellipsis;
+  border-radius: 4px 0px 13px 0px;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
@@ -991,7 +993,7 @@
   color: #FFFFFF;
 }
 
-.abnormalScoreNumber{
+.abnormalScoreNumber {
   font-size: 1rem;
   font-family: "PingFang_SC";
   opacity: 0.6;
@@ -999,38 +1001,39 @@
   color: #FFFFFF;
 }
 
-.chartsBottomRow{
+.chartsBottomRow {
   padding: 0 0 0 1rem;
   align-items: center;
   flex-direction: row;
   justify-content: space-between;
 }
 
-.abnormalOrgaIcon{
-  width:3.5rem;
-  height:3.5rem;
+.abnormalOrgaIcon {
+  width: 3.5rem;
+  height: 3.5rem;
 }
-.orgaLineCharts{
-  width:72%;
+
+.orgaLineCharts {
+  width: 72%;
   height: 100%;
 }
 
 
-.leftCardColumn{
+.leftCardColumn {
   padding: 0;
   margin: 0;
   width: 30%;
-  height:100%
+  height: 100%
 }
 
-.RightCardColumn{
+.RightCardColumn {
   padding: 0;
   margin: 0;
   width: 68%;
-  height:100%
+  height: 100%
 }
 
-.orgaIconRow{
+.orgaIconRow {
   padding: 0;
   margin: auto;
   width: 100%;
@@ -1041,18 +1044,308 @@
   flex-direction: column;
 }
 
-.rightOrgaTop{
-  width:100%;
-  height:67%;
+.rightOrgaTop {
+  width: 100%;
+  height: 67%;
   border: 1px solid rgba(28, 224, 205, 0.2);
   border-bottom-right-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
 
 }
 
-.rightOrgaBottom{
-  width:100%;
-  height:30%;
+.rightOrgaBottom {
+  width: 100%;
+  height: 30%;
   border: 1px solid rgba(28, 224, 205, 0.2);
   border-bottom-right-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
+
+
+.orgaTopTitle {
+  width: 100%;
+  height: 2.5rem;
+  //border: 2px solid #FFFFFF;
+  background-image: url('../../../public/img/partNmaeImg.png');
+  background-position: left;
+  background-repeat: no-repeat;
+  background-size: contain;
+  font-size: 1.125rem;
+  font-weight: 600;
+  font-variant: tabular-nums;
+  line-height: 1.5715;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: 0 3.2rem;
+}
+
+
+.orgaBottomTitle {
+  width: 100%;
+  height: 2.5rem;
+  //border: 2px solid #FFFFFF;
+  background-image: url('../../../public/img/partNmaeImg.png');
+  background-position: left;
+  background-repeat: no-repeat;
+  background-size: contain;
+  font-size: 1.125rem;
+  font-weight: 600;
+  font-variant: tabular-nums;
+  line-height: 1.5715;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: 0 3.2rem;
+}
+
+
+/***/
+
+.topOrgaCharts {
+  width: 100%;
+  height: 30%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.orgaHealthScore {
+  height: 100%;
+  width: 29%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.orgaScoreNumber {
+  font-size: 2.7rem;
+  font-weight: bold;
+  color: #FFA900;
+  text-shadow: 0 0 10px currentColor;
+
+}
+
+.orgaScoreDesc {
+  font-size: 1rem;
+  font-family: "PingFang_SC";
+  font-weight: 400;
+  color: rgba(236, 236, 236, 0.85);
+}
+
+.orgaHealthCharts {
+  height: 100%;
+  width: 76%;
+  //border: 2px solid #FFFFFF;
+}
+
+
+.abnormalIndex {
+  width: 100%;
+  height: 23%;
+
+  background: rgba(0, 252, 238, 0.06);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.healthAdvice {
+  width: 100%;
+  height: 36%;
+  background: rgba(0, 252, 238, 0.06);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+
+.indexTable {
+  width: 100%;
+  height: 75%;
+
+  :global {
+
+    .ant-table {
+      background: rgba(255, 255, 255, 0);
+      color: rgba(255, 255, 255, 0.8)
+    }
+
+    .ant-spin-nested-loading, .ant-spin-container, .ant-table, .ant-table.ant-table-bordered > .ant-table-container {
+      height: 100%
+    }
+
+    .ant-table-thead {
+      height: 2.5rem;
+    }
+
+    .ant-table-thead > tr > th {
+      position: relative;
+      color: rgba(255, 255, 255, 1);
+      font-weight: 500;
+      text-align: left;
+      background: rgba(0, 252, 238, 0.24);
+      border: 0px solid rgba(0, 252, 238, 0.24);
+      transition: background 0.3s ease;
+      padding: 0;
+
+    }
+
+    .ant-table-tbody > tr > td {
+      height: 2.5rem;
+    }
+    .ant-table-tbody > tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected) > td {
+      background: rgba(0, 252, 238, 0.24);
+    }
+
+    .ant-table-thead > tr > th, .ant-table-tbody > tr > td, .ant-table tfoot > tr > th, .ant-table tfoot > tr > td {
+      position: relative;
+       padding: 0 16px;
+      height: 2.5rem;
+      overflow-wrap: break-word;
+    }
+    .ant-table.ant-table-bordered > .ant-table-container {
+      border-left: 1px solid rgba(0, 252, 238, 0.24);
+      border-right: 1px solid rgba(0, 252, 238, 0.24);
+      border-bottom: 1px solid rgba(0, 252, 238, 0.24);
+    }
+    .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table, .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table {
+      border-top: 0px solid #f0f0f0;
+    }
+
+
+    .ant-table-cell {
+      border-right: 0px !important;
+    }
+
+    .ant-table-tbody > tr > td {
+      border-bottom: 1px solid rgba(0, 252, 238, 0.24);
+      transition: background 0.3s;
+    }
+
+  }
+}
+
+
+.abnormalList {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 29%;
+  color: white;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+
+}
+
+.indexDivider {
+  padding: 0;
+  margin: 0;
+  border: 1px solid rgba(0, 252, 238, 0.16);
+
+}
+
+
+.indexTag {
+  padding: 0;
+  margin: 0;
+  border: 1px solid #FFFFFF;
+  height: 60%;
+  width: 100%;
+
+
+}
+
+.adviceTitle {
+  font-size: 1rem;
+  font-family: "PingFang_SC";
+  color: #FFFFFF;
+}
+
+
+.adviceContent {
+  height: 80%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  overflow-y: scroll;
+}
+
+.signleAdvice {
+  width: 100%;
+  padding: 0;
+  margin: 0 0 0.65rem 0;
+  height: auto;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  align-content: center;
+}
+
+.adviceHead {
+  width: 1.3%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.headIcon {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 0.25rem;
+  background: #30D2BD;
+}
+
+.adviceText {
+  height: 100%;
+  width: 97%;
+
+  font-size: 0.875rem;
+  font-family: "PingFang_SC";
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+
+.emptyContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+
+.abnormalTable {
+  width: 100%;
+  height: 100%
+}
+
+
+.heartIcon{
+  color:#ff6900
+}
+.heartIcon2{
+
+  color:#01fcee
+
+}
+

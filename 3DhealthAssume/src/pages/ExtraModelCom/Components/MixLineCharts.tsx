@@ -97,6 +97,7 @@ const MixLineChart: React.FC<any> = (props) => {
           color: "#C0C4CC",
           opacity: 0.8,
         },
+        interval:25,
 
         splitLine: {
           lineStyle: {

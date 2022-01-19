@@ -10,8 +10,8 @@
 import React, {useEffect, useState, useRef} from 'react';
 import styles from './index.less'
 import BodyModel from "@/pages/ExtraModelCom/Components/BodyMOdel";
-import {Avatar, Badge, Carousel, Col, Divider, Row, Tag, Tooltip, Spin, Select, Empty} from "antd";
-import {AntDesignOutlined, CloseCircleOutlined} from "@ant-design/icons";
+import {Avatar, Badge, Carousel, Col, Divider, Row, Tag, Tooltip, Spin, Select, Empty, Rate, Table} from "antd";
+import {AntDesignOutlined, CloseCircleOutlined, HeartFilled, HeartOutlined} from "@ant-design/icons";
 import {connect, Dispatch} from "umi";
 import {JudgeHealthRelationship, MatchOrga} from "@/utils/dataReStructure";
 import WholeBodyOrga from "@/pages/ExtraModelCom/Components/WholeBodyOrga";
@@ -494,12 +494,155 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     )
   }
 
+  const healthAdvice=[
+    "饮食宜软，易消化，少食刺激性及过冷、过热、过硬的食物，定时定量进餐，细嚼慢咽，戒烟酒，少用对胃有刺激的药物，必要时检查胃镜。",
+    "（奥美拉唑/埃索美拉唑20mg　Bid＋阿莫西林1000mg Bid＋克拉霉素0.5　Bid ＋枸橼酸铋钾220mg Bid，正规服用14天，停药一月后复查呼气试验），随访胃镜。",
+    "每年随访胃镜，消化科随诊。"
+  ]
+  const abnormalIndex=[
+    {projectName: "电子胃镜全套1", resultKeyWords: {content: "“贲门”增生性息肉", direction: null}, normalRank: "--", careDegree: 4},
+    {
+      projectName: "胃蛋白酶原Ⅰ",
+      resultKeyWords: {content: 249, direction: "up"},
+      normalRank: "70～200ng/ml",
+      careDegree: 4.5
+    },
+    {
+      projectName: "胃蛋白酶原Ⅱ",
+      resultKeyWords: {content: 33.1, direction: "down"},
+      normalRank: "1～28.2ng/ml",
+      careDegree: 2
+    },
+    {
+      projectName: "胃蛋白酶原Ⅱ",
+      resultKeyWords: {content: 33.1, direction: "down"},
+      normalRank: "1～28.2ng/ml",
+      careDegree: 2
+    },
+  ]
+  const columns=[
+    {
+      title:"项目名",
+      dataIndex:"projectName",
+      key:"projectName",
+    },
+    {
+      title:"结果或关键词",
+      dataIndex: "resultKeyWords",
+      key:"resultKeyWords",
+      render:(text:any,record:any, index:any)=>{
+        // (record.resultKeyWords.direction&&record.resultKeyWords.direction==="up")?return
+
+        if (record.resultKeyWords.direction){
+         return <span >
+           {record.resultKeyWords.content}&nbsp;&nbsp;
+           {record.resultKeyWords.direction==="up"?<img src={"./img/upArrow.png"}/>:<img src={"./img/downArrow.png"}/>}
+         </span>
+        }else{
+          return <span>{record.resultKeyWords.content}</span>
+        }
+      }
+    },
+    {
+      title:"正常值范围",
+      dataIndex:"normalRank",
+      key:"normalRank",
+    },
+    {
+      title:"关心程度",
+      dataIndex:"careDegree",
+      key:"careDegree",
+      width:200,
+      render:(text:any, record:any)=>{
+
+        return <Rate allowHalf disabled className={record.careDegree>3?styles.heartIcon:styles.heartIcon2}  defaultValue={record.careDegree} character={()=><HeartFilled /> }/>
+
+      }
+    }
+  ]
+
+  /**
+   * 将建议遍历生成一些减小一列表
+   * */
+  const GenerateAdviceList=(list:any)=>{
+    const advice:any=[];
+    if (list.length > 0){
+      list.map((item:any,index:any)=>{
+        advice.push(
+          <Row key={index} className={styles.signleAdvice}>
+            <Col className={styles.adviceHead}>
+              <div className={styles.headIcon}/>
+            </Col>
+            <Col className={styles.adviceText}>{item}</Col>
+
+          </Row>
+
+        );
+      })
+    }else{
+      advice.push(
+        <Empty className={styles.emptyContent} description={"暂无建议"}/>
+      )
+    }
+
+
+    return advice;
+  }
+
   const GeneratRightOrga = () => {
 
     setRightColumnContent(
       <div className={styles.rightColumn}>
-        <div className={styles.rightOrgaTop}></div>
-        <div className={styles.rightOrgaBottom}></div>
+        <div className={styles.rightOrgaTop}>
+          <div className={styles.orgaTopTitle}>胃健康信息</div>
+          <div className={styles.topOrgaCharts}>
+            <div className={styles.orgaHealthScore}>
+              <div className={styles.orgaScoreNumber}>{(personalHealthScore || 0).toFixed(1)}</div>
+              <div className={styles.orgaScoreDesc}>健康得分</div>
+            </div>
+            <div className={styles.orgaHealthCharts}>
+
+              <MixLineCharts
+                mainlyScoreHistory={[personalScoreHistory]}
+                commonScoreHistory={[commonScoreHistory]}
+                lineData={{
+                  XData: ["2016", "2017", "2018", "2019", "2020"],
+                  data: [50, 20, 30, 40, 100],
+                  data2: [10, 30, 40, 90, 20]
+                }}/>
+            </div>
+          </div>
+          <div className={styles.abnormalIndex}>
+            <Row  className={styles.abnormalList}>
+              异常标识
+            </Row>
+            <Divider className={styles.indexDivider}/>
+            <Row  className={styles.indexTag}></Row>
+          </div>
+          <div className={styles.healthAdvice}>
+            <Row  className={styles.adviceTitle}>
+              健康建议
+            </Row>
+            <Divider className={styles.indexDivider}/>
+            <Row className={styles.adviceContent}>
+
+              {GenerateAdviceList(healthAdvice)}
+            </Row>
+          </div>
+
+        </div>
+        <div className={styles.rightOrgaBottom}>
+          <div className={styles.orgaBottomTitle}>部位异常标识</div>
+          <div className={styles.indexTable}>
+            <Table
+              dataSource={abnormalIndex}
+              columns={columns}
+              pagination={false}
+              bordered
+              scroll={{y:120}}
+              className={styles.abnormalTable}/>
+          </div>
+        </div>
       </div>
     )
   }

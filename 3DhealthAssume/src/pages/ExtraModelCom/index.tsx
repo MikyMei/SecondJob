@@ -10,7 +10,23 @@
 import React, {useEffect, useState, useRef} from 'react';
 import styles from './index.less'
 import BodyModel from "@/pages/ExtraModelCom/Components/BodyMOdel";
-import {Avatar, Badge, Carousel, Col, Divider, Row, Tag, Tooltip, Spin, Select, Empty, Rate, Table} from "antd";
+import {
+  Avatar,
+  Badge,
+  Carousel,
+  Col,
+  Divider,
+  Row,
+  Tag,
+  Tooltip,
+  Spin,
+  Select,
+  Empty,
+  Rate,
+  Table,
+  Radio,
+  Button, Space
+} from "antd";
 import {AntDesignOutlined, CloseCircleOutlined, HeartFilled, HeartOutlined} from "@ant-design/icons";
 import {connect, Dispatch} from "umi";
 import {JudgeHealthRelationship, MatchOrga} from "@/utils/dataReStructure";
@@ -494,12 +510,12 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     )
   }
 
-  const healthAdvice=[
+  const healthAdvice = [
     "饮食宜软，易消化，少食刺激性及过冷、过热、过硬的食物，定时定量进餐，细嚼慢咽，戒烟酒，少用对胃有刺激的药物，必要时检查胃镜。",
     "（奥美拉唑/埃索美拉唑20mg　Bid＋阿莫西林1000mg Bid＋克拉霉素0.5　Bid ＋枸橼酸铋钾220mg Bid，正规服用14天，停药一月后复查呼气试验），随访胃镜。",
     "每年随访胃镜，消化科随诊。"
   ]
-  const abnormalIndex=[
+  const abnormalIndex = [
     {projectName: "电子胃镜全套1", resultKeyWords: {content: "“贲门”增生性息肉", direction: null}, normalRank: "--", careDegree: 4},
     {
       projectName: "胃蛋白酶原Ⅰ",
@@ -520,42 +536,44 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
       careDegree: 2
     },
   ]
-  const columns=[
+  const columns = [
     {
-      title:"项目名",
-      dataIndex:"projectName",
-      key:"projectName",
+      title: "项目名",
+      dataIndex: "projectName",
+      key: "projectName",
     },
     {
-      title:"结果或关键词",
+      title: "结果或关键词",
       dataIndex: "resultKeyWords",
-      key:"resultKeyWords",
-      render:(text:any,record:any, index:any)=>{
+      key: "resultKeyWords",
+      render: (text: any, record: any, index: any) => {
         // (record.resultKeyWords.direction&&record.resultKeyWords.direction==="up")?return
 
-        if (record.resultKeyWords.direction){
-         return <span >
+        if (record.resultKeyWords.direction) {
+          return <span>
            {record.resultKeyWords.content}&nbsp;&nbsp;
-           {record.resultKeyWords.direction==="up"?<img src={"./img/upArrow.png"}/>:<img src={"./img/downArrow.png"}/>}
+            {record.resultKeyWords.direction === "up" ? <img src={"./img/upArrow.png"}/> :
+              <img src={"./img/downArrow.png"}/>}
          </span>
-        }else{
+        } else {
           return <span>{record.resultKeyWords.content}</span>
         }
       }
     },
     {
-      title:"正常值范围",
-      dataIndex:"normalRank",
-      key:"normalRank",
+      title: "正常值范围",
+      dataIndex: "normalRank",
+      key: "normalRank",
     },
     {
-      title:"关心程度",
-      dataIndex:"careDegree",
-      key:"careDegree",
-      width:200,
-      render:(text:any, record:any)=>{
+      title: "关心程度",
+      dataIndex: "careDegree",
+      key: "careDegree",
+      width: 200,
+      render: (text: any, record: any) => {
 
-        return <Rate allowHalf disabled className={record.careDegree>3?styles.heartIcon:styles.heartIcon2}  defaultValue={record.careDegree} character={()=><HeartFilled /> }/>
+        return <Rate allowHalf disabled className={record.careDegree > 3 ? styles.heartIcon : styles.heartIcon2}
+                     defaultValue={record.careDegree} character={() => <HeartFilled/>}/>
 
       }
     }
@@ -564,10 +582,10 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
   /**
    * 将建议遍历生成一些减小一列表
    * */
-  const GenerateAdviceList=(list:any)=>{
-    const advice:any=[];
-    if (list.length > 0){
-      list.map((item:any,index:any)=>{
+  const GenerateAdviceList = (list: any) => {
+    const advice: any = [];
+    if (list.length > 0) {
+      list.map((item: any, index: any) => {
         advice.push(
           <Row key={index} className={styles.signleAdvice}>
             <Col className={styles.adviceHead}>
@@ -576,10 +594,9 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
             <Col className={styles.adviceText}>{item}</Col>
 
           </Row>
-
         );
       })
-    }else{
+    } else {
       advice.push(
         <Empty className={styles.emptyContent} description={"暂无建议"}/>
       )
@@ -588,6 +605,19 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
     return advice;
   }
+
+  /**
+   * 切换异常标识
+   * */
+  const changeIndex = (e: any) => {
+    console.log(e);
+  }
+
+  const options = [
+    { label: 'Apple', value: 'Apple' },
+    { label: 'Pear', value: 'Pear' },
+    { label: 'Orange', value: 'Orange' },
+  ];
 
   const GeneratRightOrga = () => {
 
@@ -613,14 +643,34 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
             </div>
           </div>
           <div className={styles.abnormalIndex}>
-            <Row  className={styles.abnormalList}>
+            <Row className={styles.abnormalList}>
               异常标识
             </Row>
             <Divider className={styles.indexDivider}/>
-            <Row  className={styles.indexTag}></Row>
+            <Row className={styles.indexTag}>
+              <Radio.Group
+                className={styles.radioGroup}
+                onChange={changeIndex}
+                optionType="button"
+              >
+                <Space size={"middle"}>
+                  <Radio.Button className={styles.radioButton}  value={1}>异常标识1</Radio.Button>
+                  <Radio.Button className={styles.radioButton}  value={2}>异常标识1</Radio.Button>
+                  <Radio.Button className={styles.radioButton} value={3}>异常标识1</Radio.Button>
+                  <Radio.Button className={styles.radioButton} value={4}>异常标识1</Radio.Button>
+                  <Radio.Button className={styles.radioButton}  value={10}>异常标识1</Radio.Button>
+                  <Radio.Button className={styles.radioButton} value={30}>异常标识1</Radio.Button>
+                  <Radio.Button className={styles.radioButton} value={40}>异常标识1</Radio.Button>
+                  <Radio.Button className={styles.radioButton}  value={10}>异常标识1</Radio.Button>
+
+                </Space>
+
+              </Radio.Group>
+
+            </Row>
           </div>
           <div className={styles.healthAdvice}>
-            <Row  className={styles.adviceTitle}>
+            <Row className={styles.adviceTitle}>
               健康建议
             </Row>
             <Divider className={styles.indexDivider}/>
@@ -639,7 +689,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
               columns={columns}
               pagination={false}
               bordered
-              scroll={{y:120}}
+              scroll={{y: 120}}
               className={styles.abnormalTable}/>
           </div>
         </div>

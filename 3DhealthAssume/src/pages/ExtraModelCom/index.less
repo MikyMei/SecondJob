@@ -730,8 +730,12 @@
 
 
 @keyframes example {
-  from {opacity: 0;}
-  to {opacity: 1;}
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .rightColumn {
@@ -1216,21 +1220,24 @@
     .ant-table-tbody > tr > td {
       height: 2.5rem;
     }
+
     .ant-table-tbody > tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected) > td {
       background: rgba(0, 252, 238, 0.24);
     }
 
     .ant-table-thead > tr > th, .ant-table-tbody > tr > td, .ant-table tfoot > tr > th, .ant-table tfoot > tr > td {
       position: relative;
-       padding: 0 16px;
+      padding: 0 16px;
       height: 2.5rem;
       overflow-wrap: break-word;
     }
+
     .ant-table.ant-table-bordered > .ant-table-container {
       border-left: 1px solid rgba(0, 252, 238, 0.24);
       border-right: 1px solid rgba(0, 252, 238, 0.24);
       border-bottom: 1px solid rgba(0, 252, 238, 0.24);
     }
+
     .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table, .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table {
       border-top: 0px solid #f0f0f0;
     }
@@ -1272,9 +1279,38 @@
 .indexTag {
   padding: 0;
   margin: 0;
-  border: 1px solid #FFFFFF;
   height: 60%;
   width: 100%;
+  display: flex;
+  padding: 0;
+  margin: 0;
+  height: 60%;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  overflow-x: scroll;
+
+  :global {
+
+    .ant-radio-button-wrapper {
+      height: 2.5rem;
+      border-radius: 20px !important;
+      border: 1px solid #00FCEE;
+      background: rgba(0, 252, 238, 0.09);
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.7);
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      justify-content: flex-start;
+    }
+    .ant-radio-button-wrapper-checked:not([class*=' ant-radio-button-wrapper-disabled']).ant-radio-button-wrapper:first-child {
+      background: rgba(255, 169, 0, 0.3);
+      color: white;
+      border: 1px solid #FFA900;
+    }
+
+  }
 
 
 }
@@ -1347,12 +1383,22 @@
 }
 
 
-.heartIcon{
-  color:#ff6900
-}
-.heartIcon2{
-
-  color:#01fcee
-
+.heartIcon {
+  color: #ff6900
 }
 
+.heartIcon2 {
+
+  color: #01fcee
+
+}
+
+
+.radioGroup {
+  width: auto;
+}
+
+.radioButton {
+  word-break: keep-all; /* 不换行 */
+  white-space: nowrap; /* 不换行 */
+}

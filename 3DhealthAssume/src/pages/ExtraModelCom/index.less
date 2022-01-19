@@ -729,6 +729,11 @@
 }
 
 
+@keyframes example {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
 .rightColumn {
   width: 36%;
   height: 95%;
@@ -738,6 +743,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  animation-name: example;
+  animation-duration: 3s;
 }
 
 .rightTop {

@@ -50,7 +50,17 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     keyHealthIndex,
     abnormalOrgaTop4,
     abnormalOrgaTop4Detail,
-    loadStatus
+    loadStatus,
+
+    /**
+     * 以下主要用于点击器官之后进行的
+     * */
+
+    selectedOrga,
+    currentOrgaScoreHistory,
+    currentOrgaCommonHistory,
+    currentOrgaHealthAdvice,
+    currentIindexDetail,
   } = bodyModelInfo;
 
 
@@ -67,9 +77,12 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
   const [visible, setVisible] = useState<any>(false)
   const [modalTitle, setModalTitle] = useState<any>('');
   const [rightColumnContent, setRightColumnContent] = useState<any>();
+  const [nowSelectedOrga, setNowSelectedOrga]=useState<any>("555");
 
   const enlargeItem = (value: any) => {
-    bodyRef.current.testEnlarge(value);
+      bodyRef.current.testEnlarge(value);
+
+
   }
 
 
@@ -125,7 +138,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
   }, [abnormalOrgaTop4]);
 
-  const OpenWholeOrga = (e: any, iconName: any, orgaName: any) => {
+  const OpenWholeOrga = (e: any, iconName: any, orgaName: any, orgaAll) => {
     e.currentTarget.style.boxShadow = '0px 0px 10px #d2a845 inset';
     /**
      * 要改变的项目是当前选中的，框的阴影图， 名字字体颜色，成绩字体颜色高亮, 在关闭信息窗的时候恢复，和点击其他的时候恢复
@@ -140,6 +153,25 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     RestoreStyle();
 
     //  在这里请求全身性器官的具体病症
+    if (dispatch){
+
+
+      const orgaParams={
+        orgaName:orgaAll.name
+      }
+      const indexParams={
+        indexName:orgaAll.name
+      }
+      dispatch({
+        type:"bodyModel/getSelectedOrgaDetail",
+        payload:{
+          orgaAll,
+          orgaParams,
+          indexParams
+        }
+      });
+
+    }
 
     GetWholeOrgaDetail(orgaName);
   }
@@ -160,6 +192,14 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     setVisible(true);
   }
   const CloseOrgaModal = () => {
+    if (dispatch){
+      dispatch({
+        type:"bodyModel/initSelectedOrga",
+        payload:{
+          newSelectedOrga:null
+        }
+      })
+    }
     setVisible(false);
   }
 
@@ -213,7 +253,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
           orgaCardList[`${key}`].push(
             <div key={item.name} className={styles.signleOption_unchecked}
                  onClick={(e) => {
-                   key != "全身性器官" ? ClickSignleOrga(e, item.name, orgaRelated.meshName, orgaRelated.iconName) : OpenWholeOrga(e, orgaRelated.iconName, item.name)
+                   key != "全身性器官" ? ClickSignleOrga(e, item.name, orgaRelated.meshName, orgaRelated.iconName, item) : OpenWholeOrga(e, orgaRelated.iconName, item.name, item )
                  }}>
               <Row gutter={24} className={styles.optionContent}>
                 <Col className={styles.optionIcon}>
@@ -267,7 +307,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
   /**
    * 点击器官卡片进行的操作：改变卡片的样式，打开指定模型（改变模型位置，请求器官的数据）
    * */
-  const ClickSignleOrga = (e: any, orgaName: any, meshName: any, iconName: any) => {
+  const ClickSignleOrga = (e: any, orgaName: any, meshName: any, iconName: any, orgaAll:any) => {
     // RestoreStyle();
     e.currentTarget.style.boxShadow = '0px 0px 10px #d2a845 inset';
     /**
@@ -284,8 +324,35 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     /**
      * 在这里判断是否已经打开，如果是，就关闭
      * */
-    enlargeItem(meshName);
+
+      if (dispatch){
+
+
+        const orgaParams={
+          orgaName:orgaAll.name
+        }
+        const indexParams={
+          indexName:orgaAll.name
+        }
+        dispatch({
+          type:"bodyModel/getSelectedOrgaDetail",
+          payload:{
+              orgaAll,
+              orgaParams,
+              indexParams
+          }
+        });
+
+      }
+      enlargeItem(meshName);
+
+
+
+
+
   }
+
+
 
 
   const GetAllBodyHealth = () => {
@@ -318,17 +385,30 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
   useEffect(() => {
     if (personalHealthScore && personalScoreHistory && commonScoreHistory && keyHealthIndex && abnormalOrgaTop4) {
-      // GenerateRightPerson();
-      GeneratRightOrga()
+      GenerateRightPerson();
+      // GeneratRightOrga()
     }
 
   }, [personalHealthScore, personalScoreHistory, commonScoreHistory, keyHealthIndex, abnormalOrgaTop4,])
 
+  useEffect(() => {
+    if (selectedOrga){
+      GeneratRightOrga();
+    }else{
+      if (personalHealthScore && personalScoreHistory && commonScoreHistory && keyHealthIndex && abnormalOrgaTop4) {
+        GenerateRightPerson();
+        // GeneratRightOrga()
+      }
+
+    }
+  }, [selectedOrga])
 
   const Generate4Index = (topList: any) => {
 
     const cardlist: any = [];
     const result: any = [];
+
+    console.log(topList);
 
     topList.map(top => {
       const orgaRelated = MatchOrga(top.name);
@@ -614,27 +694,27 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
   }
 
   const options = [
-    { label: 'Apple', value: 'Apple' },
-    { label: 'Pear', value: 'Pear' },
-    { label: 'Orange', value: 'Orange' },
+    {label: 'Apple', value: 'Apple'},
+    {label: 'Pear', value: 'Pear'},
+    {label: 'Orange', value: 'Orange'},
   ];
 
   const GeneratRightOrga = () => {
 
     setRightColumnContent(
-      <div className={styles.rightColumn}>
+      <div  className={styles.rightColumn}>
         <div className={styles.rightOrgaTop}>
-          <div className={styles.orgaTopTitle}>胃健康信息</div>
+          <div className={styles.orgaTopTitle}>{selectedOrga.name||''}健康信息</div>
           <div className={styles.topOrgaCharts}>
             <div className={styles.orgaHealthScore}>
-              <div className={styles.orgaScoreNumber}>{(personalHealthScore || 0).toFixed(1)}</div>
+              <div className={styles.orgaScoreNumber}>{(selectedOrga.score || 0).toFixed(1)}</div>
               <div className={styles.orgaScoreDesc}>健康得分</div>
             </div>
             <div className={styles.orgaHealthCharts}>
 
               <MixLineCharts
-                mainlyScoreHistory={[personalScoreHistory]}
-                commonScoreHistory={[commonScoreHistory]}
+                mainlyScoreHistory={[...currentOrgaScoreHistory]}
+                commonScoreHistory={[...currentOrgaCommonHistory]}
                 lineData={{
                   XData: ["2016", "2017", "2018", "2019", "2020"],
                   data: [50, 20, 30, 40, 100],
@@ -654,14 +734,14 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
                 optionType="button"
               >
                 <Space size={"middle"}>
-                  <Radio.Button className={styles.radioButton}  value={1}>异常标识1</Radio.Button>
-                  <Radio.Button className={styles.radioButton}  value={2}>异常标识1</Radio.Button>
+                  <Radio.Button className={styles.radioButton} value={1}>异常标识1</Radio.Button>
+                  <Radio.Button className={styles.radioButton} value={2}>异常标识1</Radio.Button>
                   <Radio.Button className={styles.radioButton} value={3}>异常标识1</Radio.Button>
                   <Radio.Button className={styles.radioButton} value={4}>异常标识1</Radio.Button>
-                  <Radio.Button className={styles.radioButton}  value={10}>异常标识1</Radio.Button>
+                  <Radio.Button className={styles.radioButton} value={10}>异常标识1</Radio.Button>
                   <Radio.Button className={styles.radioButton} value={30}>异常标识1</Radio.Button>
                   <Radio.Button className={styles.radioButton} value={40}>异常标识1</Radio.Button>
-                  <Radio.Button className={styles.radioButton}  value={10}>异常标识1</Radio.Button>
+                  <Radio.Button className={styles.radioButton} value={10}>异常标识1</Radio.Button>
 
                 </Space>
 
@@ -676,7 +756,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
             <Divider className={styles.indexDivider}/>
             <Row className={styles.adviceContent}>
 
-              {GenerateAdviceList(healthAdvice)}
+              {GenerateAdviceList(currentOrgaHealthAdvice)}
             </Row>
           </div>
 
@@ -685,7 +765,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
           <div className={styles.orgaBottomTitle}>部位异常标识</div>
           <div className={styles.indexTable}>
             <Table
-              dataSource={abnormalIndex}
+              dataSource={currentIindexDetail}
               columns={columns}
               pagination={false}
               bordered

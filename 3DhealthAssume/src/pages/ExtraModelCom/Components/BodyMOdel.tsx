@@ -33,7 +33,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const {onRef, currentOrga, orgaDescription, illTypeList, dispatch, bodyModelInfo} = props;
 
 
-  const {illList} = bodyModelInfo;
+  const {illList, selectedOrga} = bodyModelInfo;
   const loader = new GLTFLoader();
 
 
@@ -195,7 +195,9 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
   const [displayType, setDisplayType] = useState<any>("none");
   const [currentInfoWindow, setCurrentInfoWindow] = useState<any>(); // 在选定器官的时候打开指定的信息窗口，
-  const [controlMaterial, setControlMaterial] = useState<any>(); // 保存起初就是不展示的器官，在点击之后再显示
+  const [controlMaterial, setControlMaterial] = useState<any>(null); // 保存起初就是不展示的器官，在点击之后再显示
+
+
 
 
   const initModel = () => {
@@ -1187,6 +1189,11 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     }
   }
 
+  // useEffect(()=>{
+  //   if (!selectedOrga){
+  //     closeInfoWindow();
+  //   }
+  // },[selectedOrga])
 
   const closeInfoWindow = () => {
 
@@ -1209,6 +1216,14 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       .start();
     choosenMesh = null;
     setThreeChoosenMesh(choosenMesh);
+    if (dispatch){
+      dispatch({
+        type:"bodyModel/initSelectedOrga",
+        payload:{
+          newSelectedOrga:null
+        }
+      })
+    }
   }
 
 

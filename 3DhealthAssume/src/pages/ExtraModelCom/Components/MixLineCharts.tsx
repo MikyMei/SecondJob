@@ -20,6 +20,10 @@ const MixLineChart: React.FC<any> = (props) => {
   const inputEl = useRef(null);
 
 
+
+  console.log( mainlyScoreHistory,
+    commonScoreHistory,)
+
   const personalResult = RestructurePersonalScore(mainlyScoreHistory);
   const commonResult = RestructureCommonScore(commonScoreHistory,mainlyScoreHistory.length); // 因为平均数历年来都一样，因此只有一个数
 

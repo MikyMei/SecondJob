@@ -219,8 +219,13 @@ const Model: ModelType = {
           newHealthAdvice:healthAdviceResponse.data||[],
           newIndexDetail:indexDetailResponse.data||[],
         }
+      });
+      yield put({
+        type:"initSelectedOrga",
+        payload:{newSelectedOrga:payload.orgaAll}
       })
-    }
+    },
+
 
   },
 
@@ -293,9 +298,15 @@ const Model: ModelType = {
       }
     },
     initSelectedOrga(state, {payload}) {
+      let orgaTemp:any;
+      if (payload.newSelectedOrga===state.selectedOrga){
+        orgaTemp=null;
+      }else{
+        orgaTemp=payload.newSelectedOrga;
+      }
       return {
         ...state,
-        selectedOrga: payload.newSelectedOrga,
+        selectedOrga: orgaTemp,
       }
     },
     initSelectedOrgaDetail(state, {payload}){

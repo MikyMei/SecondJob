@@ -34,6 +34,7 @@ import WholeBodyOrga from "@/pages/ExtraModelCom/Components/WholeBodyOrga";
 import MixLineCharts from "@/pages/ExtraModelCom/Components/MixLineCharts";
 import MixLineCharts2 from "@/pages/ExtraModelCom/Components/MixLineCharts2";
 import MixLineCharts3 from "@/pages/ExtraModelCom/Components/MixLineCharts3";
+import MyTable from "@/pages/ExtraModelCom/Components/MyTable";
 
 const {Option} = Select;
 
@@ -61,7 +62,10 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     currentOrgaCommonHistory,
     currentOrgaHealthAdvice,
     currentIindexDetail,
+    illList,
+    wholeOrgaIll
   } = bodyModelInfo;
+
 
 
   const bodyRef = useRef(null);
@@ -77,10 +81,11 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
   const [visible, setVisible] = useState<any>(false)
   const [modalTitle, setModalTitle] = useState<any>('');
   const [rightColumnContent, setRightColumnContent] = useState<any>();
-  const [nowSelectedOrga, setNowSelectedOrga]=useState<any>("555");
+  const [nowSelectedOrga, setNowSelectedOrga] = useState<any>("555");
+  const [defaultSelectedIndex, setDefaultSelectedIndex] = useState<any>(null); // 默认选中的异常标识，可以用在右侧信息栏
 
   const enlargeItem = (value: any) => {
-      bodyRef.current.testEnlarge(value);
+    bodyRef.current.testEnlarge(value);
 
 
   }
@@ -153,21 +158,18 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     RestoreStyle();
 
     //  在这里请求全身性器官的具体病症
-    if (dispatch){
+    if (dispatch) {
 
 
-      const orgaParams={
-        orgaName:orgaAll.name
+      const orgaParams = {
+        orgaName: orgaAll.name
       }
-      const indexParams={
-        indexName:orgaAll.name
-      }
+
       dispatch({
-        type:"bodyModel/getSelectedOrgaDetail",
-        payload:{
+        type: "bodyModel/getSelectedOrgaDetail",
+        payload: {
           orgaAll,
           orgaParams,
-          indexParams
         }
       });
 
@@ -192,14 +194,14 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     setVisible(true);
   }
   const CloseOrgaModal = () => {
-    if (dispatch){
-      dispatch({
-        type:"bodyModel/initSelectedOrga",
-        payload:{
-          newSelectedOrga:null
-        }
-      })
-    }
+    // if (dispatch) {
+    //   dispatch({
+    //     type: "bodyModel/initSelectedOrga",
+    //     payload: {
+    //       newSelectedOrga: null
+    //     }
+    //   })
+    // }
     setVisible(false);
   }
 
@@ -253,7 +255,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
           orgaCardList[`${key}`].push(
             <div key={item.name} className={styles.signleOption_unchecked}
                  onClick={(e) => {
-                   key != "全身性器官" ? ClickSignleOrga(e, item.name, orgaRelated.meshName, orgaRelated.iconName, item) : OpenWholeOrga(e, orgaRelated.iconName, item.name, item )
+                   key != "全身性器官" ? ClickSignleOrga(e, item.name, orgaRelated.meshName, orgaRelated.iconName, item) : OpenWholeOrga(e, orgaRelated.iconName, item.name, item)
                  }}>
               <Row gutter={24} className={styles.optionContent}>
                 <Col className={styles.optionIcon}>
@@ -307,7 +309,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
   /**
    * 点击器官卡片进行的操作：改变卡片的样式，打开指定模型（改变模型位置，请求器官的数据）
    * */
-  const ClickSignleOrga = (e: any, orgaName: any, meshName: any, iconName: any, orgaAll:any) => {
+  const ClickSignleOrga = (e: any, orgaName: any, meshName: any, iconName: any, orgaAll: any) => {
     // RestoreStyle();
     e.currentTarget.style.boxShadow = '0px 0px 10px #d2a845 inset';
     /**
@@ -325,34 +327,29 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
      * 在这里判断是否已经打开，如果是，就关闭
      * */
 
-      if (dispatch){
+    if (dispatch) {
 
 
-        const orgaParams={
-          orgaName:orgaAll.name
-        }
-        const indexParams={
-          indexName:orgaAll.name
-        }
-        dispatch({
-          type:"bodyModel/getSelectedOrgaDetail",
-          payload:{
-              orgaAll,
-              orgaParams,
-              indexParams
-          }
-        });
-
+      const orgaParams = {
+        orgaName: orgaAll.name
       }
-      enlargeItem(meshName);
+      const indexParams = {
+        indexName: orgaAll.name
+      }
+      dispatch({
+        type: "bodyModel/getSelectedOrgaDetail",
+        payload: {
+          orgaAll,
+          orgaParams,
+          indexParams
+        }
+      });
 
-
-
+    }
+    enlargeItem(meshName);
 
 
   }
-
-
 
 
   const GetAllBodyHealth = () => {
@@ -392,9 +389,9 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
   }, [personalHealthScore, personalScoreHistory, commonScoreHistory, keyHealthIndex, abnormalOrgaTop4,])
 
   useEffect(() => {
-    if (selectedOrga){
+    if (selectedOrga) {
       GeneratRightOrga();
-    }else{
+    } else {
       if (personalHealthScore && personalScoreHistory && commonScoreHistory && keyHealthIndex && abnormalOrgaTop4) {
         GenerateRightPerson();
         // GeneratRightOrga()
@@ -408,7 +405,6 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     const cardlist: any = [];
     const result: any = [];
 
-    console.log(topList);
 
     topList.map(top => {
       const orgaRelated = MatchOrga(top.name);
@@ -690,21 +686,96 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
    * 切换异常标识
    * */
   const changeIndex = (e: any) => {
-    console.log(e);
+    /**
+     * 在这里会进行的操作是，获得异常标识地表哥内容，和后期地打开相应动画，
+     * */
+
+    if (dispatch) {
+      dispatch({
+        type: "bodyModel/getSelectedIndexProject",
+        payload: {
+            indexParams:{
+              indexName:e.target.value
+            }
+
+        }
+      })
+    }
+
   }
 
-  const options = [
-    {label: 'Apple', value: 'Apple'},
-    {label: 'Pear', value: 'Pear'},
-    {label: 'Orange', value: 'Orange'},
-  ];
+
+  const GenerateRadioButton = (illIndexList: any) => {
+    const buttonList: any = [];
+    let IllListTemp: any = [];
+    const result: any = [];
+    console.log(illIndexList);
+    if (Array.isArray(illIndexList)) {
+      IllListTemp = illIndexList;
+    } else {
+      IllListTemp = illIndexList.illType || []
+    }
+    if (IllListTemp.length > 0) {
+      IllListTemp.map((item: any, index: any) => {
+        console.log(index);
+        buttonList.push(
+          <Radio.Button key={item.illName || item.name} className={styles.radioButton}
+                        value={item.illName || item.name}>{item.illName || item.name}</Radio.Button>
+        )
+      })
+
+
+      if (dispatch) {
+        dispatch({
+          type: "bodyModel/getSelectedIndexProject",
+          payload: {
+              indexParams:{
+                indexName:IllListTemp[0].illName || IllListTemp[0].name
+              }
+
+          }
+        })
+      }
+
+      result.push(
+        <Radio.Group
+          defaultValue={IllListTemp[0].illName || IllListTemp[0].name}
+          className={styles.radioGroup}
+          onChange={changeIndex}
+          optionType="button"
+        >
+          <Space size={"middle"}>
+            {buttonList}
+
+          </Space>
+
+        </Radio.Group>
+      )
+    }
+
+
+
+    return result;
+
+
+  }
 
   const GeneratRightOrga = () => {
+    const illListTemp = choosenPart === "全身性器官" ? wholeOrgaIll : illList;
+    // console.log("当前一场表示", Array.isArray(illListTemp));
+    // const
+    // if (Array.isArray(illListTemp)){
+    //
+    // }
+    /**
+     * 如果是数组，那就是全身性器官，数组中的元素是疾病
+     * 如果是对象，那内容就是illtype
+     * */
 
     setRightColumnContent(
-      <div  className={styles.rightColumn}>
+      <div className={styles.rightColumn}>
         <div className={styles.rightOrgaTop}>
-          <div className={styles.orgaTopTitle}>{selectedOrga.name||''}健康信息</div>
+          <div className={styles.orgaTopTitle}>{selectedOrga.name || ''}健康信息</div>
           <div className={styles.topOrgaCharts}>
             <div className={styles.orgaHealthScore}>
               <div className={styles.orgaScoreNumber}>{(selectedOrga.score || 0).toFixed(1)}</div>
@@ -728,24 +799,18 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
             </Row>
             <Divider className={styles.indexDivider}/>
             <Row className={styles.indexTag}>
-              <Radio.Group
-                className={styles.radioGroup}
-                onChange={changeIndex}
-                optionType="button"
-              >
-                <Space size={"middle"}>
-                  <Radio.Button className={styles.radioButton} value={1}>异常标识1</Radio.Button>
-                  <Radio.Button className={styles.radioButton} value={2}>异常标识1</Radio.Button>
-                  <Radio.Button className={styles.radioButton} value={3}>异常标识1</Radio.Button>
-                  <Radio.Button className={styles.radioButton} value={4}>异常标识1</Radio.Button>
-                  <Radio.Button className={styles.radioButton} value={10}>异常标识1</Radio.Button>
-                  <Radio.Button className={styles.radioButton} value={30}>异常标识1</Radio.Button>
-                  <Radio.Button className={styles.radioButton} value={40}>异常标识1</Radio.Button>
-                  <Radio.Button className={styles.radioButton} value={10}>异常标识1</Radio.Button>
+              {/*<Radio.Group*/}
+              {/*  defaultValue={1}*/}
+              {/*  className={styles.radioGroup}*/}
+              {/*  onChange={changeIndex}*/}
+              {/*  optionType="button"*/}
+              {/*>*/}
+              {/*  <Space size={"middle"}>*/}
+              {GenerateRadioButton(illListTemp)}
 
-                </Space>
+              {/*  </Space>*/}
 
-              </Radio.Group>
+              {/*</Radio.Group>*/}
 
             </Row>
           </div>
@@ -764,13 +829,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
         <div className={styles.rightOrgaBottom}>
           <div className={styles.orgaBottomTitle}>部位异常标识</div>
           <div className={styles.indexTable}>
-            <Table
-              dataSource={currentIindexDetail}
-              columns={columns}
-              pagination={false}
-              bordered
-              scroll={{y: 120}}
-              className={styles.abnormalTable}/>
+            <MyTable/>
           </div>
         </div>
       </div>
@@ -820,6 +879,14 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
                       onChange={(value: any) => {
                         closeInfoWindow();
                         setChoosenPart(value);
+                        if (dispatch) {
+                          dispatch({
+                            type: "bodyModel/initSelectedOrga",
+                            payload: {
+                              newSelectedOrga: null
+                            }
+                          })
+                        }
                       }}
                       dropdownClassName={styles.dropdownClassName}
               >

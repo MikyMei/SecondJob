@@ -339,18 +339,21 @@ export async function GetSpecificIndexDetail(params: any) {
   return {
     code: 200,
     data: [
-      {projectName: "电子胃镜全套1", resultKeyWords: {content: "“贲门”增生性息肉", direction: ""}, normalRank: "--", careDegree: 4},
-      {
-        projectName: "胃蛋白酶原Ⅰ",
-        resultKeyWords: {content: 249, direction: "up"},
-        normalRank: "70～200ng/ml",
-        careDegree: 4
+      {projectName: `${params.indexName}项目一`,
+        resultKeyWords: {content: "“贲门”增生性息肉", direction: ""},
+        normalRank: "--", careDegree: 2.5
       },
       {
-        projectName: "胃蛋白酶原Ⅱ",
+        projectName: `${params.indexName}项目二`,
+        resultKeyWords: {content: 249, direction: "up"},
+        normalRank: "70～200ng/ml",
+        careDegree: 3
+      },
+      {
+        projectName: `${params.indexName}项目三`,
         resultKeyWords: {content: 33.1, direction: "down"},
         normalRank: "1～28.2ng/ml",
-        careDegree: 2
+        careDegree: 4.5
       },
     ]
   }

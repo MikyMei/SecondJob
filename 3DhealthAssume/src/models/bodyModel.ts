@@ -68,6 +68,7 @@ export type ModelType = {
 
     getWholeOrgaIllDetail: Effect;
     getSelectedOrgaDetail: Effect;
+    getSelectedIndexProject:Effect; // 获得当前的选中的指标的项目细节
 
   };
   reducers: {
@@ -81,7 +82,8 @@ export type ModelType = {
     initWholeOrgaIll: Reducer<StateType>;
 
     initSelectedOrga: Reducer<StateType>;
-    initSelectedOrgaDetail: Reducer<StateType>
+    initSelectedOrgaDetail: Reducer<StateType>;
+    initSelectedIndexDetail: Reducer<StateType>;
   };
 };
 
@@ -210,14 +212,12 @@ const Model: ModelType = {
       const healthAdviceResponse = yield call(GetOrgaHealthAdvice, payload.orgaParams);
     // 在初始化的时候，请求第一个异常标识地异常项目
 
-      const indexDetailResponse=yield call(GetSpecificIndexDetail, payload.indexParams)
       yield put({
         type:"initSelectedOrgaDetail",
         payload:{
           newOrgaHistory:scoreHistoryResponse.data||[],
           newCommonHistory:commonHistoryResponse.data||[],
           newHealthAdvice:healthAdviceResponse.data||[],
-          newIndexDetail:indexDetailResponse.data||[],
         }
       });
       yield put({
@@ -225,6 +225,22 @@ const Model: ModelType = {
         payload:{newSelectedOrga:payload.orgaAll}
       })
     },
+
+    * getSelectedIndexProject({payload},{call, put}){
+      /**
+       * 获得当前选中指标地
+       * */
+      console.log(payload.indexParams);
+
+      const indexDetailResponse=yield call(GetSpecificIndexDetail, payload.indexParams);
+      yield put({
+        type:"initSelectedIndexDetail",
+        payload:{
+          newIndexDetail:indexDetailResponse.data||[],
+        }
+      })
+
+    }
 
 
   },
@@ -315,7 +331,14 @@ const Model: ModelType = {
         currentOrgaScoreHistory: payload.newOrgaHistory, // 当前器官的历史的分
         currentOrgaCommonHistory: payload.newCommonHistory, // 当前器官的同质人群历史的分
         currentOrgaHealthAdvice: payload.newHealthAdvice, // 当前器官的医生建议，数组，
+        // currentIindexDetail: payload.newIndexDetail, // 当前一场表示地异常指标,buzai
+      }
+    },
+    initSelectedIndexDetail(state, {payload}){
+      return {
+        ...state,
         currentIindexDetail: payload.newIndexDetail, // 当前一场表示地异常指标
+
       }
     }
 

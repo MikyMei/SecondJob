@@ -709,7 +709,6 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     const buttonList: any = [];
     let IllListTemp: any = [];
     const result: any = [];
-    console.log(illIndexList);
     if (Array.isArray(illIndexList)) {
       IllListTemp = illIndexList;
     } else {
@@ -717,7 +716,6 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     }
     if (IllListTemp.length > 0) {
       IllListTemp.map((item: any, index: any) => {
-        console.log(index);
         buttonList.push(
           <Radio.Button key={item.illName || item.name} className={styles.radioButton}
                         value={item.illName || item.name}>{item.illName || item.name}</Radio.Button>

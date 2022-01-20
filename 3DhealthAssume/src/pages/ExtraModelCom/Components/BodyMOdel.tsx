@@ -112,6 +112,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     "Retopo_肺",
     "Retopo_肾脏",
     "Retopo_心脏",
+    "Heart__Ani",
     "Retopo_皮肤"];  //
   const orgaTypeList = [["Retopo_皮肤"],
     ["Retopo_跟骨",
@@ -149,6 +150,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       "Retopo_支气管",
       "Retopo_肺",
       "Retopo_肾脏",
+      "Heart__Ani",
       "Retopo_心脏"],
     []
   ];  // 根据器官将他们分为不同的部分，首先要知道他有几类
@@ -293,7 +295,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
     let model;
-    loader.load('./img/allKindsOfModel/MaleModel/standardFigure.gltf', function (gltf: any) {
+    loader.load('./img/allKindsOfModel/MaleModel/standardFigure2.gltf', function (gltf: any) {
         model = gltf.scene;
         model.scale.setScalar(5.5, 5.5, 5.5);
         model.position.setY(-4.5);
@@ -307,7 +309,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         scene.add(model);
         model.traverse((child: any) => {
 
-            /**
+          console.log(child.animations);
+          /**
              * 在这里将不同模型根据他的名字，将
              * */
             if (child.geometry) {
@@ -1067,6 +1070,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           centroid.addVectors(object.geometry.boundingBox.min, object.geometry.boundingBox.max);
           centroid.multiplyScalar(0.5);
           centroid.applyMatrix4(object.matrixWorld);
+          console.log("模型radius",radius);
 
 
           new TWEEN.Tween(threeCamera.position)

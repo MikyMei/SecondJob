@@ -230,7 +230,6 @@ const Model: ModelType = {
       /**
        * 获得当前选中指标地
        * */
-      console.log(payload.indexParams);
 
       const indexDetailResponse=yield call(GetSpecificIndexDetail, payload.indexParams);
       yield put({

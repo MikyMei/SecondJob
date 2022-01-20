@@ -88,6 +88,7 @@ export function MatchOrga(orgaName: any) {
     "肺": {orgaName: "肺", meshName: "Retopo_肺", iconName: "icon_肺"},
     "肾脏": {orgaName: "肾脏", meshName: "Retopo_肾脏", iconName: "icon_肾"},
     "心脏": {orgaName: "心脏", meshName: "Retopo_心脏", iconName: "icon_心脏"},
+    "心脏(动画)": {orgaName: "心脏", meshName: "Heart__Ani", iconName: "icon_心脏"},
     "皮肤": {orgaName: "皮肤", meshName: "Retopo_皮肤", iconName: "icon_胃"},
 
     "甲状腺": {orgaName: "甲状腺", meshName: "", iconName: "icon_肾"},

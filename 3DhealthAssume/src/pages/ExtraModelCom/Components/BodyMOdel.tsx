@@ -310,8 +310,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
         scene.add(model);
         model.traverse((child: any) => {
-
-          console.log(child);
+          // console.log(child);
           /**
              * 在这里将不同模型根据他的名字，将
              * */
@@ -319,14 +318,10 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
               child.geometry.computeBoundingBox();
               child.geometry.computeBoundingSphere()
             }
-
-
           processGLTFChild(child)
           }
         );
 
-        // const animations = gltf.animations;
-        // const mixer = new THREE.AnimationMixer(model);
       },
       undefined
 
@@ -340,7 +335,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
 
-
     setThreeScene(scene);
     setThreeCamera(camera);
     setThreeLabelRenderer(labelRenderer);
@@ -348,8 +342,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     setThreeControls(controls);
     setThreeObjects(objects);
     setThreeMainCanvas(mainCanvas);
-
-
   }
 
   /**
@@ -474,10 +466,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     threeRenderer.render(threeScence, threeCamera);
     threeLabelRenderer.render(threeScence, threeCamera);
 
-    // if (threeChoosenMesh) {
-    //   OpenInfoWindow();
-    //
-    // }
 
     requestAnimationFrame(render);
 

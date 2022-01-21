@@ -295,7 +295,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
     let model;
-    loader.load('./img/allKindsOfModel/MaleModel/standardFigure2.gltf', function (gltf: any) {
+    loader.load('./img/allKindsOfModel/MaleModel/standardFigure3.gltf', function (gltf: any) {
         model = gltf.scene;
         model.scale.setScalar(5.5, 5.5, 5.5);
         model.position.setY(-4.5);
@@ -305,11 +305,13 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
          * transformControl可以方便调节物体位置大小。
          * */
 
+        console.log(gltf);
+
 
         scene.add(model);
         model.traverse((child: any) => {
 
-          console.log(child.animations);
+          console.log(child);
           /**
              * 在这里将不同模型根据他的名字，将
              * */
@@ -318,12 +320,13 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
               child.geometry.computeBoundingSphere()
             }
 
-            processGLTFChild(child)
+
+          processGLTFChild(child)
           }
         );
 
         // const animations = gltf.animations;
-        const mixer = new THREE.AnimationMixer(model);
+        // const mixer = new THREE.AnimationMixer(model);
       },
       undefined
 
@@ -1228,6 +1231,14 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         }
       })
     }
+  }
+
+  /**
+   * 一键切换按钮，对比不同模型
+   * */
+
+  const CompareStandardModel=()=>{
+
   }
 
 

@@ -5,6 +5,8 @@ import { join } from 'path';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
+import px2rem from 'postcss-plugin-px2rem';
+
 
 const { REACT_APP_ENV } = process.env;
 
@@ -80,6 +82,12 @@ export default defineConfig({
   nodeModulesTransform: { type: 'none' },
   webpack5: {},
   exportStatic: {},
-  fastRefresh: {},
+  // fastRefresh: {},
   runtimePublicPath:true,
+  extraPostCSSPlugins: [
+    px2rem({
+      rootValue: 16, // 开启hd后需要换算：rootValue=designWidth*100/750,此处设计稿为1920，所以1920*100/750=256
+      selectorBlackList: ['ant-pro-basicLayout'], //以包含t_npx的class不需要转换
+    }),
+  ],
 });

@@ -23,11 +23,14 @@ const MyTable: React.FC = (props: any) => {
       title: "项目名",
       dataIndex: "projectName",
       key: "projectName",
+      ellipsis:true,
     },
     {
       title: "结果或关键词",
       dataIndex: "resultKeyWords",
       key: "resultKeyWords",
+      ellipsis:true,
+
       render: (text: any, record: any, index: any) => {
         // (record.resultKeyWords.direction&&record.resultKeyWords.direction==="up")?return
 
@@ -46,6 +49,8 @@ const MyTable: React.FC = (props: any) => {
       title: "正常值范围",
       dataIndex: "normalRank",
       key: "normalRank",
+      ellipsis:true,
+
     },
     {
       title: "关心程度",
@@ -68,7 +73,7 @@ const MyTable: React.FC = (props: any) => {
       columns={columns}
       pagination={false}
       bordered
-      scroll={{y: 120}}
+      scroll={{y: '75%'}}
       className={styles.abnormalTable}/>
   )
 }

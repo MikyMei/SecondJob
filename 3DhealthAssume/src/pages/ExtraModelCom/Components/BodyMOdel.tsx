@@ -29,7 +29,7 @@ import {AntDesignOutlined, CloseCircleOutlined, UserOutlined} from "@ant-design/
 const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescription: any, illTypeList: any, dispatch: Dispatch, bodyModelInfo: any }) => {
 
 
-  const { TabPane } = Tabs;
+  const {TabPane} = Tabs;
   const {onRef, currentOrga, orgaDescription, illTypeList, dispatch, bodyModelInfo} = props;
 
 
@@ -114,7 +114,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     "Retopo_心脏",
     "Heart__Ani",
     "Retopo_皮肤"];  //
-  const orgaTypeList = [["Retopo_皮肤"],
+  const orgaTypeList = [["Retopo_皮肤", "皮肤"],
     ["Retopo_跟骨",
       "Retopo_腕骨",
       "Retopo_颈椎",
@@ -198,8 +198,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const [displayType, setDisplayType] = useState<any>("none");
   const [currentInfoWindow, setCurrentInfoWindow] = useState<any>(); // 在选定器官的时候打开指定的信息窗口，
   const [controlMaterial, setControlMaterial] = useState<any>(null); // 保存起初就是不展示的器官，在点击之后再显示
-
-
+  const [mixerAnimation, setMixerAnimation] = useState<any>(null); // 控制动画的
+  const [animationList, setAnimationList] = useState<any>(); // 存放动画的数据组
 
 
   const initModel = () => {
@@ -225,10 +225,10 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
     // 获得渲染器所在的标签元素，作为渲染器的尺寸
-    renderer = new THREE.WebGLRenderer({antialias: true, alpha:true});
+    renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
     renderer.setClearAlpha(0);
     // renderer.setClearColor(new THREE.Color("#eeeeee"));
-    renderer.setSize(mainCanvas.offsetWidth*0.8, mainCanvas.offsetHeight);
+    renderer.setSize(mainCanvas.offsetWidth * 0.8, mainCanvas.offsetHeight);
     renderer.shadowMap.enabled = true;
 
 
@@ -254,7 +254,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     // 2d渲染器
     labelRenderer = new CSS2DRenderer();  // 新增的渲染器
-    labelRenderer.setSize(mainCanvas.offsetWidth*0.8, mainCanvas.offsetHeight);
+    labelRenderer.setSize(mainCanvas.offsetWidth * 0.8, mainCanvas.offsetHeight);
     // this.labelRenderer.domElement.style.position = 'absolute';
     // this.labelRenderer.domElement.style.top = 0;
     labelRenderer.domElement.style = "pointer-events: auto;position: absolute;top: 0px;"  // 处理新的渲染器
@@ -282,10 +282,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     scene.add(point);
 
 
-
-
-
-    camera = new THREE.PerspectiveCamera(45, mainCanvas.offsetWidth*0.8 / mainCanvas.offsetHeight, 0.1, 2000);
+    camera = new THREE.PerspectiveCamera(45, mainCanvas.offsetWidth * 0.8 / mainCanvas.offsetHeight, 0.1, 2000);
 
     // 定位相机，并且指向场景中心
     camera.position.x = 0;
@@ -295,7 +292,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
     let model;
-    loader.load('./img/allKindsOfModel/MaleModel/standardFigure3.gltf', function (gltf: any) {
+    loader.load('./img/allKindsOfModel/MaleModel/standardFigure5.gltf', function (gltf: any) {
         model = gltf.scene;
         model.scale.setScalar(5.5, 5.5, 5.5);
         model.position.setY(-4.5);
@@ -305,20 +302,62 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
          * transformControl可以方便调节物体位置大小。
          * */
 
-        console.log(gltf);
+        /**
+         * 在这里将模型地动画全部格式化，并生成mixer
+         * */
+        const mixer = new THREE.AnimationMixer(model);
+        const action = mixer.clipAction(gltf.animations[0]);
+        action.play();
+        console.log(action);
+
+        setMixerAnimation(mixer);
+        let tempAnimationList: any=new Object();
+        if (gltf.animations && gltf.animations.length > 0) {
+          gltf.animations.map((item: any, index: any) => {
+            if (item.tracks[0] && item.tracks[0].name) {
+              /**
+               * 这里只是根据动画的名字，而将该动画划分到合适的器官下，获得地名字可以改变
+               * 如果模型变了，那么动画的state变量也要彻底改变
+               * */
+              const orgaName = item.tracks[0].name.split(".")[0];
+              const animationName = item.tracks[0].name.split(".")[1];
+
+              tempAnimationList[`${orgaName}`]=[];
+              tempAnimationList[`${orgaName}`].push(
+                {
+                  indexName: animationName,
+                  animationContent: mixer.clipAction(gltf.animations[index])
+                }
+              )
+
+
+            }
+
+          })
+        }
+        console.log("所有动画", tempAnimationList);
+
+        setAnimationList(tempAnimationList);
+
 
 
         scene.add(model);
         model.traverse((child: any) => {
-          // console.log(child);
-          /**
+            // console.log(child);
+            /**
              * 在这里将不同模型根据他的名字，将
              * */
+
+
+            if (child.name === "Retopo_心脏_") {
+              child.name = "Retopo_心脏"
+            }
+
             if (child.geometry) {
               child.geometry.computeBoundingBox();
               child.geometry.computeBoundingSphere()
             }
-          processGLTFChild(child)
+            processGLTFChild(child)
           }
         );
 
@@ -357,7 +396,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   useEffect(() => {
     if (threeChoosenMesh) {
       render();
-
     }
   }, [threeChoosenMesh])
 
@@ -401,10 +439,10 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const onWindowResize = () => {
 
     if (threeMainCanvas) {
-      threeCamera.aspect = threeMainCanvas.offsetWidth*0.8 / threeMainCanvas.offsetHeight;
+      threeCamera.aspect = threeMainCanvas.offsetWidth * 0.8 / threeMainCanvas.offsetHeight;
       threeCamera.updateProjectionMatrix();
 
-      threeRenderer.setSize(threeMainCanvas.offsetWidth*0.8, threeMainCanvas.offsetHeight);
+      threeRenderer.setSize(threeMainCanvas.offsetWidth * 0.8, threeMainCanvas.offsetHeight);
       // threeLabelRenderer.setSize(window.innerWidth, threeMainCanvas.offsetHeight);
 
 
@@ -417,10 +455,18 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const render = () => {
 
 
+
     /**
      * 实现身体扫光
      * */
     const dt = clock.getDelta();
+    /**
+     * 模型的动画
+     * */
+
+    if (mixerAnimation){
+      mixerAnimation.update(dt);
+    }
 
 
     if (dt > 1) return false;
@@ -1014,7 +1060,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     var standardVector1 = newWorldVector.project(threeCamera);
     // var standardVector1 = new THREE.Vector3(0,0,1);
-    var a1 = threeMainCanvas.offsetWidth*0.8 / 2;
+    var a1 = threeMainCanvas.offsetWidth * 0.8 / 2;
     var b1 = threeMainCanvas.offsetHeight / 2;
 
 
@@ -1022,7 +1068,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     var y1 = Math.round(-standardVector1.y * b1 + b1);
 
     testAnt.style.top = y1 + 'px';
-    testAnt.style.right = (threeMainCanvas.offsetWidth*0.8 - x1) + 'px';
+    testAnt.style.right = (threeMainCanvas.offsetWidth * 0.8 - x1) + 'px';
 
 
   }
@@ -1061,7 +1107,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           centroid.addVectors(object.geometry.boundingBox.min, object.geometry.boundingBox.max);
           centroid.multiplyScalar(0.5);
           centroid.applyMatrix4(object.matrixWorld);
-          console.log("模型radius",radius);
+          console.log("模型radius", radius);
 
 
           new TWEEN.Tween(threeCamera.position)
@@ -1123,7 +1169,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         type: "bodyModel/getOrgaDetail",
         payload: {
           orgaParams: {orgaName: name}
-    }
+        }
       })
     }
 
@@ -1170,7 +1216,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       setContentList(contentTemp)
     }
 
-    if (illList.orgaPicture){
+    if (illList.orgaPicture) {
       await illList.orgaPicture.map((item: any, index: any) => {
         imgTemp.push(
           <Image
@@ -1211,11 +1257,11 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       .start();
     choosenMesh = null;
     setThreeChoosenMesh(choosenMesh);
-    if (dispatch){
+    if (dispatch) {
       dispatch({
-        type:"bodyModel/initSelectedOrga",
-        payload:{
-          newSelectedOrga:null
+        type: "bodyModel/initSelectedOrga",
+        payload: {
+          newSelectedOrga: null
         }
       })
     }
@@ -1225,7 +1271,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * 一键切换按钮，对比不同模型
    * */
 
-  const CompareStandardModel=()=>{
+  const CompareStandardModel = () => {
 
   }
 
@@ -1236,19 +1282,20 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
         <div id={"testAnt"} style={{display: displayType}} className={styles.infoCard}>
 
-          <Tabs defaultActiveKey="1" tabBarExtraContent={<CloseCircleOutlined onClick={closeInfoWindow} className={styles.closeIcon} />}>
+          <Tabs defaultActiveKey="1"
+                tabBarExtraContent={<CloseCircleOutlined onClick={closeInfoWindow} className={styles.closeIcon}/>}>
             <TabPane tab={infoTitle} key="1">
               <Row id={"orgaDesc"} className={styles.organDesc}>
                 {infoDesc}
-              </Row>            </TabPane>
+              </Row> </TabPane>
             <TabPane tab={"医学影像"} key="2">
               <Carousel effect={"fade"}>
                 {orgaPicture}
-              </Carousel>            </TabPane>
+              </Carousel> </TabPane>
             <TabPane tab={"异常标识"} key="3">
-                <Carousel effect={"fade"}>
-                  {contentList}
-                </Carousel>
+              <Carousel effect={"fade"}>
+                {contentList}
+              </Carousel>
             </TabPane>
           </Tabs>
 

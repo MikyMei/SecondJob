@@ -67,7 +67,6 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
   } = bodyModelInfo;
 
 
-
   const bodyRef = useRef(null);
   const [currentOrga, setCurrentOrga] = useState<any>('');
   const [orgaDescription, setOrgaDescription] = useState<any>('');
@@ -690,17 +689,30 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
      * 在这里会进行的操作是，获得异常标识地表哥内容，和后期地打开相应动画，
      * */
 
+
     if (dispatch) {
       dispatch({
         type: "bodyModel/getSelectedIndexProject",
         payload: {
-            indexParams:{
-              indexName:e.target.value
-            }
+          indexParams: {
+            indexName: e.target.value
+          }
 
         }
       })
     }
+
+    StartAnimation(e.target.value);
+
+  }
+
+
+  const StartAnimation = (keyName: any) => {
+    bodyRef.current.setInfoTabs();
+
+
+    bodyRef.current.testPlay(keyName);
+
 
   }
 
@@ -717,8 +729,11 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     if (IllListTemp.length > 0) {
       IllListTemp.map((item: any, index: any) => {
         buttonList.push(
-          <Radio.Button key={item.illName || item.name} className={styles.radioButton}
-                        value={item.illName || item.name}>{item.illName || item.name}</Radio.Button>
+          <Radio.Button
+            onClick={()=>{ bodyRef.current.sliderDivIndex(index); }}
+            key={item.illName || item.name}
+            className={styles.radioButton}
+            value={item.illName || item.name}>{item.illName || item.name}</Radio.Button>
         )
       })
 
@@ -727,12 +742,16 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
         dispatch({
           type: "bodyModel/getSelectedIndexProject",
           payload: {
-              indexParams:{
-                indexName:IllListTemp[0].illName || IllListTemp[0].name
-              }
-
+            indexParams: {
+              indexName: IllListTemp[0].illName || IllListTemp[0].name
+            }
           }
         })
+        if(IllListTemp[0].illName ){
+          bodyRef.current.setIndex(IllListTemp[0].illName );
+        }
+
+
       }
 
       result.push(
@@ -750,7 +769,6 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
         </Radio.Group>
       )
     }
-
 
 
     return result;

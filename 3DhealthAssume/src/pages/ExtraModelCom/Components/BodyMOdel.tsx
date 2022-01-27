@@ -7,7 +7,7 @@
  */
 
 
-import React, {useEffect, useState, useImperativeHandle} from 'react';
+import React, {useEffect, useState, useImperativeHandle, useRef} from 'react';
 import {connect, history, Dispatch} from "umi";
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 
@@ -24,6 +24,7 @@ import {Avatar, Badge, Button, Slider, Tooltip, Row, Col, Divider, Tag, Carousel
 import Utils from "@/pages/ExtraModelCom/utils";
 import * as TWEEN from '@tweenjs/tween.js';
 import {AntDesignOutlined, CloseCircleOutlined, UserOutlined} from "@ant-design/icons";
+import { CarouselRef } from 'antd/lib/carousel';
 
 
 const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescription: any, illTypeList: any, dispatch: Dispatch, bodyModelInfo: any }) => {
@@ -201,6 +202,13 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const [mixerAnimation, setMixerAnimation] = useState<any>(null); // 控制动画的
   const [animationList, setAnimationList] = useState<any>(); // 存放动画的数据组
 
+  const [infoSelectedTab, setInfoSelectedTab] = useState<any>("0"); // 信息窗口选中的选项，主要是为了区分是否是异常标识
+  const [playedAnimationed, setPlayedAnimationed] = useState<any>(null); //已经再被播放的动画、
+  const [selectedAbnormal, setSelectedAbnormal] = useState<any>(null);  // 当前选中的异常标识
+
+  let sliderDivIndex: CarouselRef | null=null;
+
+  const carRef=useRef(null);
 
   const initModel = () => {
 
@@ -307,11 +315,10 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
          * */
         const mixer = new THREE.AnimationMixer(model);
         const action = mixer.clipAction(gltf.animations[0]);
-        action.play();
-        console.log(action);
+        // action.play();
 
         setMixerAnimation(mixer);
-        let tempAnimationList: any=new Object();
+        let tempAnimationList: any = new Object();
         if (gltf.animations && gltf.animations.length > 0) {
           gltf.animations.map((item: any, index: any) => {
             if (item.tracks[0] && item.tracks[0].name) {
@@ -319,31 +326,27 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
                * 这里只是根据动画的名字，而将该动画划分到合适的器官下，获得地名字可以改变
                * 如果模型变了，那么动画的state变量也要彻底改变
                * */
-              const orgaName = item.tracks[0].name.split(".")[0];
+              let orgaName = item.tracks[0].name.split(".")[0];
               const animationName = item.tracks[0].name.split(".")[1];
-
-              tempAnimationList[`${orgaName}`]=[];
+              if (orgaName === "Retopo_心脏_") {
+                orgaName = "Retopo_心脏"
+              }
+              tempAnimationList[`${orgaName}`] = [];
               tempAnimationList[`${orgaName}`].push(
                 {
                   indexName: animationName,
                   animationContent: mixer.clipAction(gltf.animations[index])
                 }
               )
-
-
             }
-
           })
         }
-        console.log("所有动画", tempAnimationList);
 
         setAnimationList(tempAnimationList);
 
 
-
         scene.add(model);
         model.traverse((child: any) => {
-            // console.log(child);
             /**
              * 在这里将不同模型根据他的名字，将
              * */
@@ -455,7 +458,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const render = () => {
 
 
-
     /**
      * 实现身体扫光
      * */
@@ -464,7 +466,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * 模型的动画
      * */
 
-    if (mixerAnimation){
+    if (mixerAnimation) {
       mixerAnimation.update(dt);
     }
 
@@ -655,6 +657,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       blending: THREE.NormalBlending,
       transparent: true,
       depthWrite: false,
+      // morphTargets: true,
+
     });
     const material2 = new THREE.ShaderMaterial({
       uniforms: AeroSphere1.uniforms,
@@ -664,6 +668,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       transparent: true,
       depthWrite: false,
       visible: true,
+      // morphTargets: true,
+
     });
     const material3 = new THREE.ShaderMaterial({
       uniforms: AeroSphere3.uniforms,
@@ -673,6 +679,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       transparent: true,
       depthWrite: false,
       visible: false,
+      // morphTargets: true,
+
     });
     return {material1, material2, material3}
   }
@@ -902,6 +910,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   }
 
 
+
+
   const processGLTFChild = (child: any) => {
 
     try {
@@ -924,7 +934,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             child.castShadow = true;
             break;
           case 2:
-            child.material = Shaders(orgaMatchColor[`${child.name}`]).material3;
+            child.material = new THREE.MeshStandardMaterial({color:orgaMatchColor[`${child.name}`], transparent:true, opacity:0.5, visible:false});
+            // child.material = Shaders(orgaMatchColor[`${child.name}`]).material3;
             child.castShadow = true
 
             break;
@@ -1107,7 +1118,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           centroid.addVectors(object.geometry.boundingBox.min, object.geometry.boundingBox.max);
           centroid.multiplyScalar(0.5);
           centroid.applyMatrix4(object.matrixWorld);
-          console.log("模型radius", radius);
 
 
           new TWEEN.Tween(threeCamera.position)
@@ -1154,7 +1164,21 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     testClose: () => {
       closeInfoWindow()
+    },
+
+    testPlay:(indexName: any)=>{
+      PlayAnimation(indexName);
+    },
+    setIndex:(index:any)=>{
+      setSelectedAbnormal(index);
+    },
+    setInfoTabs:()=>{
+      setInfoSelectedTab("2")
+    },
+    sliderDivIndex:(divIndex:any)=>{
+      SliderTo(divIndex)
     }
+
 
   }));
 
@@ -1194,16 +1218,46 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     structIllList();
   }, [illList]);
 
+
+  /**
+   * 在信息窗口，和右侧器官的异常标识，点击调用
+   * */
+  const PlayAnimation = (indexName: any) => {
+
+
+    /**
+     * 在这里进行操作动画，目前左侧栏已经可以，但是右侧栏目还不行
+     * */
+    //
+
+    /**
+     * 在这里根据异常标识的名字，选择数组里面的合适组，动画启动
+     * */
+
+
+    if (playedAnimationed){
+      playedAnimationed.stop();
+    }
+
+    if (animationList[`${threeChoosenMesh.name}`]){
+
+      animationList[`${threeChoosenMesh.name}`][0].animationContent.play();
+      setPlayedAnimationed(animationList[`${threeChoosenMesh.name}`][0].animationContent);
+    }
+  }
+
   const structIllList = async () => {
     setInfoTitle(illList.name);
     setInfoDesc(illList.desc);
     const contentTemp: any = [];
     const imgTemp: any = [];
+
+
     if (illList.illType) {
 
       await illList.illType.map((item: any, index: any) => {
         contentTemp.push(
-          <div key={index}>
+          <div key={item.illName}>
             <Row className={styles.illType}>
               {item.illName}
             </Row>
@@ -1237,6 +1291,20 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   // },[selectedOrga])
 
   const closeInfoWindow = () => {
+
+    /**
+     * 关闭窗口的时候，将相关恢复
+     * */
+
+    if(playedAnimationed){
+      playedAnimationed.stop()
+
+    }
+    setInfoSelectedTab("0");
+    setPlayedAnimationed(null);
+    setSelectedAbnormal(null);
+
+
 
     if (controlMaterial) {
       controlMaterial.visible = false;
@@ -1275,6 +1343,29 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
   }
 
+  /**
+   * 信息串口，切换面板的时候，如果切换到异常标识，自动播放第一个异常标识的动画
+   * */
+
+  const ChangeIndex=(activeKey:any)=>{
+    if (playedAnimationed){
+      playedAnimationed.stop();
+    }
+    setInfoSelectedTab(activeKey);
+    if (activeKey==="2"){
+    //  打开默认的第一个动画
+      illList.illType[0]?PlayAnimation(illList.illType[0].illName):null;
+    }
+  }
+
+
+  const SliderTo=(divIndex:any)=>{
+    if (sliderDivIndex){
+      sliderDivIndex.innerSlider.slickGoTo(divIndex);
+
+    }
+  }
+
 
   return (
     <div className={styles.output}>
@@ -1282,18 +1373,25 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
         <div id={"testAnt"} style={{display: displayType}} className={styles.infoCard}>
 
-          <Tabs defaultActiveKey="1"
+          <Tabs activeKey={infoSelectedTab}
+                onChange={ChangeIndex}
                 tabBarExtraContent={<CloseCircleOutlined onClick={closeInfoWindow} className={styles.closeIcon}/>}>
-            <TabPane tab={infoTitle} key="1">
+            <TabPane tab={infoTitle} key={"0"}>
               <Row id={"orgaDesc"} className={styles.organDesc}>
                 {infoDesc}
               </Row> </TabPane>
-            <TabPane tab={"医学影像"} key="2">
+            <TabPane tab={"医学影像"} key={"1"}>
               <Carousel effect={"fade"}>
                 {orgaPicture}
               </Carousel> </TabPane>
-            <TabPane tab={"异常标识"} key="3">
-              <Carousel effect={"fade"}>
+            <TabPane tab={"异常标识"} key={"2"}>
+              <Carousel
+                ref={el=> {
+                  sliderDivIndex = el
+                }}
+                initialSlide={0}
+                effect={"fade"}
+                afterChange={(current: any)=>PlayAnimation(illList.illType[current].illName)}>
                 {contentList}
               </Carousel>
             </TabPane>
@@ -1304,14 +1402,14 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
       </div>
 
-      <Slider min={0}
-              max={3}
-              step={0.1}
-              reverse={true}
-              tipFormatter={formatter}
-              vertical
-              onChange={sliderChange}
-              className={styles.sliderBar}/>
+      {/*<Slider min={0}*/}
+      {/*        max={3}*/}
+      {/*        step={0.1}*/}
+      {/*        reverse={true}*/}
+      {/*        tipFormatter={formatter}*/}
+      {/*        vertical*/}
+      {/*        onChange={sliderChange}*/}
+      {/*        className={styles.sliderBar}/>*/}
     </div>
   )
 }

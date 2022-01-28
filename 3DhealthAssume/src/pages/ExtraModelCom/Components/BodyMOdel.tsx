@@ -25,6 +25,7 @@ import Utils from "@/pages/ExtraModelCom/utils";
 import * as TWEEN from '@tweenjs/tween.js';
 import {AntDesignOutlined, CloseCircleOutlined, UserOutlined} from "@ant-design/icons";
 import { CarouselRef } from 'antd/lib/carousel';
+import {MatchIndexAnimaton} from "@/utils/dataReStructure";
 
 
 const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescription: any, illTypeList: any, dispatch: Dispatch, bodyModelInfo: any }) => {
@@ -1232,6 +1233,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     /**
      * 在这里根据异常标识的名字，选择数组里面的合适组，动画启动
+     * 还需要一个方法，来根据器官的名字和异常标识获得动画名字， 再根据名字找到对应器官的动画，进行调用
      * */
 
 
@@ -1239,10 +1241,18 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       playedAnimationed.stop();
     }
 
-    if (animationList[`${threeChoosenMesh.name}`]){
+    const animationName=MatchIndexAnimaton(threeChoosenMesh.name,indexName)
 
-      animationList[`${threeChoosenMesh.name}`][0].animationContent.play();
-      setPlayedAnimationed(animationList[`${threeChoosenMesh.name}`][0].animationContent);
+    if (animationList[`${threeChoosenMesh.name}`] && threeChoosenMesh && animationName){
+
+      animationList[`${threeChoosenMesh.name}`].map(item=>{
+        if (item.indexName===animationName){
+          item.animationContent.play();
+          setPlayedAnimationed(item.animationContent);
+        }
+      })
+      // animationList[`${threeChoosenMesh.name}`][0].animationContent.play();
+      // setPlayedAnimationed(animationList[`${threeChoosenMesh.name}`][0].animationContent);
     }
   }
 

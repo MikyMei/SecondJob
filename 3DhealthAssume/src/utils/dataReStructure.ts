@@ -7,7 +7,7 @@
  */
 
 import moment from "moment";
-import Icon, { HomeOutlined } from '@ant-design/icons';
+import Icon, {HomeOutlined} from '@ant-design/icons';
 
 /**
  * 传入接口请求来的所有部位和其中的器官数据，比较得出四个最小值，传进来的是个对象，其中key为器官所属类别，value为数组
@@ -134,7 +134,7 @@ export function RestructureCommonScore(originList: any, length: any) {
   }
 
   for (let i = 0; i < length; i++) {
-    result.Data[i]=originList[0].avg
+    result.Data[i] = originList[0].avg
   }
 
 
@@ -199,4 +199,56 @@ export function JudgeHealthRelationship(healthIndex: any) {
 }
 
 
+export function MatchIndexAnimaton  (orgaName: any, indexName: any) {
+// morphTargetInfluences
 
+  const originAllList={
+    "Retopo_跟骨":	{}	,
+    "Retopo_腕骨":	{},
+    "Retopo_颈椎":	{},
+    "Retopo_锁骨":	{},
+    "Retopo_颅骨":	{},
+    "Retopo_牙齿_上":	{},
+    "Retopo_股骨":	{},
+    "Retopo_腓骨":	{},
+    "Retopo_肱骨":	{},
+    "Retopo_踝关节":	{},
+    "Retopo_下颌骨":	{},
+    "Retopo_牙齿_下":	{},
+    "Retopo_手":	{},
+    "Retopo_脚":	{},
+    "Retopo_骨盆":	{},
+    "Retopo_桡骨":	{},
+    "Retopo_肋骨":	{},
+    "Retopo_骶骨":	{},
+    "Retopo_肩胛骨":	{},
+    "Retopo_胸骨":	{},
+    "Retopo_跗骨":	{},
+    "Retopo_胫骨":	{},
+    "Retopo_尺骨":	{},
+    "Retopo_脊柱":	{},
+    "Retopo_生殖系统":	{},
+    "Retopo_静脉":	{},
+    "Retopo_动脉":	{},
+    "Retopo_大脑":	{},
+    "Retopo_消化系统":	{},
+    "Retopo_小肠":	{},
+    "Retopo_胃部":	{},
+    "Retopo_肝脏":	{},
+    "Retopo_支气管":	{},
+    "Retopo_肺":	{},
+    "Retopo_肾脏":	{},
+    "Retopo_心脏":	{"异常指标2":	"morphTargetInfluences"}	,
+    "Heart__Ani":	{},
+    "Retopo_皮肤":	{},
+
+  };
+  let result=null;
+
+  if (originAllList[`${orgaName}`]&&originAllList[`${orgaName}`][`${indexName}`]){
+    result=originAllList[`${orgaName}`][`${indexName}`]
+  }
+
+  return result;
+
+}

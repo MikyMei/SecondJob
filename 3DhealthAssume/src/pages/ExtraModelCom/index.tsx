@@ -711,14 +711,12 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
 
     /**
-     * 需要判断当前选中的部位是否是全身性器官
+     * 需要判断当前选中的部位是否是全身性器官，因为全身性器官没有具体的模型动画
      * */
 
     if(choosenPart!=="全身性器官"){
       bodyRef.current.setInfoTabs();
-
       bodyRef.current.testPlay(keyName);
-
     }
 
 
@@ -903,6 +901,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
                       autoFocus={true}
                       bordered={false}
                       onChange={(value: any) => {
+                        bodyRef.current.ResetCompare();
                         closeInfoWindow();
                         setChoosenPart(value);
                         if (dispatch) {

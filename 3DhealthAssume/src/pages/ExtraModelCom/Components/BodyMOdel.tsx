@@ -24,7 +24,7 @@ import {Avatar, Badge, Button, Slider, Tooltip, Row, Col, Divider, Tag, Carousel
 import Utils from "@/pages/ExtraModelCom/utils";
 import * as TWEEN from '@tweenjs/tween.js';
 import {AntDesignOutlined, CloseCircleOutlined, UserOutlined} from "@ant-design/icons";
-import { CarouselRef } from 'antd/lib/carousel';
+import {CarouselRef} from 'antd/lib/carousel';
 import {MatchIndexAnimaton} from "@/utils/dataReStructure";
 
 
@@ -45,6 +45,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * */
   let scene: any;
   const objects: any = [];
+  const standardObjects: any = [];
   let camera: any;
   let plane: any;
   let spotLight: any;
@@ -116,7 +117,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     "Retopo_心脏",
     "Heart__Ani",
     "Retopo_皮肤"];  //
-  const orgaTypeList = [["Retopo_皮肤", "皮肤"],
+  const orgaTypeList = [["Retopo_皮肤", "皮肤", "超重"],
     ["Retopo_跟骨",
       "Retopo_腕骨",
       "Retopo_颈椎",
@@ -184,6 +185,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const [threeRenderer, setThreeRenderer] = useState<any>();
   const [threeLabelRenderer, setThreeLabelRenderer] = useState<any>();
   const [threeObjects, setThreeObjects] = useState<any>();
+  const [threeStandardObjects, setThreeStandardObjects] = useState<any>();  // 主要用来存放对比模型的所有器官的网格模型
   const [threeMainCanvas, setThreeMainCanvas] = useState<any>();
   const [threeAddTimer, setThreeAddTimer] = useState<any>(false);
   const [threeIsStart, setThreeIsStart] = useState<any>(false);
@@ -195,7 +197,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   });
 
   const [bodyMaterial, setBodyMaterial] = useState<any>();// 主要用来存放body地material为的是能够更改流光
-  const [threeChoosenMesh, setThreeChoosenMesh] = useState<any>();// 主要用来存放body地material为的是能够更改流光
+  const [threeChoosenMesh, setThreeChoosenMesh] = useState<any>(null);// 主要用来存放body地material为的是能够更改流光
 
   const [displayType, setDisplayType] = useState<any>("none");
   const [currentInfoWindow, setCurrentInfoWindow] = useState<any>(); // 在选定器官的时候打开指定的信息窗口，
@@ -206,10 +208,14 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const [infoSelectedTab, setInfoSelectedTab] = useState<any>("0"); // 信息窗口选中的选项，主要是为了区分是否是异常标识
   const [playedAnimationed, setPlayedAnimationed] = useState<any>(null); //已经再被播放的动画、
   const [selectedAbnormal, setSelectedAbnormal] = useState<any>(null);  // 当前选中的异常标识
+  // 主要用于模型对比功能，一般事先加载两个模型。一个正常模型。
+  // 另一个是当前用户的的模型，如果需要对对比模型（即正常模型，进行操作，需要将状态变量中的受控模型进行重新赋值)
+  const [meshCompare, setMeshCompare] = useState<boolean>(true);
 
-  let sliderDivIndex: CarouselRef | null=null;
 
-  const carRef=useRef(null);
+  let sliderDivIndex: CarouselRef | null = null;
+
+  const carRef = useRef(null);
 
   const initModel = () => {
 
@@ -300,11 +306,15 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     camera.lookAt(0, 0, 0);
 
 
+    /**
+     * 加载当前用户的模型，后面还要加载一个正常模型（所有网格模型都是正常形态，事先让其所有的模型都可见性为false）
+     * */
     let model;
     loader.load('./img/allKindsOfModel/MaleModel/standardFigure5.gltf', function (gltf: any) {
         model = gltf.scene;
         model.scale.setScalar(5.5, 5.5, 5.5);
         model.position.setY(-4.5);
+        model.visible = meshCompare;
 
         /**
          * beIntersectObjects是用来存放需要射线检测的物体数组。
@@ -315,7 +325,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
          * 在这里将模型地动画全部格式化，并生成mixer
          * */
         const mixer = new THREE.AnimationMixer(model);
-        const action = mixer.clipAction(gltf.animations[0]);
+        // const action = mixer.clipAction(gltf.animations[0]);
         // action.play();
 
         setMixerAnimation(mixer);
@@ -346,6 +356,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         setAnimationList(tempAnimationList);
 
 
+        model.name = "userMeshModel";
+
         scene.add(model);
         model.traverse((child: any) => {
             /**
@@ -361,7 +373,69 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
               child.geometry.computeBoundingBox();
               child.geometry.computeBoundingSphere()
             }
-            processGLTFChild(child)
+            /**
+             * 遍历模型的时候，加一个参数，主要是为了在加载对比模型
+             * */
+
+            if (child.isMesh) {
+              objects.push(child);
+              processGLTFChild(child, false)
+
+            }
+          }
+        );
+
+      },
+      undefined
+
+      , function (error) {
+
+        console.error(error);
+
+      });
+
+    /**
+     * 加载标准的模型，但是里面的所有child的可见性设置为不可见，目前来看只加载皮肤和骨骼
+     * */
+    let standardModel;
+
+    loader.load('./img/allKindsOfModel/MaleModel/overWeightFigure.gltf', function (gltf: any) {
+        standardModel = gltf.scene;
+        standardModel.scale.setScalar(5.5, 5.5, 5.5);
+        standardModel.position.setY(-4.5);
+        standardModel.visible = meshCompare;
+
+        /**
+         * beIntersectObjects是用来存放需要射线检测的物体数组。
+         * transformControl可以方便调节物体位置大小。
+         * */
+
+        /**
+         * 在这里将模型地动画全部格式化，并生成mixer
+         * */
+
+
+
+        standardModel.name = "standardModel";
+
+        scene.add(standardModel);
+        standardModel.traverse((child: any) => {
+            /**
+             * 在这里将不同模型根据他的名字，将
+             * */
+
+
+            /**
+             * 遍历模型的时候，加一个参数，主要是为了在加载对比模型
+             * */
+
+          if (child.isMesh) {
+              standardObjects.push(child);
+              child.visible=false;
+
+            processGLTFChild(child, true)
+
+            }
           }
         );
 
@@ -384,6 +458,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     setThreeRenderer(renderer);
     setThreeControls(controls);
     setThreeObjects(objects);
+    setThreeStandardObjects(standardObjects);
     setThreeMainCanvas(mainCanvas);
   }
 
@@ -911,41 +986,44 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   }
 
 
-
-
-  const processGLTFChild = (child: any) => {
+  const processGLTFChild = (child: any, visible: boolean) => {
 
     try {
-      if (child.isMesh) {
-        objects.push(child);
+      // if (child.isMesh) {
 
 
-        // 根据器官属于在哪个数组，判断属于哪一类，选择哪一类着色器材质
-        const type = JudgeOrgaType(child.name);
+      // 根据器官属于在哪个数组，判断属于哪一类，选择哪一类着色器材质
+      const type = JudgeOrgaType(child.name);
 
-        switch (type) {
-          case 0:
-            child.material = setCityMaterial(child).materialBody;
+      switch (type) {
+        case 0:
+          child.material = setCityMaterial(child).materialBody;
 
-            child.castShadow = true;
+          child.castShadow = true;
 
-            break;
-          case 1:
-            child.material = Shaders("#30D2BD").material2;
-            child.castShadow = true;
-            break;
-          case 2:
-            child.material = new THREE.MeshStandardMaterial({color:orgaMatchColor[`${child.name}`], transparent:true, opacity:0.5, visible:false});
-            // child.material = Shaders(orgaMatchColor[`${child.name}`]).material3;
-            child.castShadow = true
+          break;
+        case 1:
+          child.material = Shaders("#30D2BD").material2;
+          child.castShadow = true;
+          break;
+        case 2:
+          child.material = new THREE.MeshStandardMaterial(
+            {
+              color: orgaMatchColor[`${child.name}`],
+              transparent: true,
+              opacity: 0.5,
+              visible: visible
+            });
+          // child.material = Shaders(orgaMatchColor[`${child.name}`]).material3;
+          child.castShadow = true
 
-            break;
-          default:
-            child.material = Shaders("#30D2BD").material2;
-            child.castShadow = true;
-            break;
-        }
+          break;
+        default:
+          child.material = Shaders("#30D2BD").material2;
+          child.castShadow = true;
+          break;
       }
+      // }
     } catch (e) {
       console.log('error:', e)
       console.error('设置色彩出错, child:', child)
@@ -1095,7 +1173,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * 点击放大或者是打开器官的弹框，或者跳到指定位置
    * */
   const enlargeItem = async (name: any) => {
-
+    await RestoreCompare();
 
     if (controlMaterial) {
       controlMaterial.visible = false;
@@ -1167,17 +1245,22 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       closeInfoWindow()
     },
 
-    testPlay:(indexName: any)=>{
+    testPlay: (indexName: any) => {
       PlayAnimation(indexName);
     },
-    setIndex:(index:any)=>{
+    setIndex: (index: any) => {
       setSelectedAbnormal(index);
     },
-    setInfoTabs:()=>{
+    setInfoTabs: () => {
       setInfoSelectedTab("2")
     },
-    sliderDivIndex:(divIndex:any)=>{
+    sliderDivIndex: (divIndex: any) => {
       SliderTo(divIndex)
+    },
+
+    // 恢复健康比对
+    ResetCompare:()=>{
+      RestoreCompare()
     }
 
 
@@ -1226,8 +1309,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const PlayAnimation = (indexName: any) => {
 
 
-
-
     /**
      * 在这里进行操作动画，目前左侧栏已经可以，但是右侧栏目还不行
      * */
@@ -1239,16 +1320,16 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * */
 
 
-    if (playedAnimationed){
+    if (playedAnimationed) {
       playedAnimationed.stop();
     }
 
-    const animationName=MatchIndexAnimaton(threeChoosenMesh.name,indexName)
+    const animationName = MatchIndexAnimaton(threeChoosenMesh.name, indexName)
 
-    if (animationList[`${threeChoosenMesh.name}`] && threeChoosenMesh && animationName){
+    if (animationList[`${threeChoosenMesh.name}`] && threeChoosenMesh && animationName) {
 
-      animationList[`${threeChoosenMesh.name}`].map(item=>{
-        if (item.indexName===animationName){
+      animationList[`${threeChoosenMesh.name}`].map(item => {
+        if (item.indexName === animationName) {
           item.animationContent.play();
           setPlayedAnimationed(item.animationContent);
         }
@@ -1302,20 +1383,30 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   //   }
   // },[selectedOrga])
 
-  const closeInfoWindow = () => {
+  const RestoreCompare=async ()=>{
+    await threeObjects.forEach(object=>{
+      object.visible=true;
+    })
+    await threeStandardObjects.forEach(object=>{
+      object.visible=false;
+    })
+  }
+
+  const closeInfoWindow = async () => {
 
     /**
      * 关闭窗口的时候，将相关恢复
      * */
 
-    if(playedAnimationed){
+    await RestoreCompare();
+
+    if (playedAnimationed) {
       playedAnimationed.stop()
 
     }
     setInfoSelectedTab("0");
     setPlayedAnimationed(null);
     setSelectedAbnormal(null);
-
 
 
     if (controlMaterial) {
@@ -1359,23 +1450,44 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * 信息串口，切换面板的时候，如果切换到异常标识，自动播放第一个异常标识的动画
    * */
 
-  const ChangeIndex=(activeKey:any)=>{
-    if (playedAnimationed){
+  const ChangeIndex = (activeKey: any) => {
+    if (playedAnimationed) {
       playedAnimationed.stop();
     }
     setInfoSelectedTab(activeKey);
-    if (activeKey==="2"){
-    //  打开默认的第一个动画
-      illList.illType[0]?PlayAnimation(illList.illType[0].illName):null;
+    if (activeKey === "2") {
+      //  打开默认的第一个动画
+      illList.illType[0] ? PlayAnimation(illList.illType[0].illName) : null;
     }
   }
 
 
-  const SliderTo=(divIndex:any)=>{
-    if (sliderDivIndex){
+  const SliderTo = (divIndex: any) => {
+    if (sliderDivIndex) {
       sliderDivIndex.innerSlider.slickGoTo(divIndex);
 
     }
+  }
+
+  /**
+   * 健康对比相关功能，这里主要是将场景中已经加载的正常模型和用户模型进行交替控制展示和隐藏
+   * */
+
+  const ComparePartOrga = async () => {
+    /**
+     * 如果当前选中的器官模型有，就只是改变该模型，否则，改变所有的当前material可见的
+     * */
+
+    await threeObjects.forEach((signleOrga: any) => {
+      if ( signleOrga.name === "Retopo_皮肤") {
+        signleOrga.visible = !signleOrga.visible;
+      }
+    })
+    await threeStandardObjects.forEach((signleOrga: any) => {
+      if ( signleOrga.name === "超重") {
+        signleOrga.visible = !signleOrga.visible;
+      }
+    })
   }
 
 
@@ -1398,12 +1510,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
               </Carousel> </TabPane>
             <TabPane tab={"异常标识"} key={"2"}>
               <Carousel
-                ref={el=> {
+                ref={el => {
                   sliderDivIndex = el
                 }}
                 initialSlide={0}
                 effect={"fade"}
-                afterChange={(current: any)=>PlayAnimation(illList.illType[current].illName)}>
+                afterChange={(current: any) => PlayAnimation(illList.illType[current].illName)}>
                 {contentList}
               </Carousel>
             </TabPane>
@@ -1413,6 +1525,11 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         </div>
 
       </div>
+      {threeChoosenMesh?"":<div className={styles.compareButton} onClick={() => ComparePartOrga()}>
+        <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>
+        <a className={styles.compareText}>健康对比</a>
+
+      </div>}
 
       {/*<Slider min={0}*/}
       {/*        max={3}*/}

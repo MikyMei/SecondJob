@@ -1226,6 +1226,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const PlayAnimation = (indexName: any) => {
 
 
+
+
     /**
      * 在这里进行操作动画，目前左侧栏已经可以，但是右侧栏目还不行
      * */

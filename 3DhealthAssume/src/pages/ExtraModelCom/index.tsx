@@ -708,10 +708,20 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
 
   const StartAnimation = (keyName: any) => {
-    bodyRef.current.setInfoTabs();
 
 
-    bodyRef.current.testPlay(keyName);
+    /**
+     * 需要判断当前选中的部位是否是全身性器官
+     * */
+
+    if(choosenPart!=="全身性器官"){
+      bodyRef.current.setInfoTabs();
+
+      bodyRef.current.testPlay(keyName);
+
+    }
+
+
 
 
   }

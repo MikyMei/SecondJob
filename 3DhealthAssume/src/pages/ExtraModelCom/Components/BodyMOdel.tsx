@@ -450,11 +450,11 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
     controls = new OrbitControls(camera, renderer.domElement);
-    // controls.mouseButtons = {
-    //   LEFT: '',
-    //   MIDDLE: THREE.MOUSE.DOLLY,
-    //   RIGHT: THREE.MOUSE.PAN
-    // }
+    controls.mouseButtons = {
+      LEFT: THREE.MOUSE.ROTATE,
+      MIDDLE: THREE.MOUSE.DOLLY,
+      RIGHT: ''
+    }
     controls.enableDamping = true;
 
     setThreeScene(scene);

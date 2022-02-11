@@ -387,7 +387,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
   }, [personalHealthScore, personalScoreHistory, commonScoreHistory, keyHealthIndex, abnormalOrgaTop4,])
 
   useEffect(() => {
-    if (selectedOrga) {
+    if (selectedOrga && illList) {
       GeneratRightOrga();
     } else {
       if (personalHealthScore && personalScoreHistory && commonScoreHistory && keyHealthIndex && abnormalOrgaTop4) {
@@ -396,7 +396,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
       }
 
     }
-  }, [selectedOrga])
+  }, [selectedOrga,  illList])
 
   const Generate4Index = (topList: any) => {
 

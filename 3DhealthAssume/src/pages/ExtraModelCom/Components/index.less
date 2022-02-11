@@ -12,13 +12,41 @@
   height: 20%;
   position: absolute;
 
+
   :global {
     .ant-slider-track {
       position: absolute;
+      width: 1.5rem;
+      opacity:0.4;
+
       height: 4px;
-      background-color: #b1acac;
+      background-color: #8bbcfd;
       border-radius: 2px;
       transition: background-color 0.3s;
+    }
+
+    .ant-slider-rail {
+      width: 1.5rem !important;
+      height: 100%;
+      opacity:0.2;
+    }
+
+    .ant-slider-handle {
+      width: 1.5rem;
+      margin-left:0;
+      background-color: #91d5ff;
+      border: solid 0.125rem rgb(145 213 255 / 50%);
+      border-radius: 1%;
+      box-shadow: 0;
+      cursor: pointer;
+      transition: border-color 0.3s, box-shadow 0.6s, transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+
+    .ant-slider-vertical .ant-slider-mark {
+      top: 0;
+      left: 0rem;
+      width: 1.5rem;
+      height: 100%;
     }
 
   }
@@ -295,6 +323,8 @@
   height: 100%;
   background: url('https://3-d-health-1253940515.cos.ap-shanghai.myqcloud.com/sceneBackground.png') center no-repeat;
   //background-size:100%;
+
+
 }
 
 .webglOutput{

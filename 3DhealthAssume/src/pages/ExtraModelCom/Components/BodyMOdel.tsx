@@ -450,6 +450,11 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
     controls = new OrbitControls(camera, renderer.domElement);
+    // controls.mouseButtons = {
+    //   LEFT: '',
+    //   MIDDLE: THREE.MOUSE.DOLLY,
+    //   RIGHT: THREE.MOUSE.PAN
+    // }
     controls.enableDamping = true;
 
     setThreeScene(scene);
@@ -1007,11 +1012,14 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           child.castShadow = true;
           break;
         case 2:
+          /**
+           * 以下为两种方案，着色器的优势在于控制滑动隐藏上，而动画不能用
+           * */
           child.material = new THREE.MeshStandardMaterial(
             {
               color: orgaMatchColor[`${child.name}`],
               transparent: true,
-              opacity: 0.5,
+              opacity: 0.7,
               visible: visible
             });
           // child.material = Shaders(orgaMatchColor[`${child.name}`]).material3;
@@ -1101,7 +1109,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
               .start()
           }else{
             new TWEEN.Tween(object.material)
-              .to({opacity: 0.5}, 2000) // 在1s内移动至 (0, 0)
+              .to({opacity: 0.7}, 2000) // 在1s内移动至 (0, 0)
               .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
               .start()
           }
@@ -1144,7 +1152,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             .start()
         }else{
           new TWEEN.Tween(object.material)
-            .to({opacity: needOpacity * 0.5}, 2000) // 在1s内移动至 (0, 0)
+            .to({opacity: needOpacity * 0.7}, 2000) // 在1s内移动至 (0, 0)
             .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
             .start()
         }
@@ -1559,8 +1567,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       </div>}
 
       <Slider min={0}
-              max={3}
-              step={0.1}
+              max={orgaTypeList.length-1}
+              step={0.05}
               reverse={true}
               tipFormatter={formatter}
               vertical

@@ -319,13 +319,14 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     e.currentTarget.children[0].children[2].style.opacity = 1;
     e.currentTarget.children[0].children[2].style.textShadow = "0 0 10px currentColor";
 
-    optionsCard.push(e.currentTarget);
-    RestoreStyle();
+
     /**
-     * 在这里判断是否已经打开，如果是，就关闭
+     * 在这里判断是否已经打开，如果是，就关闭,判断是否是重复点击
      * */
 
-    if (dispatch) {
+    console.log(optionsCard[0] === e.currentTarget);
+
+    if (dispatch && optionsCard[0] != e.currentTarget ) {
 
 
       const orgaParams = {
@@ -344,6 +345,10 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
       });
 
     }
+
+    optionsCard.push(e.currentTarget);
+
+    RestoreStyle();
     enlargeItem(meshName);
 
 

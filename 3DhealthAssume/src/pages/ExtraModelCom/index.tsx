@@ -93,7 +93,6 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
   const closeInfoWindow = () => {
     if (optionsCard.length > 0 && choosenPart != "全身性器官") {
       bodyRef.current.testClose();
-
     }
   }
 

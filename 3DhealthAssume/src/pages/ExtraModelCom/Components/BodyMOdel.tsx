@@ -1086,11 +1086,25 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         if (afterObjects.toString().indexOf(object.name) !== -1) {
 
           object.material.visible = true;
-          new TWEEN.Tween(object.material.uniforms.coeficient)
-            .to({type: 'f', value: 1}, 2000) // 在1s内移动至 (0, 0)
-            .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
+          /**
+           * 这个适用于着色器的修改透明度
+           * */
+          // new TWEEN.Tween(object.material.uniforms.coeficient)
+          //   .to({type: 'f', value: 1}, 2000) // 在1s内移动至 (0, 0)
+          //   .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
+          //   .start()
 
-            .start()
+          if (object.material.uniforms){
+            new TWEEN.Tween(object.material.uniforms.coeficient)
+              .to({type: 'f', value: 1}, 2000) // 在1s内移动至 (0, 0)
+              .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
+              .start()
+          }else{
+            new TWEEN.Tween(object.material)
+              .to({opacity: 0.5}, 2000) // 在1s内移动至 (0, 0)
+              .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
+              .start()
+          }
 
         }
 
@@ -1120,10 +1134,23 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         }
 
 
-        new TWEEN.Tween(object.material.uniforms.coeficient)
-          .to({type: 'f', value: needOpacity}, 2000) // 在1s内移动至 (0, 0)
-          .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
-          .start()
+        /**
+         * 这个适用于着色器的修改透明度， 一般的就直接修改材质里的透明度， 因为皮肤和骨骼使用的是着色器，所以修改透明度的方式不同
+         * */
+        if (object.material.uniforms){
+          new TWEEN.Tween(object.material.uniforms.coeficient)
+            .to({type: 'f', value: needOpacity}, 2000) // 在1s内移动至 (0, 0)
+            .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
+            .start()
+        }else{
+          new TWEEN.Tween(object.material)
+            .to({opacity: needOpacity * 0.5}, 2000) // 在1s内移动至 (0, 0)
+            .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
+            .start()
+        }
+
+
+
       }
     })
   }
@@ -1531,14 +1558,14 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
       </div>}
 
-      {/*<Slider min={0}*/}
-      {/*        max={3}*/}
-      {/*        step={0.1}*/}
-      {/*        reverse={true}*/}
-      {/*        tipFormatter={formatter}*/}
-      {/*        vertical*/}
-      {/*        onChange={sliderChange}*/}
-      {/*        className={styles.sliderBar}/>*/}
+      <Slider min={0}
+              max={3}
+              step={0.1}
+              reverse={true}
+              tipFormatter={formatter}
+              vertical
+              onChange={sliderChange}
+              className={styles.sliderBar}/>
     </div>
   )
 }

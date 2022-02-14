@@ -115,7 +115,7 @@ const MixLineChart: React.FC<any> = (props) => {
         trigger: 'axis',
         backgroundColor:null,
         textStyle: {
-          color:'rgba(255,255,255,0.8)',
+          color:'rgba(255,255,255,1)',
         },
         className: styles.chartTooltip,
         borderColor:'#00DEC5',

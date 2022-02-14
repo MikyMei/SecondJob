@@ -275,7 +275,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     labelRenderer.domElement.style = "pointer-events: auto;position: absolute;top: 0px;"  // 处理新的渲染器
 
 
-    const axes = new THREE.AxisHelper(20);
+    const axes = new THREE.AxesHelper(20);
     // scene.add(axes);
 
 
@@ -1565,7 +1565,10 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         </div>
 
       </div>
-      {threeChoosenMesh ? "" : <div className={styles.compareButton} onClick={() => ComparePartOrga()}>
+      {threeChoosenMesh ? "" : <div className={styles.compareButton}
+                                    onMouseDown={() => ComparePartOrga()}
+                                    onMouseUp={()=>RestoreCompare()}
+      >
         <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>
         <a className={styles.compareText}>健康对比</a>
 

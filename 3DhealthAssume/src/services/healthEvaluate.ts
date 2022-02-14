@@ -76,7 +76,6 @@ export async function GetAllOrgaList(params: any) {
           {name: "胫骨", exceptionCount: 4, score: 72},
           {name: "尺骨", exceptionCount: 5, score: 73},
           {name: "脊柱", exceptionCount: 6, score: 74},
-
         ],
         "内脏部位": [
           {name: "生殖系统", exceptionCount: 1, score: 46},

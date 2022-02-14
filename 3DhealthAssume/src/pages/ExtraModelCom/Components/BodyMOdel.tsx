@@ -171,7 +171,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     "Retopo_肺": "#ea5d69",
     "Retopo_肾脏": "#e04903",
     "Retopo_心脏": "#f05552",
-  }
+  };
 
   let choosenMesh: any;
 

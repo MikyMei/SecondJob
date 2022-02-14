@@ -22,7 +22,6 @@ const headers = {
 
 export async function GetPersonalHealthInfo(params: any) {
 
-
   const data = [
     {
       name: "路明明",
@@ -30,8 +29,7 @@ export async function GetPersonalHealthInfo(params: any) {
       last_check_score: 94,
       last_check_time: "2017-12-08",
       user_id: "2017014713",
-
-
+      BMI:3.5, // 这个主要用来确定用户应该加载的模型
     }
   ]
   return data;

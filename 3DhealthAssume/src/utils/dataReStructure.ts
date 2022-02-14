@@ -199,56 +199,117 @@ export function JudgeHealthRelationship(healthIndex: any) {
 }
 
 
-export function MatchIndexAnimaton  (orgaName: any, indexName: any) {
+export function MatchIndexAnimaton(orgaName: any, indexName: any) {
 // morphTargetInfluences
 
-  const originAllList={
-    "Retopo_跟骨":	{}	,
-    "Retopo_腕骨":	{},
-    "Retopo_颈椎":	{},
-    "Retopo_锁骨":	{},
-    "Retopo_颅骨":	{},
-    "Retopo_牙齿_上":	{},
-    "Retopo_股骨":	{},
-    "Retopo_腓骨":	{},
-    "Retopo_肱骨":	{},
-    "Retopo_踝关节":	{},
-    "Retopo_下颌骨":	{},
-    "Retopo_牙齿_下":	{},
-    "Retopo_手":	{},
-    "Retopo_脚":	{},
-    "Retopo_骨盆":	{},
-    "Retopo_桡骨":	{},
-    "Retopo_肋骨":	{},
-    "Retopo_骶骨":	{},
-    "Retopo_肩胛骨":	{},
-    "Retopo_胸骨":	{},
-    "Retopo_跗骨":	{},
-    "Retopo_胫骨":	{},
-    "Retopo_尺骨":	{},
-    "Retopo_脊柱":	{},
-    "Retopo_生殖系统":	{},
-    "Retopo_静脉":	{},
-    "Retopo_动脉":	{},
-    "Retopo_大脑":	{},
-    "Retopo_消化系统":	{},
-    "Retopo_小肠":	{},
-    "Retopo_胃部":	{},
-    "Retopo_肝脏":	{},
-    "Retopo_支气管":	{},
-    "Retopo_肺":	{},
-    "Retopo_肾脏":	{},
-    "Retopo_心脏":	{"异常指标2":	"morphTargetInfluences"}	,
-    "Heart__Ani":	{},
-    "Retopo_皮肤":	{},
+  const originAllList = {
+    "Retopo_跟骨": {},
+    "Retopo_腕骨": {},
+    "Retopo_颈椎": {},
+    "Retopo_锁骨": {},
+    "Retopo_颅骨": {},
+    "Retopo_牙齿_上": {},
+    "Retopo_股骨": {},
+    "Retopo_腓骨": {},
+    "Retopo_肱骨": {},
+    "Retopo_踝关节": {},
+    "Retopo_下颌骨": {},
+    "Retopo_牙齿_下": {},
+    "Retopo_手": {},
+    "Retopo_脚": {},
+    "Retopo_骨盆": {},
+    "Retopo_桡骨": {},
+    "Retopo_肋骨": {},
+    "Retopo_骶骨": {},
+    "Retopo_肩胛骨": {},
+    "Retopo_胸骨": {},
+    "Retopo_跗骨": {},
+    "Retopo_胫骨": {},
+    "Retopo_尺骨": {},
+    "Retopo_脊柱": {},
+    "Retopo_生殖系统": {},
+    "Retopo_静脉": {},
+    "Retopo_动脉": {},
+    "Retopo_大脑": {},
+    "Retopo_消化系统": {},
+    "Retopo_小肠": {},
+    "Retopo_胃部": {},
+    "Retopo_肝脏": {},
+    "Retopo_支气管": {},
+    "Retopo_肺": {},
+    "Retopo_肾脏": {},
+    "Retopo_心脏": {"异常指标2": "morphTargetInfluences"},
+    "Heart__Ani": {},
+    "Retopo_皮肤": {},
 
   };
-  let result=null;
+  let result = null;
 
-  if (originAllList[`${orgaName}`]&&originAllList[`${orgaName}`][`${indexName}`]){
-    result=originAllList[`${orgaName}`][`${indexName}`]
+  if (originAllList[`${orgaName}`] && originAllList[`${orgaName}`][`${indexName}`]) {
+    result = originAllList[`${orgaName}`][`${indexName}`]
   }
 
   return result;
+
+}
+
+
+/**
+ * 根据传来的用户信息和BMI指数来确定用户的性别和具体类别
+ * */
+
+export function JudgeGender(personalInfo: any) {
+
+  let finalGender = "MaleModel";
+  let finalModel = "standardFigure.gltf";
+
+
+  /**
+   * 当前的思路是根据BMI与数组的下标所比较，来判断当前的模型类别
+   * */
+  const genderType: any = [
+    {
+      genderName: ["男", "male", "Male"],
+      modelType: "MaleModel",
+    },
+    {
+      genderName: ["女", "female", "Female"],
+      modelType: "FemaleModel",
+    },
+  ];
+
+  /**
+   * 在这里定义一个取值范围，左闭右开，或者左开右闭都是可以的
+   * */
+
+  const modelType: any = [
+    {BMIRank: [3.0, 4.0], modelName: "standardFigure.gltf"},
+    {BMIRank: [4.0, 5.0], modelName: "overWeightFigure.gltf"},
+    {BMIRank: [5.0, 6.0], modelName: "fatFigure.gltf"},
+    {BMIRank: [2.0, 3.0], modelName: "tooLightFigure.gltf"},
+    {BMIRank: [1.0, 2.0], modelName: "superLightFigure.gltf"},
+  ];
+
+
+  if (personalInfo.gender) {
+    genderType.map((item: any) => {
+      if (item.genderName.indexOf(personalInfo.gender) != -1) {
+        finalGender = item.modelType;
+
+      }
+    })
+  }
+
+  if (personalInfo.BMI) {
+    modelType.map((item: any) => {
+      if (item.BMIRank[0]<=personalInfo.BMI && item.BMIRank[1]>personalInfo.BMI ){
+        finalModel=item.modelName;
+      }
+    })
+
+  }
+
+
+  return {finalGender, finalModel}
 
 }

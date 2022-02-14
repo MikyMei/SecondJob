@@ -25,7 +25,7 @@ import Utils from "@/pages/ExtraModelCom/utils";
 import * as TWEEN from '@tweenjs/tween.js';
 import {AntDesignOutlined, CloseCircleOutlined, UserOutlined} from "@ant-design/icons";
 import {CarouselRef} from 'antd/lib/carousel';
-import {MatchIndexAnimaton} from "@/utils/dataReStructure";
+import {JudgeGender, MatchIndexAnimaton} from "@/utils/dataReStructure";
 
 
 const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescription: any, illTypeList: any, dispatch: Dispatch, bodyModelInfo: any }) => {
@@ -35,7 +35,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const {onRef, currentOrga, orgaDescription, illTypeList, dispatch, bodyModelInfo} = props;
 
 
-  const {illList, selectedOrga} = bodyModelInfo;
+  const {illList, selectedOrga, personalInfo} = bodyModelInfo;
   const loader = new GLTFLoader();
 
 
@@ -217,7 +217,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
   const carRef = useRef(null);
 
-  const initModel = () => {
+  const initModel = (modelType: any, modelName: any) => {
 
 
     // 获得渲染器长度
@@ -310,7 +310,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * 加载当前用户的模型，后面还要加载一个正常模型（所有网格模型都是正常形态，事先让其所有的模型都可见性为false）
      * */
     let model;
-    loader.load('./img/allKindsOfModel/MaleModel/standardFigure5.gltf', function (gltf: any) {
+    loader.load(`./img/allKindsOfModel/${modelType}/${modelName}`, function (gltf: any) {
         model = gltf.scene;
         model.scale.setScalar(5.5, 5.5, 5.5);
         model.position.setY(-4.5);
@@ -399,7 +399,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * */
     let standardModel;
 
-    loader.load('./img/allKindsOfModel/MaleModel/overWeightFigure.gltf', function (gltf: any) {
+    loader.load(`./img/allKindsOfModel/${modelType}/overWeightFigure.gltf`, function (gltf: any) {
         standardModel = gltf.scene;
         standardModel.scale.setScalar(5.5, 5.5, 5.5);
         standardModel.position.setY(-4.5);
@@ -415,7 +415,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
          * */
 
 
-
         standardModel.name = "standardModel";
 
         scene.add(standardModel);
@@ -429,11 +428,11 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
              * 遍历模型的时候，加一个参数，主要是为了在加载对比模型
              * */
 
-          if (child.isMesh) {
+            if (child.isMesh) {
               standardObjects.push(child);
-              child.visible=false;
+              child.visible = false;
 
-            processGLTFChild(child, true)
+              processGLTFChild(child, true)
 
             }
           }
@@ -1040,10 +1039,17 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
   useEffect(() => {
+    /**
+     * 在这里加个方法，来返回用户的模型，男女，和哪个
+     * */
 
-    initModel();
+    if (personalInfo.name) {
+      const result = JudgeGender(personalInfo);
+      initModel(result.finalGender, result.finalModel);
 
-  }, [])
+    }
+
+  }, [personalInfo])
 
 
   /**
@@ -1102,12 +1108,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           //   .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
           //   .start()
 
-          if (object.material.uniforms){
+          if (object.material.uniforms) {
             new TWEEN.Tween(object.material.uniforms.coeficient)
               .to({type: 'f', value: 1}, 2000) // 在1s内移动至 (0, 0)
               .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
               .start()
-          }else{
+          } else {
             new TWEEN.Tween(object.material)
               .to({opacity: 0.7}, 2000) // 在1s内移动至 (0, 0)
               .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
@@ -1145,18 +1151,17 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         /**
          * 这个适用于着色器的修改透明度， 一般的就直接修改材质里的透明度， 因为皮肤和骨骼使用的是着色器，所以修改透明度的方式不同
          * */
-        if (object.material.uniforms){
+        if (object.material.uniforms) {
           new TWEEN.Tween(object.material.uniforms.coeficient)
             .to({type: 'f', value: needOpacity}, 2000) // 在1s内移动至 (0, 0)
             .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
             .start()
-        }else{
+        } else {
           new TWEEN.Tween(object.material)
             .to({opacity: needOpacity * 0.7}, 2000) // 在1s内移动至 (0, 0)
             .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
             .start()
         }
-
 
 
       }
@@ -1294,7 +1299,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     },
 
     // 恢复健康比对
-    ResetCompare:()=>{
+    ResetCompare: () => {
       RestoreCompare()
     }
 
@@ -1418,12 +1423,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   //   }
   // },[selectedOrga])
 
-  const RestoreCompare=async ()=>{
-    await threeObjects.forEach(object=>{
-      object.visible=true;
+  const RestoreCompare = async () => {
+    await threeObjects.forEach(object => {
+      object.visible = true;
     })
-    await threeStandardObjects.forEach(object=>{
-      object.visible=false;
+    await threeStandardObjects.forEach(object => {
+      object.visible = false;
     })
   }
 
@@ -1514,12 +1519,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * */
 
     await threeObjects.forEach((signleOrga: any) => {
-      if ( signleOrga.name === "Retopo_皮肤") {
+      if (signleOrga.name === "Retopo_皮肤") {
         signleOrga.visible = !signleOrga.visible;
       }
     })
     await threeStandardObjects.forEach((signleOrga: any) => {
-      if ( signleOrga.name === "超重") {
+      if (signleOrga.name === "超重") {
         signleOrga.visible = !signleOrga.visible;
       }
     })
@@ -1560,14 +1565,14 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         </div>
 
       </div>
-      {threeChoosenMesh?"":<div className={styles.compareButton} onClick={() => ComparePartOrga()}>
+      {threeChoosenMesh ? "" : <div className={styles.compareButton} onClick={() => ComparePartOrga()}>
         <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>
         <a className={styles.compareText}>健康对比</a>
 
       </div>}
 
       <Slider min={0}
-              max={orgaTypeList.length-1}
+              max={orgaTypeList.length - 1}
               step={0.05}
               reverse={true}
               tipFormatter={formatter}

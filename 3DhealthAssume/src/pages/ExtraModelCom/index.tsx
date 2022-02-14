@@ -324,7 +324,6 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
      * 在这里判断是否已经打开，如果是，就关闭,判断是否是重复点击
      * */
 
-    console.log(optionsCard[0] === e.currentTarget);
 
     if (dispatch && optionsCard[0] != e.currentTarget ) {
 

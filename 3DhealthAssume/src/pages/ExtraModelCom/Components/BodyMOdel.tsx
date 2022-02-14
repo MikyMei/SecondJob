@@ -1566,6 +1566,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
       </div>
       {threeChoosenMesh ? "" : <div className={styles.compareButton}
+
                                     onMouseDown={() => ComparePartOrga()}
                                     onMouseUp={()=>RestoreCompare()}
       >

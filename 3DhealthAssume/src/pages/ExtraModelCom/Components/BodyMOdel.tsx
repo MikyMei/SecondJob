@@ -1572,9 +1572,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       >
         <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>
         <a className={styles.compareText}>健康对比</a>
-
       </div>}
-
       <Slider min={0}
               max={orgaTypeList.length - 1}
               step={0.05}

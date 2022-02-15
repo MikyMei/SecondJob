@@ -45,6 +45,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * */
   let scene: any;
   const objects: any = [];
+  const scanMeshModel: any = [];
   const standardObjects: any = [];
   let camera: any;
   let plane: any;
@@ -211,6 +212,9 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   // 主要用于模型对比功能，一般事先加载两个模型。一个正常模型。
   // 另一个是当前用户的的模型，如果需要对对比模型（即正常模型，进行操作，需要将状态变量中的受控模型进行重新赋值)
   const [meshCompare, setMeshCompare] = useState<boolean>(true);
+  const [scanMesh, setScanMesh] = useState<any>();
+
+
 
 
   let sliderDivIndex: CarouselRef | null = null;
@@ -379,6 +383,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
             if (child.isMesh) {
               objects.push(child);
+
+
               processGLTFChild(child, false)
 
             }
@@ -462,6 +468,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     setThreeRenderer(renderer);
     setThreeControls(controls);
     setThreeObjects(objects);
+    setScanMesh(scanMeshModel);
     setThreeStandardObjects(standardObjects);
     setThreeMainCanvas(mainCanvas);
   }
@@ -566,10 +573,19 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     }
     setThreeAddTimer(addTimer);
     setThreeTime(time);
-    if (threeObjects.length > 0) {
-      threeObjects[threeObjects.length - 1].material.uniforms.time = time;
+    /**
+     * 这里是固定了皮肤的在最后一个，实际上需要在最开始的时候就整出来
+     * */
+    if (scanMesh.length>0) {
+      scanMesh.map(item=>{
+      item.material.uniforms.time = time;
+      })
+
 
     }
+
+
+
     if (isStart) {
       StartTime.value += dt * 0.6;
       if (StartTime.value >= 1) {
@@ -873,6 +889,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         },
         vertexShader: `
           varying vec3	vVertexWorldPosition;
+          uniform float time;
           varying vec3	vVertexNormal;
           varying vec4	vFragColor;
           varying vec4 vPositionMatrix;
@@ -883,7 +900,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             vVertexWorldPosition	= (modelMatrix * vec4(position, 1)).xyz;
             vPositionMatrix = projectionMatrix * vec4(position, 1.0);
             vPosition = position;
-            gl_Position	= projectionMatrix * modelViewMatrix * vec4(position, 1);
+            gl_Position	= projectionMatrix * modelViewMatrix * vec4(position.x, position.y, position.z , 1);
           }`,
         fragmentShader: `
           float distanceTo(vec2 src, vec2 dst) {
@@ -931,18 +948,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           distColor = mix(distColor, uTopColor, indexMix);
           // 开启扩散波
           vec2 position2D = vec2(vPosition.x, vPosition.y);
-          // if (uDiffusion.x > 0.5) {
-          //     // 扩散速度
-          //     float dTime = mod(time * uDiffusion.z, uRadius * 2.0);
-          //     // 当前的离中心点距离
-          //     float uLen = distanceTo(position2D, vec2(uCenter.x, uCenter.z));
-          //     // 扩散范围
-          //     if (uLen < dTime && uLen > dTime - uDiffusion.y) {
-          //         // 颜色渐变
-          //         float dIndex = sin((dTime - uLen) / uDiffusion.y );
-          //         distColor = mix(uColor, distColor, dIndex);
-          //     }
-          // }
+
 
             if (uFlow.x > 0.5) {
                 // 扩散速度
@@ -999,8 +1005,10 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       // 根据器官属于在哪个数组，判断属于哪一类，选择哪一类着色器材质
       const type = JudgeOrgaType(child.name);
 
+
       switch (type) {
         case 0:
+          scanMeshModel.push(child);
           child.material = setCityMaterial(child).materialBody;
 
           child.castShadow = true;
@@ -1014,7 +1022,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           /**
            * 以下为两种方案，着色器的优势在于控制滑动隐藏上，而动画不能用
            * */
-          child.material = new THREE.MeshStandardMaterial(
+          child.material = new THREE.MeshPhongMaterial(
             {
               color: orgaMatchColor[`${child.name}`],
               transparent: true,
@@ -1568,7 +1576,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       {threeChoosenMesh ? "" : <div className={styles.compareButton}
 
                                     onMouseDown={() => ComparePartOrga()}
-                                    onMouseUp={()=>RestoreCompare()}
+                                    onMouseUp={() => RestoreCompare()}
       >
         <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>
         <a className={styles.compareText}>健康对比</a>

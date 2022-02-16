@@ -77,7 +77,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * 在这里存储可以使用滑块控制的，在忽快中展示的文本，以及对应数值调整地对应模型的名字（后期可以使用className进而控制一类地mesh）
    * 这个需要先确定有哪几类，在确定每一类中的所包含的器官名字，
    * */
-  const matchType = ["皮肤", "骨骼", "内脏", ""];
+  const matchType = ["皮肤", "骨骼", "内脏1","内脏2","内脏3","内脏4", ""];
   const matchMesh = [["Body002"], ["Circulatory_Heart001"], ["Skeletal001"], []];
 
   const orgaNameList = ["Retopo_跟骨",
@@ -143,19 +143,28 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       "Retopo_胫骨",
       "Retopo_尺骨",
       "Retopo_脊柱"],
-    ["Retopo_生殖系统",
-      "Retopo_静脉",
-      "Retopo_动脉",
+    [
       "Retopo_大脑",
-      "Retopo_消化系统",
       "Retopo_小肠",
-      "Retopo_胃部",
       "Retopo_肝脏",
-      "Retopo_支气管",
+
+      ],
+    ["Retopo_生殖系统",
       "Retopo_肺",
       "Retopo_肾脏",
+    ],
+    [
+      "Retopo_胃部",
+      "Retopo_消化系统",
       "Heart__Ani",
-      "Retopo_心脏"],
+      "Retopo_心脏"
+
+    ],
+    ["Retopo_静脉",
+      "Retopo_动脉",
+      "Retopo_支气管",
+
+    ],
     []
   ];  // 根据器官将他们分为不同的部分，首先要知道他有几类
 
@@ -462,11 +471,11 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
     controls = new OrbitControls(camera, renderer.domElement);
-    controls.mouseButtons = {
-      LEFT: THREE.MOUSE.ROTATE,
-      MIDDLE: THREE.MOUSE.DOLLY,
-      RIGHT: ''
-    }
+    // controls.mouseButtons = {
+    //   LEFT: THREE.MOUSE.ROTATE,
+    //   MIDDLE: THREE.MOUSE.DOLLY,
+    //   RIGHT: ''
+    // }
     controls.enableDamping = true;
 
     setThreeScene(scene);
@@ -1026,6 +1035,10 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           child.castShadow = true;
           break;
         case 2:
+        case 3:
+        case 4:
+        case 5:
+
           /**
            * 以下为两种方案，着色器的优势在于控制滑动隐藏上，而动画不能用
            * */
@@ -1033,11 +1046,13 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             {
               color: orgaMatchColor[`${child.name}`],
               transparent: true,
-              opacity: 0.8,
+              opacity: 0.9,
               visible: visible,
               metalness: 0,
               roughness: 0,
               envMapIntensity: 1,
+              side: THREE.DoubleSide,
+              depthWrite: true
             });
           // child.material = Shaders(orgaMatchColor[`${child.name}`]).material3;
           child.castShadow = true
@@ -1128,12 +1143,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
           if (object.material.uniforms) {
             new TWEEN.Tween(object.material.uniforms.coeficient)
-              .to({type: 'f', value: 1}, 2000) // 在1s内移动至 (0, 0)
+              .to({type: 'f', value: 1}, 1000) // 在1s内移动至 (0, 0)
               .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
               .start()
           } else {
             new TWEEN.Tween(object.material)
-              .to({opacity: 0.8}, 2000) // 在1s内移动至 (0, 0)
+              .to({opacity: 0.9}, 1000) // 在1s内移动至 (0, 0)
               .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
               .start()
           }
@@ -1171,12 +1186,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
          * */
         if (object.material.uniforms) {
           new TWEEN.Tween(object.material.uniforms.coeficient)
-            .to({type: 'f', value: needOpacity}, 2000) // 在1s内移动至 (0, 0)
+            .to({type: 'f', value: needOpacity}, 1000) // 在1s内移动至 (0, 0)
             .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
             .start()
         } else {
           new TWEEN.Tween(object.material)
-            .to({opacity: needOpacity * 0.8}, 2000) // 在1s内移动至 (0, 0)
+            .to({opacity: needOpacity * 0.9}, 1000) // 在1s内移动至 (0, 0)
             .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
             .start()
         }

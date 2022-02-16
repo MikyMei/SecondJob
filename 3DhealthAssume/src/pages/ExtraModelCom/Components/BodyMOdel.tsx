@@ -291,14 +291,21 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     spotLight.shadow.penumbra = 0.05;
     spotLight.shadow.mapSize.width = 3026;
     spotLight.shadow.mapSize.height = 3026;
-    scene.add(spotLight);
+    // scene.add(spotLight);
 
     ambient = new THREE.AmbientLight(0x444444);
     scene.add(ambient);
 
+    /**
+     * 前后两个点光源
+     * */
     point = new THREE.PointLight(0xffffff);
-    point.position.set(400, 200, 300); // 点光源位置
+    point.position.set(0, 200, 300); // 点光源位置
     scene.add(point);
+
+    const backPoint =new THREE.PointLight(0xffffff);
+    backPoint.position.set(0, 200, -300); // 点光源位置
+    scene.add(backPoint);
 
 
     camera = new THREE.PerspectiveCamera(45, mainCanvas.offsetWidth * 0.8 / mainCanvas.offsetHeight, 0.1, 2000);
@@ -1022,12 +1029,15 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           /**
            * 以下为两种方案，着色器的优势在于控制滑动隐藏上，而动画不能用
            * */
-          child.material = new THREE.MeshPhongMaterial(
+          child.material = new THREE.MeshStandardMaterial(
             {
               color: orgaMatchColor[`${child.name}`],
               transparent: true,
-              opacity: 0.7,
-              visible: visible
+              opacity: 0.8,
+              visible: visible,
+              metalness: 0,
+              roughness: 0,
+              envMapIntensity: 1,
             });
           // child.material = Shaders(orgaMatchColor[`${child.name}`]).material3;
           child.castShadow = true
@@ -1123,7 +1133,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
               .start()
           } else {
             new TWEEN.Tween(object.material)
-              .to({opacity: 0.7}, 2000) // 在1s内移动至 (0, 0)
+              .to({opacity: 0.8}, 2000) // 在1s内移动至 (0, 0)
               .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
               .start()
           }
@@ -1166,7 +1176,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             .start()
         } else {
           new TWEEN.Tween(object.material)
-            .to({opacity: needOpacity * 0.7}, 2000) // 在1s内移动至 (0, 0)
+            .to({opacity: needOpacity * 0.8}, 2000) // 在1s内移动至 (0, 0)
             .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
             .start()
         }

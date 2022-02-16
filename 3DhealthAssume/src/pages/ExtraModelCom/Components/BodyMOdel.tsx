@@ -77,7 +77,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * 在这里存储可以使用滑块控制的，在忽快中展示的文本，以及对应数值调整地对应模型的名字（后期可以使用className进而控制一类地mesh）
    * 这个需要先确定有哪几类，在确定每一类中的所包含的器官名字，
    * */
-  const matchType = ["皮肤", "骨骼", "内脏1","内脏2","内脏3","内脏4", ""];
+  const matchType = ["皮肤", "骨骼", "内脏1", "内脏2", "内脏3", "内脏4", ""];
   const matchMesh = [["Body002"], ["Circulatory_Heart001"], ["Skeletal001"], []];
 
   const orgaNameList = ["Retopo_跟骨",
@@ -148,7 +148,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       "Retopo_小肠",
       "Retopo_肝脏",
 
-      ],
+    ],
     ["Retopo_生殖系统",
       "Retopo_肺",
       "Retopo_肾脏",
@@ -172,15 +172,15 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     "Retopo_生殖系统": "#fcafaf",
     "Retopo_静脉": "#b8c7bf",
     "Retopo_动脉": "#fb7f68",
-    "Retopo_大脑": "#caadb1",
-    "Retopo_消化系统": "#e8e1c0",
-    "Retopo_小肠": "#fff1d2",
-    "Retopo_胃部": "#f78b7a",
+    "Retopo_大脑": "#D6C0AD",
+    "Retopo_消化系统": "#EDBDA9",
+    "Retopo_小肠": "#F7D46C",
+    "Retopo_胃部": "#EDBDA9",
     "Retopo_肝脏": "#ee934c",
     "Retopo_支气管": "#cc594b",
-    "Retopo_肺": "#ea5d69",
-    "Retopo_肾脏": "#e04903",
-    "Retopo_心脏": "#f05552",
+    "Retopo_肺": "#ff7464",
+    "Retopo_肾脏": "#F0834D",
+    "Retopo_心脏": "#BC4D2A",
   };
 
   let choosenMesh: any;
@@ -222,8 +222,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   // 另一个是当前用户的的模型，如果需要对对比模型（即正常模型，进行操作，需要将状态变量中的受控模型进行重新赋值)
   const [meshCompare, setMeshCompare] = useState<boolean>(true);
   const [scanMesh, setScanMesh] = useState<any>();
-
-
+  const [sliderValue, setSliderValue] = useState<any>(0);
+  const [sliderFlag, setSliderFlag] = useState<any>(false);
 
 
   let sliderDivIndex: CarouselRef | null = null;
@@ -312,7 +312,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     point.position.set(0, 200, 300); // 点光源位置
     scene.add(point);
 
-    const backPoint =new THREE.PointLight(0xffffff);
+    const backPoint = new THREE.PointLight(0xffffff);
     backPoint.position.set(0, 200, -300); // 点光源位置
     scene.add(backPoint);
 
@@ -592,14 +592,13 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     /**
      * 这里是固定了皮肤的在最后一个，实际上需要在最开始的时候就整出来
      * */
-    if (scanMesh.length>0) {
-      scanMesh.map(item=>{
-      item.material.uniforms.time = time;
+    if (scanMesh.length > 0) {
+      scanMesh.map(item => {
+        item.material.uniforms.time = time;
       })
 
 
     }
-
 
 
     if (isStart) {
@@ -1106,7 +1105,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * 主要是当滑动条不是匀速的时候调用，用于将之前的都隐藏掉，之后的都可视，且透明度均为一
    * */
 
-  const changeBeforeOpacity = (index: any) => {
+  const changeBeforeOpacity = ( index: any) => {
+
 
     /**
      * 把index地剔除剩下的拿出来，挨个进行设置
@@ -1125,7 +1125,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     if (threeObjects.length > 0 && (beforeObjects.length > 0 || afterObjects.length)) {
       threeObjects.map((object: any) => {
         if (beforeObjects.toString().indexOf(object.name) !== -1) {
-
           object.material.visible = false;
 
         }
@@ -1161,7 +1160,41 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
   }
 
+  /**
+   * restore all model material,
+   * when you do or ready to interact with the model, and when "sliderValue is not zero"
+   * */
+
+  const ResetAllOpacity = () => {
+    const oldObjects = orgaTypeList.slice(0);
+    const displayObjects = orgaTypeList.slice(0,2);
+    const hidedenObjects = orgaTypeList.slice(2,oldObjects.length-1);
+
+    if (sliderFlag && oldObjects.length > 0) {
+      threeObjects.map((object: any, index: any) => {
+        if ( hidedenObjects.toString().indexOf(object.name) !== -1){
+          object.material.visible = false;
+        }else{
+
+          if (object.material.uniforms){
+            object.material.visible = true;
+            object.material.uniforms.coeficient={type: 'f', value: 1}
+          }else{
+            object.material.visible = true;
+            object.material.opacity = 0.9;
+          }
+        }
+
+      })
+      setSliderValue(0);
+      setSliderFlag(false)
+    }
+  }
+
+
   const sliderChange = (value: any) => {
+    setSliderValue(value);
+    setSliderFlag(true);
     //  orgaTypeList
     // 获取当前需要被一起控制的一类mesh
     const nowMesh = orgaTypeList[Math.floor(value)];
@@ -1334,6 +1367,11 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     // 恢复健康比对
     ResetCompare: () => {
       RestoreCompare()
+    },
+
+    //resetSliderValue
+    resetSlider: () => {
+      ResetAllOpacity();
     }
 
 
@@ -1606,14 +1644,15 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>
         <a className={styles.compareText}>健康对比</a>
       </div>}
-      <Slider min={0}
+      {threeChoosenMesh ? "" :<Slider min={0}
               max={orgaTypeList.length - 1}
               step={0.05}
               reverse={true}
               tipFormatter={formatter}
               vertical
+              value={sliderValue}
               onChange={sliderChange}
-              className={styles.sliderBar}/>
+              className={styles.sliderBar}/>}
     </div>
   )
 }

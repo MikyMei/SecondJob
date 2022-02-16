@@ -83,8 +83,9 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
   const [nowSelectedOrga, setNowSelectedOrga] = useState<any>("555");
   const [defaultSelectedIndex, setDefaultSelectedIndex] = useState<any>(null); // 默认选中的异常标识，可以用在右侧信息栏
 
-  const enlargeItem = (value: any) => {
-    bodyRef.current.testEnlarge(value);
+  const enlargeItem = async (value: any) => {
+    await bodyRef.current.resetSlider();
+    await bodyRef.current.testEnlarge(value);
 
 
   }
@@ -905,6 +906,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
                       bordered={false}
                       onChange={(value: any) => {
                         bodyRef.current.ResetCompare();
+                        bodyRef.current.resetSlider();
                         closeInfoWindow();
                         setChoosenPart(value);
                         if (dispatch) {

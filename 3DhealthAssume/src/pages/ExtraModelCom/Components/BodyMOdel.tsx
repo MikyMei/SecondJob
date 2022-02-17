@@ -1631,8 +1631,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
               </Carousel>
             </TabPane>
           </Tabs>
-
-
         </div>
 
       </div>

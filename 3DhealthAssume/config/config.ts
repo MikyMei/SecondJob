@@ -80,7 +80,7 @@ export default defineConfig({
     },
   ],
   nodeModulesTransform: { type: 'none' },
-  webpack5: {},
+  // webpack5: {},
   exportStatic: {},
   // fastRefresh: {},
   runtimePublicPath:true,

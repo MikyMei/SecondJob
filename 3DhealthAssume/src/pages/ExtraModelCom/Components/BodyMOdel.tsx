@@ -453,7 +453,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             if (child.isMesh) {
               standardObjects.push(child);
               child.visible = false;
-
               processGLTFChild(child, true)
 
             }
@@ -1049,6 +1048,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
               visible: visible,
               metalness: 0,
               roughness: 0,
+              specular:"#ffffff",
+              shininess:2000,
               envMapIntensity: 1,
               side: THREE.DoubleSide,
               depthWrite: true

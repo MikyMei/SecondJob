@@ -742,7 +742,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
       IllListTemp.map((item: any, index: any) => {
         buttonList.push(
           <Radio.Button
-            onClick={()=>{ bodyRef.current.sliderDivIndex(index); }}
+            onClick={()=>{ choosenPart!=="全身性器官"?bodyRef.current.sliderDivIndex(index):"" }}
             key={item.illName || item.name}
             className={styles.radioButton}
             value={item.illName || item.name}>{item.illName || item.name}</Radio.Button>

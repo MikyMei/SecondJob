@@ -1040,17 +1040,17 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           /**
            * 以下为两种方案，着色器的优势在于控制滑动隐藏上，而动画不能用
            * */
-          child.material = new THREE.MeshStandardMaterial(
+          child.material = new THREE.MeshPhongMaterial(
             {
               color: orgaMatchColor[`${child.name}`],
               transparent: true,
               opacity: 0.9,
               visible: visible,
-              metalness: 0,
-              roughness: 0,
+              // metalness: 0,
+              // roughness: 0,
               specular:"#ffffff",
               shininess:2000,
-              envMapIntensity: 1,
+              // envMapIntensity: 1,
               side: THREE.DoubleSide,
               depthWrite: true
             });

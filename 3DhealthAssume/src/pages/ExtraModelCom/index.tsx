@@ -40,6 +40,10 @@ const {Option} = Select;
 
 const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch }) => {
 
+
+  console.log("传递的参数",window.location.search);
+
+
   const {bodyModelInfo, dispatch} = props;
 
   const {

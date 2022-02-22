@@ -302,8 +302,8 @@ export function JudgeGender(personalInfo: any) {
 
   if (personalInfo.BMI) {
     modelType.map((item: any) => {
-      if (item.BMIRank[0]<=personalInfo.BMI && item.BMIRank[1]>personalInfo.BMI ){
-        finalModel=item.modelName;
+      if (item.BMIRank[0] <= personalInfo.BMI && item.BMIRank[1] > personalInfo.BMI) {
+        finalModel = item.modelName;
       }
     })
 
@@ -311,5 +311,167 @@ export function JudgeGender(personalInfo: any) {
 
 
   return {finalGender, finalModel}
+
+}
+
+
+/**
+ * 根据传来的器官名字，确定所属部位
+ * */
+
+export function GetOrgaParent(orgaName: any) {
+
+  const allPartDetails: any = {
+    "腹部": ["胃",
+      "小肠",
+      "肠黏膜",
+      "肝脏",
+      "大肠",
+      "肛",
+      "肾脏",
+      "输尿管",
+      "膀胱",
+      "尿道",
+      "血-尿屏障",
+      "血-睾屏障",
+      "腰椎关节",
+      "腰骨和腰肌",
+      "睾丸",
+      "附睾",
+      "输精管",
+      "射精管",
+      "前列腺",
+      "男性外生殖器",
+      "卵巢",
+      "输卵管",
+      "子宫",
+      "女性阴道",
+      "女性外生殖器",
+    ],
+    "全身": ["血管",
+      "全身（组织）",
+      "骨骼肌",
+      "脂肪",
+      "皮肤",
+      "皮下组织",
+      "粘膜",
+      "毛发",
+      "指甲",
+      "抵抗感染组织",
+      "免疫监视组织",
+      "自身稳定组织",
+      "内脏",
+      "骨骼肌等",
+    ],
+    "上肢": ["肩关节",
+      "肩骨和肩肌",
+      "肘关节",
+      "肘骨和肘肌",
+      "腕关节",
+      "腕骨和腕肌",
+      "掌指关节",
+      "掌指骨和掌指肌",
+    ],
+    "神经": ["视觉中枢神经通路",
+      "听觉中枢神经通路",
+      "嗅觉中枢神经通路",
+      "味觉中枢神经通路",
+      "浅感觉中枢神经通路",
+      "平衡觉中枢神经通路",
+      "机体觉中枢神经通路",
+      "中枢神经系统",
+      "周围神经系统",
+    ],
+    "头面部": ["口",
+      "咽",
+      "喉和会厌",
+      "鼻",
+      "血-脑屏障",
+      "颅盖",
+      "血-眼屏障",
+      "左眼",
+      "右眼",
+      "左耳",
+      "右耳",
+      "鼻嗅觉感受功能",
+      "舌",
+      "内耳（平衡觉）",
+      "面部关节",
+      "面部骨骼与面部肌肉",
+      "颈椎关节",
+      "颈骨和颈肌",
+      "脑",
+      "脑（视觉认知功能）",
+      "脑（听觉认知功能）",
+      "脑（触觉认知功能）",
+      "脑（定向力功能）",
+      "脑（目的行为运动协调功能）",
+      "脑（思维功能）",
+      "脑（智能功能）",
+    ],
+    "下肢": ["髋关节",
+      "髋骨和髋肌",
+      "骨盆关节",
+      "骨盆骨和骨盆肌",
+      "膝关节",
+      "膝骨和膝肌",
+      "足关节",
+      "足骨和足肌",
+    ],
+    "胸部": ["食管",
+      "心脏",
+      "肺脏",
+      "支气管",
+      "气管",
+      "血-气屏障",
+      "血-胸腺屏障",
+      "胸椎关节",
+      "胸骨和胸肌",
+      "乳房",
+    ],
+  };
+  let partName: any;
+
+  for (const p in allPartDetails) {
+    if (allPartDetails[p].indexOf(orgaName) !== -1) {
+      partName = p;
+    }
+  }
+
+
+  return partName;
+
+}
+
+
+/**
+ * 根据传来的器官数组，再每个器官中加一个属性，组织，或者将他们分类成某个部位,
+ * 返回两种结果，一类时给数组中的每个元素增加一个部位属性（newOrgaList），另一个是将他们格式化成需要的格式（orgaObject）
+ * */
+
+
+export function RestructureOrgaList(orgaList: any){
+
+  /**
+   * 给器官列表增加身体部位
+   * */
+  const newOrgaList=JSON.parse(JSON.stringify(orgaList));
+
+  const orgaObject=new Object();
+
+  if (Array.isArray(newOrgaList) && newOrgaList.length>0){
+    newOrgaList.map((orga: any)=>{
+      const partName=GetOrgaParent(orga.orgaName);
+      orga.parName=partName;
+      if (orgaObject[`${partName}`]){
+        orgaObject[`${partName}`].push(orga)
+      }else{
+        orgaObject[`${partName}`]=[orga];
+
+      }
+    })
+  }
+
+  return {newOrgaList, orgaObject}
 
 }

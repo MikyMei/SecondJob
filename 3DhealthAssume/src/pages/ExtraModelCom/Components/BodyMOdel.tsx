@@ -1143,12 +1143,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
           if (object.material.uniforms) {
             new TWEEN.Tween(object.material.uniforms.coeficient)
-              .to({type: 'f', value: 1}, 1000) // 在1s内移动至 (0, 0)
+              .to({type: 'f', value: 1}, 500) // 在1s内移动至 (0, 0)
               .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
               .start()
           } else {
             new TWEEN.Tween(object.material)
-              .to({opacity: 0.9}, 1000) // 在1s内移动至 (0, 0)
+              .to({opacity: 0.9}, 500) // 在1s内移动至 (0, 0)
               .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
               .start()
           }
@@ -1220,12 +1220,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
          * */
         if (object.material.uniforms) {
           new TWEEN.Tween(object.material.uniforms.coeficient)
-            .to({type: 'f', value: needOpacity}, 1000) // 在1s内移动至 (0, 0)
+            .to({type: 'f', value: needOpacity}, 500) // 在1s内移动至 (0, 0)
             .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
             .start()
         } else {
           new TWEEN.Tween(object.material)
-            .to({opacity: needOpacity * 0.9}, 1000) // 在1s内移动至 (0, 0)
+            .to({opacity: needOpacity * 0.9}, 500) // 在1s内移动至 (0, 0)
             .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
             .start()
         }

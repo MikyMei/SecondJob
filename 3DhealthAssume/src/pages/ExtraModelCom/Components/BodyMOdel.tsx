@@ -1639,6 +1639,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
                                     onMouseDown={() => ComparePartOrga()}
                                     onMouseUp={() => RestoreCompare()}
+                                    onMouseOut={() => RestoreCompare()}
       >
         <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>
         <a className={styles.compareText}>健康对比</a>

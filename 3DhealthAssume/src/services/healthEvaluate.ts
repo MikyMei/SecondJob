@@ -90,7 +90,7 @@ export async function GetAllOrgaList(params: any) {
           {name: "肺", exceptionCount: 1, score: 60},
           {name: "肾脏", exceptionCount: 2, score: 61},
           {name: "心脏", exceptionCount: 3, score: 62},
-          {name: "心脏(动画)", exceptionCount: 3, score: 62},
+          // {name: "心脏(动画)", exceptionCount: 3, score: 62},
 
         ],
         "全身性器官": [

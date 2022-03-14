@@ -1635,15 +1635,30 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         </div>
 
       </div>
-      {threeChoosenMesh ? "" : <div className={styles.compareButton}
+      {threeChoosenMesh ? "" :
+        <div className={styles.switchGroup}>
+          <div className={styles.compareButton}
 
-                                    onMouseDown={() => ComparePartOrga()}
-                                    onMouseUp={() => RestoreCompare()}
-                                    onMouseOut={() => RestoreCompare()}
-      >
-        <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>
-        <a className={styles.compareText}>健康对比</a>
-      </div>}
+               onMouseDown={() => ComparePartOrga()}
+               onMouseUp={() => RestoreCompare()}
+               onMouseOut={() => RestoreCompare()}
+          >
+            <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>
+            <a className={styles.compareText}>健康对比（标准和胖）</a>
+          </div>
+          <div className={styles.compareButton1}
+
+               onMouseDown={() => ComparePartOrga()}
+               onMouseUp={() => RestoreCompare()}
+               onMouseOut={() => RestoreCompare()}
+          >
+            <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>
+            <a className={styles.compareText}>健康对比（标准和瘦）</a>
+          </div>
+        </div>
+
+
+      }
       {threeChoosenMesh ? "" :<Slider min={0}
               max={orgaTypeList.length - 1}
               step={0.05}

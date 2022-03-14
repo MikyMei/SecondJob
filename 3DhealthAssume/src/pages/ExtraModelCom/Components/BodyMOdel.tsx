@@ -543,7 +543,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * */
 
     let thinnerModel;
-    loader.load(`./img/allKindsOfModel/${modelType}/overWeightFigure2.gltf`, function (gltf: any) {
+    loader.load(`./img/allKindsOfModel/${modelType}/fatFigure2.gltf`, function (gltf: any) {
         thinnerModel = gltf.scene;
         thinnerModel.scale.setScalar(5.5, 5.5, 5.5);
         thinnerModel.position.setY(-4.5);

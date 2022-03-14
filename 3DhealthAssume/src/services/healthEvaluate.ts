@@ -52,7 +52,7 @@ export async function GetAllOrgaList(params: any) {
           {name: "皮肤", exceptionCount: 4, score: 68}
         ],
         "骨骼部位": [
-          {name: "跟骨", exceptionCount: 1, score: 50},
+
           {name: "腕骨", exceptionCount: 2, score: 52},
           {name: "颈椎", exceptionCount: 3, score: 53},
           {name: "锁骨", exceptionCount: 4, score: 54},
@@ -76,6 +76,7 @@ export async function GetAllOrgaList(params: any) {
           {name: "胫骨", exceptionCount: 4, score: 72},
           {name: "尺骨", exceptionCount: 5, score: 73},
           {name: "脊柱", exceptionCount: 6, score: 74},
+          {name: "跟骨", exceptionCount: 1, score: 50},
         ],
         "内脏部位": [
           {name: "生殖系统", exceptionCount: 1, score: 46},

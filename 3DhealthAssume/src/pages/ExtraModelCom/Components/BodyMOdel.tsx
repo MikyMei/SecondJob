@@ -47,6 +47,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const objects: any = [];
   const scanMeshModel: any = [];
   const standardObjects: any = [];
+  const thinnerObjects: any = []; // 存放对比模型中的mesh目前只存放两个，皮肤和骨骼
   let camera: any;
   let plane: any;
   let spotLight: any;
@@ -118,7 +119,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     "Retopo_心脏",
     "Heart__Ani",
     "Retopo_皮肤"];  //
-  const orgaTypeList = [["Retopo_皮肤", "皮肤", "超重"],
+  const orgaTypeList = [["Retopo_皮肤", "皮肤", "超重", "全身_1", "胖"],
     ["Retopo_跟骨",
       "Retopo_腕骨",
       "Retopo_颈椎",
@@ -142,7 +143,38 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       "Retopo_跗骨",
       "Retopo_胫骨",
       "Retopo_尺骨",
-      "Retopo_脊柱"],
+      "Retopo_脊柱",
+      //  以下为对比模型的名字
+      "腰椎关节，腰椎",
+      "腰肌，腰椎",
+      "肩关节",
+      "肩肌，肩关节",
+      "肘肌，手肘",
+      "手肘",
+      "手腕",
+      "手指",
+      "牙，口",
+      "口，舌",
+      "咽",
+      "喉和会厌",
+      "鼻，头颈部",
+      "头颈部，颅盖",
+      "耳",
+      "面部关节，头颈部",
+      "面部肌肉，头颈部",
+      "颈肌，颈椎",
+      "颈椎",
+      "髋肌，髋部",
+      "骨盆，髋部",
+      "骨盆，骶骨，髋部",
+      "骨盆肌",
+      "股骨，髋部，膝关节",
+      "膝关节",
+      "膝肌，膝关节",
+      "足关节",
+      "血_胸腺屏障",
+      "胸椎",
+    ],
     [
       "Retopo_大脑",
       "Retopo_小肠",
@@ -195,7 +227,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const [threeRenderer, setThreeRenderer] = useState<any>();
   const [threeLabelRenderer, setThreeLabelRenderer] = useState<any>();
   const [threeObjects, setThreeObjects] = useState<any>();
-  const [threeStandardObjects, setThreeStandardObjects] = useState<any>();  // 主要用来存放对比模型的所有器官的网格模型
+  const [threeStandardObjects, setThreeStandardObjects] = useState<any>();  // 主要用来存放对比模型的所有器官的网格模型（目前存放的是超重模型）
+  const [threeThinnerObjects, setThreeThinnerObjects] = useState<any>();  // 主要用来存放对比模型的所有器官的网格模型（目前存放的是超重模型）
   const [threeMainCanvas, setThreeMainCanvas] = useState<any>();
   const [threeAddTimer, setThreeAddTimer] = useState<any>(false);
   const [threeIsStart, setThreeIsStart] = useState<any>(false);
@@ -417,11 +450,44 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       });
 
     /**
-     * 加载标准的模型，但是里面的所有child的可见性设置为不可见，目前来看只加载皮肤和骨骼
+     * 加载标准的模型，但是里面的所有child的可见性设置为不可见，目前来看只加载皮肤和骨骼；
+     * 定义一个对比模型需要加载的子模型的名字，例如只加载骨骼和皮肤
      * */
     let standardModel;
+    const compareMeshList = [
+      "腰椎关节，腰椎",
+      // "腰肌，腰椎",
+      "肩关节",
+      // "肩肌，肩关节",
+      // "肘肌，手肘",
+      "手肘",
+      "手腕",
+      "手指",
+      "牙，口",
+      // "口，舌",
+      // "咽",
+      // "喉和会厌",
+      // "鼻，头颈部",
+      "头颈部，颅盖",
+      // "耳",
+      "面部关节，头颈部",
+      // "面部肌肉，头颈部",
+      // "颈肌，颈椎",
+      "颈椎",
+      // "髋肌，髋部",
+      "骨盆，髋部",
+      "骨盆，骶骨，髋部",
+      "股骨，髋部，膝关节",
+      "膝关节",
+      // "膝肌，膝关节",
+      "足关节",
+      // "血_胸腺屏障",
+      "胸椎",
+      "全身_1",
+      "胖",
+    ]
 
-    loader.load(`./img/allKindsOfModel/${modelType}/overWeightFigure.gltf`, function (gltf: any) {
+    loader.load(`./img/allKindsOfModel/${modelType}/overWeightFigure2.gltf`, function (gltf: any) {
         standardModel = gltf.scene;
         standardModel.scale.setScalar(5.5, 5.5, 5.5);
         standardModel.position.setY(-4.5);
@@ -451,9 +517,67 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
              * */
 
             if (child.isMesh) {
-              standardObjects.push(child);
+
               child.visible = false;
-              processGLTFChild(child, true)
+              if (compareMeshList.includes(child.name)) {
+                standardObjects.push(child);
+                processGLTFChild(child, true);
+              }
+
+
+            }
+          }
+        );
+
+      },
+      undefined
+
+      , function (error) {
+
+        console.error(error);
+
+      });
+
+    /**
+     * 加载比较瘦的模型，一般来说只加载皮肤和谷歌模型
+     * */
+
+    let thinnerModel;
+    loader.load(`./img/allKindsOfModel/${modelType}/overWeightFigure2.gltf`, function (gltf: any) {
+        thinnerModel = gltf.scene;
+        thinnerModel.scale.setScalar(5.5, 5.5, 5.5);
+        thinnerModel.position.setY(-4.5);
+        thinnerModel.visible = meshCompare;
+
+        /**
+         * beIntersectObjects是用来存放需要射线检测的物体数组。
+         * transformControl可以方便调节物体位置大小。
+         * */
+
+        /**
+         * 在这里将模型地动画全部格式化，并生成mixer
+         * */
+
+
+        thinnerModel.name = "thinnerModel";
+
+        scene.add(thinnerModel);
+        thinnerModel.traverse((child: any) => {
+            /**
+             * 在这里将不同模型根据他的名字，将
+             * */
+
+
+            /**
+             * 遍历模型的时候，加一个参数，主要是为了在加载对比模型
+             * */
+
+            if (child.isMesh) {
+              child.visible = false;
+              if (compareMeshList.includes(child.name)) {
+                thinnerObjects.push(child);
+                processGLTFChild(child, true);
+              }
 
             }
           }
@@ -485,6 +609,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     setThreeObjects(objects);
     setScanMesh(scanMeshModel);
     setThreeStandardObjects(standardObjects);
+    setThreeThinnerObjects(thinnerObjects);
     setThreeMainCanvas(mainCanvas);
   }
 
@@ -1048,8 +1173,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
               visible: visible,
               // metalness: 0,
               // roughness: 0,
-              specular:"#ffffff",
-              shininess:2000,
+              specular: "#ffffff",
+              shininess: 2000,
               // envMapIntensity: 1,
               side: THREE.DoubleSide,
               depthWrite: true
@@ -1106,7 +1231,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * 主要是当滑动条不是匀速的时候调用，用于将之前的都隐藏掉，之后的都可视，且透明度均为一
    * */
 
-  const changeBeforeOpacity = ( index: any) => {
+  const changeBeforeOpacity = (index: any) => {
 
 
     /**
@@ -1168,19 +1293,19 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
   const ResetAllOpacity = () => {
     const oldObjects = orgaTypeList.slice(0);
-    const displayObjects = orgaTypeList.slice(0,2);
-    const hidedenObjects = orgaTypeList.slice(2,oldObjects.length-1);
+    const displayObjects = orgaTypeList.slice(0, 2);
+    const hidedenObjects = orgaTypeList.slice(2, oldObjects.length - 1);
 
     if (sliderFlag && oldObjects.length > 0) {
       threeObjects.map((object: any, index: any) => {
-        if ( hidedenObjects.toString().indexOf(object.name) !== -1){
+        if (hidedenObjects.toString().indexOf(object.name) !== -1) {
           object.material.visible = false;
-        }else{
+        } else {
 
-          if (object.material.uniforms){
+          if (object.material.uniforms) {
             object.material.visible = true;
-            object.material.uniforms.coeficient={type: 'f', value: 1}
-          }else{
+            object.material.uniforms.coeficient = {type: 'f', value: 1}
+          } else {
             object.material.visible = true;
             object.material.opacity = 0.9;
           }
@@ -1495,13 +1620,21 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   //   }
   // },[selectedOrga])
 
-  const RestoreCompare = async () => {
+  const RestoreCompare = async (modelTypeName: any) => {
     await threeObjects.forEach(object => {
       object.visible = true;
     })
-    await threeStandardObjects.forEach(object => {
-      object.visible = false;
-    })
+
+    if (modelTypeName==="overWeight"){
+      await threeStandardObjects.forEach(object => {
+        object.visible = false;
+      })
+    }else{
+      await threeThinnerObjects.forEach(object => {
+        object.visible = false;
+      })
+    }
+
   }
 
   const closeInfoWindow = async () => {
@@ -1583,23 +1716,34 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
   /**
    * 健康对比相关功能，这里主要是将场景中已经加载的正常模型和用户模型进行交替控制展示和隐藏
+   * 这里传的参数为要对比的模型名字
    * */
 
-  const ComparePartOrga = async () => {
+  const ComparePartOrga = async (modelType: any) => {
     /**
      * 如果当前选中的器官模型有，就只是改变该模型，否则，改变所有的当前material可见的
      * */
 
     await threeObjects.forEach((signleOrga: any) => {
-      if (signleOrga.name === "Retopo_皮肤") {
+      if (signleOrga.name === "Retopo_皮肤" || JudgeOrgaType(signleOrga.name) === 1) {
         signleOrga.visible = !signleOrga.visible;
       }
     })
-    await threeStandardObjects.forEach((signleOrga: any) => {
-      if (signleOrga.name === "超重") {
+
+    if (modelType === "overWeight") {
+      await threeStandardObjects.forEach((signleOrga: any) => {
+        // if (signleOrga.name === "超重") {
         signleOrga.visible = !signleOrga.visible;
-      }
-    })
+        // }
+      })
+    } else {
+      await threeThinnerObjects.forEach((signleOrga: any) => {
+        // if (signleOrga.name === "超重") {
+        signleOrga.visible = !signleOrga.visible;
+        // }
+      })
+    }
+
   }
 
 
@@ -1639,35 +1783,35 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         <div className={styles.switchGroup}>
           <div className={styles.compareButton}
 
-               onMouseDown={() => ComparePartOrga()}
-               onMouseUp={() => RestoreCompare()}
-               onMouseOut={() => RestoreCompare()}
+               onMouseDown={() => ComparePartOrga("overWeight")}
+               onMouseUp={() => RestoreCompare("overWeight")}
+               onMouseOut={() => RestoreCompare("overWeight")}
           >
             <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>
-            <a className={styles.compareText}>健康对比（标准和胖）</a>
+            <a className={styles.compareText}>健康对比（超重身材）</a>
           </div>
           <div className={styles.compareButton1}
 
-               onMouseDown={() => ComparePartOrga()}
-               onMouseUp={() => RestoreCompare()}
-               onMouseOut={() => RestoreCompare()}
+               onMouseDown={() => ComparePartOrga("fat")}
+               onMouseUp={() => RestoreCompare("fat")}
+               onMouseOut={() => RestoreCompare("fat")}
           >
             <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>
-            <a className={styles.compareText}>健康对比（标准和瘦）</a>
+            <a className={styles.compareText}>健康对比（肥胖身材）</a>
           </div>
         </div>
 
 
       }
-      {threeChoosenMesh ? "" :<Slider min={0}
-              max={orgaTypeList.length - 1}
-              step={0.05}
-              reverse={true}
-              tipFormatter={formatter}
-              vertical
-              value={sliderValue}
-              onChange={sliderChange}
-              className={styles.sliderBar}/>}
+      {threeChoosenMesh ? "" : <Slider min={0}
+                                       max={orgaTypeList.length - 1}
+                                       step={0.05}
+                                       reverse={true}
+                                       tipFormatter={formatter}
+                                       vertical
+                                       value={sliderValue}
+                                       onChange={sliderChange}
+                                       className={styles.sliderBar}/>}
     </div>
   )
 }

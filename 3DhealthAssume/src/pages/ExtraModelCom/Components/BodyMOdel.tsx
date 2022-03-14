@@ -1725,22 +1725,18 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * */
 
     await threeObjects.forEach((signleOrga: any) => {
-      if (signleOrga.name === "Retopo_皮肤" || JudgeOrgaType(signleOrga.name) === 1) {
+      // if (signleOrga.name === "Retopo_皮肤" || JudgeOrgaType(signleOrga.name) === 1) {
         signleOrga.visible = !signleOrga.visible;
-      }
+      // }
     })
 
     if (modelType === "overWeight") {
       await threeStandardObjects.forEach((signleOrga: any) => {
-        // if (signleOrga.name === "超重") {
         signleOrga.visible = !signleOrga.visible;
-        // }
       })
     } else {
       await threeThinnerObjects.forEach((signleOrga: any) => {
-        // if (signleOrga.name === "超重") {
         signleOrga.visible = !signleOrga.visible;
-        // }
       })
     }
 

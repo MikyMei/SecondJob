@@ -48,6 +48,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const scanMeshModel: any = [];
   const standardObjects: any = [];
   const thinnerObjects: any = []; // 存放对比模型中的mesh目前只存放两个，皮肤和骨骼
+  const lighterObjects: any = []; // 存放对比模型中的mesh目前只存放两个，皮肤和骨骼
   let camera: any;
   let plane: any;
   let spotLight: any;
@@ -298,6 +299,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const [threeObjects, setThreeObjects] = useState<any>();
   const [threeStandardObjects, setThreeStandardObjects] = useState<any>();  // 主要用来存放对比模型的所有器官的网格模型（目前存放的是超重模型）
   const [threeThinnerObjects, setThreeThinnerObjects] = useState<any>();  // 主要用来存放对比模型的所有器官的网格模型（目前存放的是超重模型）
+  const [threeLighterObjects, setThreeLighterObjects] = useState<any>();  // 主要用来存放对比模型的所有器官的网格模型（目前存放的是较瘦模型）
   const [threeMainCanvas, setThreeMainCanvas] = useState<any>();
   const [threeAddTimer, setThreeAddTimer] = useState<any>(false);
   const [threeIsStart, setThreeIsStart] = useState<any>(false);
@@ -595,7 +597,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       });
 
     /**
-     * 加载比较瘦的模型，一般来说只加载皮肤和谷歌模型
+     * 加载比肥胖的模型，一般来说只加载皮肤和谷歌模型
      * */
 
     let thinnerModel;
@@ -648,6 +650,56 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
       });
 
+    let lighterModel;
+    loader.load(`./img/allKindsOfModel/${modelType}/thinnerFigure.gltf`, function (gltf: any) {
+        lighterModel = gltf.scene;
+        lighterModel.scale.setScalar(5.5, 5.5, 5.5);
+        lighterModel.position.setY(-4.5);
+        lighterModel.visible = meshCompare;
+
+        /**
+         * beIntersectObjects是用来存放需要射线检测的物体数组。
+         * transformControl可以方便调节物体位置大小。
+         * */
+
+        /**
+         * 在这里将模型地动画全部格式化，并生成mixer
+         * */
+
+
+        lighterModel.name = "lighterModel";
+
+        scene.add(lighterModel);
+        lighterModel.traverse((child: any) => {
+            /**
+             * 在这里将不同模型根据他的名字，将
+             * */
+
+
+            /**
+             * 遍历模型的时候，加一个参数，主要是为了在加载对比模型
+             * */
+
+            if (child.isMesh) {
+              child.visible = false;
+              if (compareMeshList.includes(child.name)) {
+                lighterObjects.push(child);
+                processGLTFChild(child, true);
+              }
+
+            }
+          }
+        );
+
+      },
+      undefined
+
+      , function (error) {
+
+        console.error(error);
+
+      });
+
 
     controls = new OrbitControls(camera, renderer.domElement);
     // controls.mouseButtons = {
@@ -666,6 +718,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     setScanMesh(scanMeshModel);
     setThreeStandardObjects(standardObjects);
     setThreeThinnerObjects(thinnerObjects);
+    setThreeLighterObjects(lighterObjects);
     setThreeMainCanvas(mainCanvas);
   }
 
@@ -1351,20 +1404,17 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     const oldObjects = orgaTypeList.slice(0);
     const displayObjects = orgaTypeList.slice(0, 2);
     const hidedenObjects = orgaTypeList.slice(2, oldObjects.length - 1);
-    console.log(hidedenObjects);
 
     if (sliderFlag && oldObjects.length > 0) {
       threeObjects.map((object: any, index: any) => {
 
         if (JudgeExisted(hidedenObjects,object.name)) {
-          console.log("回复的时候隐藏的模型",object.name);
           object.material.visible = false;
         } else {
 
           if (object.material.uniforms) {
 
             object.material.visible = true;
-            console.log(object.name);
             object.material.uniforms.coeficient = {type: 'f', value: 1}
           } else {
 
@@ -1684,9 +1734,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
   const RestoreCompare = async (modelTypeName: any) => {
     await threeObjects.forEach(object => {
-      if ("手肘"===object.name){
-        console.log("恢复",object.name, object);
-      }
 
       object.visible = true;
     })
@@ -1695,8 +1742,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       await threeStandardObjects.forEach(object => {
         object.visible = false;
       })
-    } else {
+    } else if (modelTypeName === "fat") {
       await threeThinnerObjects.forEach(object => {
+        object.visible = false;
+      })
+    }else{
+      await threeLighterObjects.forEach(object => {
         object.visible = false;
       })
     }
@@ -1800,8 +1851,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       await threeStandardObjects.forEach((signleOrga: any) => {
         signleOrga.visible = !signleOrga.visible;
       })
-    } else {
+    } else if (modelType === "fat") {
       await threeThinnerObjects.forEach((signleOrga: any) => {
+        signleOrga.visible = !signleOrga.visible;
+      })
+    }else{
+      await threeLighterObjects.forEach((signleOrga: any) => {
         signleOrga.visible = !signleOrga.visible;
       })
     }
@@ -1860,6 +1915,15 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           >
             <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>
             <a className={styles.compareText}>健康对比（肥胖身材）</a>
+          </div>
+          <div className={styles.compareButton2}
+
+               onMouseDown={() => ComparePartOrga("lighter")}
+               onMouseUp={() => RestoreCompare("lighter")}
+               onMouseOut={() => RestoreCompare("lighter")}
+          >
+            <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>
+            <a className={styles.compareText}>健康对比（较瘦身材）</a>
           </div>
         </div>
 

@@ -226,7 +226,6 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
    * 渲染器官和申生成器官的卡片
    * */
   const GenerateOrgaRelated = () => {
-    console.log("所有的",allOrgaList);
 
     const partList = Object.keys(allOrgaList);
     const partOptionsTemp: any[] = [];
@@ -255,7 +254,6 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
         orgaCardList[`${key}`] = [];
         allOrgaList[`${key}`].map((item: any) => {
           const orgaRelated = MatchOrga(item.name);
-          console.log(key, item.name);
           orgaCardList[`${key}`].push(
             <div key={item.name} className={styles.signleOption_unchecked}
                  onClick={(e) => {
@@ -287,7 +285,6 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
         })
       }
     }
-    console.log("格式化之后的",orgaCardList);
     setOrgaOptions(orgaCardList);
 
   }
@@ -355,7 +352,6 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     optionsCard.push(e.currentTarget);
 
     RestoreStyle();
-    console.log(meshName);
     enlargeItem(meshName);
 
 

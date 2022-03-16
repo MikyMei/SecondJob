@@ -44,66 +44,129 @@ export async function GetPersonalHealthInfo(params: any) {
 }
 
 export async function GetAllOrgaList(params: any) {
-  return {
-    code: 2000,
-    data: [
+  // return {
+  //   code: 2000,
+  //   data: [
+  //     {
+  //       "上身部位": [
+  //         {name: "皮肤", exceptionCount: 4, score: 68}
+  //       ],
+  //       "骨骼部位": [
+  //         {name: "腕骨", exceptionCount: 2, score: 52},
+  //         {name: "颈椎", exceptionCount: 3, score: 53},
+  //         {name: "锁骨", exceptionCount: 4, score: 54},
+  //         {name: "颅骨", exceptionCount: 5, score: 55},
+  //         {name: "牙齿_上", exceptionCount: 6, score: 56},
+  //         {name: "股骨", exceptionCount: 7, score: 57},
+  //         {name: "腓骨", exceptionCount: 8, score: 58},
+  //         {name: "肱骨", exceptionCount: 9, score: 59},
+  //         {name: "踝关节", exceptionCount: 1, score: 60},
+  //         {name: "下颌骨", exceptionCount: 2, score: 61},
+  //         {name: "牙齿_下", exceptionCount: 3, score: 62},
+  //         {name: "手", exceptionCount: 4, score: 63},
+  //         {name: "脚", exceptionCount: 5, score: 64},
+  //         {name: "骨盆", exceptionCount: 6, score: 65},
+  //         {name: "桡骨", exceptionCount: 7, score: 66},
+  //         {name: "肋骨", exceptionCount: 8, score: 67},
+  //         {name: "骶骨", exceptionCount: 9, score: 68},
+  //         {name: "肩胛骨", exceptionCount: 1, score: 69},
+  //         {name: "胸骨", exceptionCount: 2, score: 70},
+  //         {name: "跗骨", exceptionCount: 3, score: 71},
+  //         {name: "胫骨", exceptionCount: 4, score: 72},
+  //         {name: "尺骨", exceptionCount: 5, score: 73},
+  //         {name: "脊柱", exceptionCount: 6, score: 74},
+  //         {name: "跟骨", exceptionCount: 1, score: 50},
+  //       ],
+  //       "内脏部位": [
+  //         {name: "生殖系统", exceptionCount: 1, score: 46},
+  //         {name: "静脉", exceptionCount: 2, score: 52},
+  //         {name: "动脉", exceptionCount: 3, score: 53},
+  //         {name: "大脑", exceptionCount: 4, score: 54},
+  //         {name: "消化系统", exceptionCount: 5, score: 55},
+  //         {name: "小肠", exceptionCount: 6, score: 56},
+  //         {name: "胃部", exceptionCount: 7, score: 57},
+  //         {name: "肝脏", exceptionCount: 8, score: 58},
+  //         {name: "支气管", exceptionCount: 9, score: 59},
+  //         {name: "肺", exceptionCount: 1, score: 60},
+  //         {name: "肾脏", exceptionCount: 2, score: 61},
+  //         {name: "心脏", exceptionCount: 3, score: 62},
+  //         // {name: "心脏(动画)", exceptionCount: 3, score: 62},
+  //
+  //       ],
+  //       "全身性器官": [
+  //         {name: "甲状腺", exceptionCount: 1, score: 47},
+  //         {name: "垂体", exceptionCount: 2, score: 52},
+  //         {name: "胸腺", exceptionCount: 3, score: 53},
+  //
+  //
+  //       ]
+  //
+  //
+  //     }]
+  // }
+
+  return{
+    code:2000,
+    data:[
       {
-        "上身部位": [
-          {name: "皮肤", exceptionCount: 4, score: 68}
-        ],
-        "骨骼部位": [
+        "腹部": [{name: "胃", exceptionCount: 2, score: 52},
+          {name: "小肠", exceptionCount: 3, score: 53},
+          {name: "肝脏", exceptionCount: 4, score: 54},
+          {name: "大肠", exceptionCount: 1, score: 55},
+          {name: "肛", exceptionCount: 2, score: 56},
+          {name: "肾脏", exceptionCount: 3, score: 57},
+          {name: "输尿管", exceptionCount: 4, score: 58},
+          {name: "膀胱", exceptionCount: 2, score: 59},
+          {name: "尿道", exceptionCount: 3, score: 60},
+          {name: "腰椎关节", exceptionCount: 4, score: 61},
+          {name: "腰肌", exceptionCount: 1, score: 62},
+          {name: "睾丸", exceptionCount: 2, score: 63},
+          // {name: "睾丸", exceptionCount: 3, score: 64},
+          {name: "输精管", exceptionCount: 4, score: 65},
+          {name: "前列腺", exceptionCount: 2, score: 66},],
 
-          {name: "腕骨", exceptionCount: 2, score: 52},
-          {name: "颈椎", exceptionCount: 3, score: 53},
-          {name: "锁骨", exceptionCount: 4, score: 54},
-          {name: "颅骨", exceptionCount: 5, score: 55},
-          {name: "牙齿_上", exceptionCount: 6, score: 56},
-          {name: "股骨", exceptionCount: 7, score: 57},
-          {name: "腓骨", exceptionCount: 8, score: 58},
-          {name: "肱骨", exceptionCount: 9, score: 59},
-          {name: "踝关节", exceptionCount: 1, score: 60},
-          {name: "下颌骨", exceptionCount: 2, score: 61},
-          {name: "牙齿_下", exceptionCount: 3, score: 62},
-          {name: "手", exceptionCount: 4, score: 63},
-          {name: "脚", exceptionCount: 5, score: 64},
-          {name: "骨盆", exceptionCount: 6, score: 65},
-          {name: "桡骨", exceptionCount: 7, score: 66},
-          {name: "肋骨", exceptionCount: 8, score: 67},
-          {name: "骶骨", exceptionCount: 9, score: 68},
-          {name: "肩胛骨", exceptionCount: 1, score: 69},
-          {name: "胸骨", exceptionCount: 2, score: 70},
-          {name: "跗骨", exceptionCount: 3, score: 71},
-          {name: "胫骨", exceptionCount: 4, score: 72},
-          {name: "尺骨", exceptionCount: 5, score: 73},
-          {name: "脊柱", exceptionCount: 6, score: 74},
-          {name: "跟骨", exceptionCount: 1, score: 50},
-        ],
-        "内脏部位": [
-          {name: "生殖系统", exceptionCount: 1, score: 46},
-          {name: "静脉", exceptionCount: 2, score: 52},
-          {name: "动脉", exceptionCount: 3, score: 53},
-          {name: "大脑", exceptionCount: 4, score: 54},
-          {name: "消化系统", exceptionCount: 5, score: 55},
-          {name: "小肠", exceptionCount: 6, score: 56},
-          {name: "胃部", exceptionCount: 7, score: 57},
-          {name: "肝脏", exceptionCount: 8, score: 58},
-          {name: "支气管", exceptionCount: 9, score: 59},
-          {name: "肺", exceptionCount: 1, score: 60},
-          {name: "肾脏", exceptionCount: 2, score: 61},
-          {name: "心脏", exceptionCount: 3, score: 62},
-          // {name: "心脏(动画)", exceptionCount: 3, score: 62},
-
-        ],
-        "全身性器官": [
-          {name: "甲状腺", exceptionCount: 1, score: 47},
-          {name: "垂体", exceptionCount: 2, score: 52},
-          {name: "胸腺", exceptionCount: 3, score: 53},
+        "上肢": [{name: "肩关节", exceptionCount: 4, score: 68},
+          {name: "肩肌", exceptionCount: 1, score: 69},
+          {name: "肘肌", exceptionCount: 2, score: 70},
+          {name: "手肘", exceptionCount: 3, score: 71},
+          {name: "手腕", exceptionCount: 4, score: 72},
+          {name: "手指", exceptionCount: 2, score: 73},],
+        "神经": [{name: "中枢神经系统", exceptionCount: 3, score: 74},
+          {name: "周围神经系统", exceptionCount: 4, score: 75},],
+        "头面部": [{name: "牙", exceptionCount: 1, score: 76},
+          {name: "口", exceptionCount: 2, score: 77},
+          {name: "咽", exceptionCount: 3, score: 78},
+          {name: "喉和会厌", exceptionCount: 4, score: 79},
+          {name: "鼻", exceptionCount: 2, score: 80},
+          {name: "血_脑屏障", exceptionCount: 3, score: 81},
+          {name: "头颈部", exceptionCount: 4, score: 82},
+          {name: "血_眼屏障", exceptionCount: 1, score: 83},
+          {name: "耳", exceptionCount: 2, score: 84},
+          {name: "面部关节", exceptionCount: 3, score: 85},
+          {name: "面部肌肉", exceptionCount: 4, score: 86},
+          {name: "颈肌", exceptionCount: 2, score: 87},
+          {name: "颈椎", exceptionCount: 3, score: 88},],
+        "下肢": [{name: "髋肌", exceptionCount: 4, score: 89},
+          {name: "髋部", exceptionCount: 1, score: 90},
+          {name: "骶骨", exceptionCount: 2, score: 91},
+          {name: "骨盆肌", exceptionCount: 3, score: 92},
+          {name: "股骨", exceptionCount: 4, score: 93},
+          {name: "膝关节", exceptionCount: 2, score: 94},
+          {name: "膝肌", exceptionCount: 3, score: 95},
+          {name: "足关节", exceptionCount: 4, score: 96},],
+        "胸部": [{name: "食管", exceptionCount: 1, score: 97},
+          {name: "心脏", exceptionCount: 2, score: 98},
+          {name: "肺脏", exceptionCount: 3, score: 99},
+          {name: "支气管", exceptionCount: 4, score: 100},
+          {name: "气管", exceptionCount: 2, score: 90},
+          {name: "血_胸腺屏障", exceptionCount: 3, score: 87},
+          {name: "胸椎", exceptionCount: 4, score: 186},],
+        "全身": [{name: "血管", exceptionCount: 3, score: 67},
+          {name: "皮肤", exceptionCount: 1, score: 88},],
+      }
+    ]
 
 
-        ]
-
-
-      }]
   }
 
   // return request('/api2/getAllPermissionList', {
@@ -292,27 +355,27 @@ export async function GetSignleWholeOrgaIll(params: any) {
         {
           name: "白血病",
           videoUrl: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4",
-          illDesc: "	白血病是一类造血干细胞恶性克隆性疾病。克隆性白血病细胞因为增殖失控、分化障碍、凋亡受阻等机制在骨髓和其他造血组织中大量增殖累积，并浸润其他非造血组织和器官，同时抑制正常造血功能。临床可见不同程度的贫血、出血、感染发热以及肝、脾、淋巴结肿大和骨骼疼痛。	"
+          illDesc: "白血病是一类造血干细胞恶性克隆性疾病。克隆性白血病细胞因为增殖失控、分化障碍、凋亡受阻等机制在骨髓和其他造血组织中大量增殖累积，并浸润其他非造血组织和器官，同时抑制正常造血功能。临床可见不同程度的贫血、出血、感染发热以及肝、脾、淋巴结肿大和骨骼疼痛。"
         },
         {
           name: "系统性红斑狼疮",
           videoUrl: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4",
-          illDesc: "	系统性红斑狼疮（SLE）是一种多发于青年女性的累及多脏器的自身免疫性炎症性结缔组织病，早期、轻型和不典型的病例日渐增多。	"
+          illDesc: "系统性红斑狼疮（SLE）是一种多发于青年女性的累及多脏器的自身免疫性炎症性结缔组织病，早期、轻型和不典型的病例日渐增多。"
         },
         {
           name: "类风湿关节炎",
           videoUrl: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4",
-          illDesc: "	类风湿关节炎（RA）是一种病因未明的慢性、以炎性滑膜炎为主的系统性疾病。其特征是手、足小关节的多关节、对称性、侵袭性关节炎症，经常伴有关节外器官受累及血清类风湿因子阳性，可以导致关节畸形及功能丧失。	"
+          illDesc: "类风湿关节炎（RA）是一种病因未明的慢性、以炎性滑膜炎为主的系统性疾病。其特征是手、足小关节的多关节、对称性、侵袭性关节炎症，经常伴有关节外器官受累及血清类风湿因子阳性，可以导致关节畸形及功能丧失。"
         },
         {
           name: "混合性结缔组织病",
           videoUrl: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4",
-          illDesc: "	1972年Sharp等首先提出一种同时或不同时具有系统性红斑狼疮（SLE）、多发性肌炎（PM）、硬皮病（SSc）、类风湿关节炎（RA）等疾病的混和表现，血中有高滴度效价的斑点型ANA和高滴度U1RNP抗体的疾病，命名为混合性结缔组织病（MCTD）。	"
+          illDesc: "1972年Sharp等首先提出一种同时或不同时具有系统性红斑狼疮（SLE）、多发性肌炎（PM）、硬皮病（SSc）、类风湿关节炎（RA）等疾病的混和表现，血中有高滴度效价的斑点型ANA和高滴度U1RNP抗体的疾病，命名为混合性结缔组织病（MCTD）。"
         },
         {
           name: "贝赫切特综合征",
           videoUrl: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4",
-          illDesc: "	贝赫切特综合征又称白塞病，是一种全身性免疫系统疾病，属于血管炎的一种。其可侵害人体多个器官，包括口腔、皮肤、关节肌肉、眼睛、血管、心脏、肺和神经系统等，主要表现为反复口腔和会阴部溃疡、皮疹、下肢结节红斑、眼部虹膜炎、食管溃疡、小肠或结肠溃疡及关节肿痛等。	"
+          illDesc: "贝赫切特综合征又称白塞病，是一种全身性免疫系统疾病，属于血管炎的一种。其可侵害人体多个器官，包括口腔、皮肤、关节肌肉、眼睛、血管、心脏、肺和神经系统等，主要表现为反复口腔和会阴部溃疡、皮疹、下肢结节红斑、眼部虹膜炎、食管溃疡、小肠或结肠溃疡及关节肿痛等。"
         },
 
       ]

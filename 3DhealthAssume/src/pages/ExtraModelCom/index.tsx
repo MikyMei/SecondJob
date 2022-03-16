@@ -95,7 +95,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
 
   const closeInfoWindow = () => {
-    if (optionsCard.length > 0 && choosenPart != "全身性器官") {
+    if (optionsCard.length > 0 && choosenPart != "全身") {
       bodyRef.current.testClose();
     }
   }
@@ -216,7 +216,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     if (score > 60) {
       return {color: "#00FFDE"}
     } else {
-      return {color: "#e21313"}
+      return {color: "#CD360A"}
     }
 
 
@@ -226,6 +226,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
    * 渲染器官和申生成器官的卡片
    * */
   const GenerateOrgaRelated = () => {
+    console.log("所有的",allOrgaList);
 
     const partList = Object.keys(allOrgaList);
     const partOptionsTemp: any[] = [];
@@ -253,11 +254,12 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
       for (let key in allOrgaList) {
         orgaCardList[`${key}`] = [];
         allOrgaList[`${key}`].map((item: any) => {
-          const orgaRelated = MatchOrga(item.name)
+          const orgaRelated = MatchOrga(item.name);
+          console.log(key, item.name);
           orgaCardList[`${key}`].push(
             <div key={item.name} className={styles.signleOption_unchecked}
                  onClick={(e) => {
-                   key != "全身性器官" ? ClickSignleOrga(e, item.name, orgaRelated.meshName, orgaRelated.iconName, item) : OpenWholeOrga(e, orgaRelated.iconName, item.name, item)
+                   key != "全身" ? ClickSignleOrga(e, item.name, orgaRelated.meshName, orgaRelated.iconName, item) : OpenWholeOrga(e, orgaRelated.iconName, item.name, item)
                  }}>
               <Row gutter={24} className={styles.optionContent}>
                 <Col className={styles.optionIcon}>
@@ -285,6 +287,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
         })
       }
     }
+    console.log("格式化之后的",orgaCardList);
     setOrgaOptions(orgaCardList);
 
   }
@@ -352,6 +355,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     optionsCard.push(e.currentTarget);
 
     RestoreStyle();
+    console.log(meshName);
     enlargeItem(meshName);
 
 
@@ -721,7 +725,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
      * 需要判断当前选中的部位是否是全身性器官，因为全身性器官没有具体的模型动画
      * */
 
-    if(choosenPart!=="全身性器官"){
+    if(choosenPart!=="全身"){
       bodyRef.current.setInfoTabs();
       bodyRef.current.testPlay(keyName);
     }
@@ -745,7 +749,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
       IllListTemp.map((item: any, index: any) => {
         buttonList.push(
           <Radio.Button
-            onClick={()=>{ choosenPart!=="全身性器官"?bodyRef.current.sliderDivIndex(index):"" }}
+            onClick={()=>{ choosenPart!=="全身"?bodyRef.current.sliderDivIndex(index):"" }}
             key={item.illName || item.name}
             className={styles.radioButton}
             value={item.illName || item.name}>{item.illName || item.name}</Radio.Button>
@@ -792,14 +796,14 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
   }
 
   const GeneratRightOrga = () => {
-    const illListTemp = choosenPart === "全身性器官" ? wholeOrgaIll : illList;
+    const illListTemp = choosenPart === "全身" ? wholeOrgaIll : illList;
     // console.log("当前一场表示", Array.isArray(illListTemp));
     // const
     // if (Array.isArray(illListTemp)){
     //
     // }
     /**
-     * 如果是数组，那就是全身性器官，数组中的元素是疾病
+     * 如果是数组，那就是全身，数组中的元素是疾病
      * 如果是对象，那内容就是illtype
      * */
 

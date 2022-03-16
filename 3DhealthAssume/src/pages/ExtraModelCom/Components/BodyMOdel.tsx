@@ -25,7 +25,7 @@ import Utils from "@/pages/ExtraModelCom/utils";
 import * as TWEEN from '@tweenjs/tween.js';
 import {AntDesignOutlined, CloseCircleOutlined, UserOutlined} from "@ant-design/icons";
 import {CarouselRef} from 'antd/lib/carousel';
-import {JudgeGender, MatchIndexAnimaton} from "@/utils/dataReStructure";
+import {JudgeExisted, JudgeGender, MatchIndexAnimaton} from "@/utils/dataReStructure";
 
 
 const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescription: any, illTypeList: any, dispatch: Dispatch, bodyModelInfo: any }) => {
@@ -146,55 +146,86 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       "Retopo_脊柱",
       //  以下为对比模型的名字
       "腰椎关节，腰椎",
-      "腰肌，腰椎",
       "肩关节",
-      "肩肌，肩关节",
-      "肘肌，手肘",
       "手肘",
       "手腕",
       "手指",
       "牙，口",
-      "口，舌",
-      "咽",
-      "喉和会厌",
-      "鼻，头颈部",
       "头颈部，颅盖",
-      "耳",
       "面部关节，头颈部",
-      "面部肌肉，头颈部",
-      "颈肌，颈椎",
       "颈椎",
-      "髋肌，髋部",
       "骨盆，髋部",
       "骨盆，骶骨，髋部",
-      "骨盆肌",
       "股骨，髋部，膝关节",
       "膝关节",
-      "膝肌，膝关节",
       "足关节",
-      "血_胸腺屏障",
       "胸椎",
+      "胖",
+
+
     ],
     [
       "Retopo_大脑",
       "Retopo_小肠",
       "Retopo_肝脏",
+      "咽",
+      "喉和会厌",
+
+      "血_脑屏障，中枢神经系统，脑",
+      "小肠，肠黏膜",
+      "肝脏",
+      "鼻，头颈部",
+      "耳",
+      "口，舌",
+      "面部肌肉，头颈部",
+      "血_胸腺屏障" ,
+      "血_眼屏障，眼"
+
 
     ],
     ["Retopo_生殖系统",
       "Retopo_肺",
       "Retopo_肾脏",
+
+      "肺脏，血_气屏障",
+      "肾脏，血_尿屏障",
+      "肛",
+      "睾丸，血_睾屏障",
+      "睾丸，血_睾屏障，附睾",
+      "尿道",
+      "前列腺",
+      "输精管，射精管",
+      "输尿管",
+      "骨盆肌" ,
+      "肘肌，手肘",
+      "肩肌，肩关节" ,
+      "颈肌，颈椎",
+      "髋肌，髋部" ,
+      "膝肌，膝关节" ,
+      "腰肌，腰椎",
+
+
     ],
     [
       "Retopo_胃部",
       "Retopo_消化系统",
       "Heart__Ani",
-      "Retopo_心脏"
+      "Retopo_心脏",
+      "心脏",
+
+      "胃",
+      "膀胱",
+      "大肠",
 
     ],
     ["Retopo_静脉",
       "Retopo_动脉",
       "Retopo_支气管",
+      "血管",
+      "气管",
+      "食管",
+      "中枢神经系统" ,
+      "周围神经系统"
 
     ],
     []
@@ -206,14 +237,52 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     "Retopo_动脉": "#fb7f68",
     "Retopo_大脑": "#D6C0AD",
     "Retopo_消化系统": "#EDBDA9",
-    "Retopo_小肠": "#F7D46C",
-    "Retopo_胃部": "#EDBDA9",
+    "Retopo_小肠": "#ffe196",
+    "Retopo_胃部": "#ff9265",
     "Retopo_肝脏": "#ee934c",
     "Retopo_支气管": "#cc594b",
-    "Retopo_肺": "#ff7464",
+    "Retopo_肺": "#CB8F81",
     "Retopo_肾脏": "#F0834D",
     "Retopo_心脏": "#BC4D2A",
-  };
+
+    "心脏"	:"#BC4D2A",
+    "气管"	:"#cc594b",
+    "血_脑屏障，中枢神经系统，脑"	:"#D6C0AD",
+    "胃"	:"#EDBDA9",
+    "肝脏"	:"#ee934c",
+    "肾脏，血_尿屏障"	:"#F0834D",
+    "小肠，肠黏膜"	:"#F7D46C",
+    "血管"	:"#fb7f68",
+    "肺脏，血_气屏障"	:"#ff7464",
+    "膀胱"	:"#ee934c",
+    "鼻，头颈部"	:"#ffe196",
+    "大肠"	:"#ff9265",
+    "耳"	:"#fcd1ce",
+    "肛"	:"#fcd1ce",
+    "睾丸，血_睾屏障"	:"#ac7878",
+    "睾丸，血_睾屏障，附睾"	:"#ac7878",
+    "骨盆肌" 	:"#CB8F81",
+    "喉和会厌"	:"#ff8080",
+    "肩肌，肩关节" 	:"#CB8F81",
+    "颈肌，颈椎"	:"#CB8F81",
+    "口，舌"	:"#ff8080",
+    "髋肌，髋部" 	:"#CB8F81",
+    "面部肌肉，头颈部"	:"#CB8F81",
+    "尿道"	:"#ff9265",
+    "前列腺"	:"#ee934c",
+    "食管"	:"#b8c7bf",
+    "输精管，射精管"	:"#fcafaf",
+    "输尿管"	:"#fcafaf",
+    "膝肌，膝关节" 	:"#CB8F81",
+    "血_胸腺屏障" 	:"#ffe8e8",
+    "血_眼屏障，眼"	:"#d2c5c5",
+    "咽"	:"#fca5a5",
+    "腰肌，腰椎"	:"#CB8F81",
+    "中枢神经系统" 	:"#f8ea97",
+    "周围神经系统"	:"#ff2da3",
+    "肘肌，手肘"	:"#CB8F81",
+
+};
 
   let choosenMesh: any;
 
@@ -363,7 +432,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * 加载当前用户的模型，后面还要加载一个正常模型（所有网格模型都是正常形态，事先让其所有的模型都可见性为false）
      * */
     let model;
-    loader.load(`./img/allKindsOfModel/${modelType}/${modelName}`, function (gltf: any) {
+    loader.load(`./img/allKindsOfModel/${modelType}/standardFigure2.gltf`, function (gltf: any) {
         model = gltf.scene;
         model.scale.setScalar(5.5, 5.5, 5.5);
         model.position.setY(-4.5);
@@ -422,7 +491,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
               child.name = "Retopo_心脏"
             }
 
-            if (child.geometry) {
+          if (child.geometry) {
               child.geometry.computeBoundingBox();
               child.geometry.computeBoundingSphere()
             }
@@ -456,32 +525,19 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     let standardModel;
     const compareMeshList = [
       "腰椎关节，腰椎",
-      // "腰肌，腰椎",
       "肩关节",
-      // "肩肌，肩关节",
-      // "肘肌，手肘",
       "手肘",
       "手腕",
       "手指",
       "牙，口",
-      // "口，舌",
-      // "咽",
-      // "喉和会厌",
-      // "鼻，头颈部",
       "头颈部，颅盖",
-      // "耳",
       "面部关节，头颈部",
-      // "面部肌肉，头颈部",
-      // "颈肌，颈椎",
       "颈椎",
-      // "髋肌，髋部",
       "骨盆，髋部",
       "骨盆，骶骨，髋部",
       "股骨，髋部，膝关节",
       "膝关节",
-      // "膝肌，膝关节",
       "足关节",
-      // "血_胸腺屏障",
       "胸椎",
       "全身_1",
       "胖",
@@ -1295,17 +1351,23 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     const oldObjects = orgaTypeList.slice(0);
     const displayObjects = orgaTypeList.slice(0, 2);
     const hidedenObjects = orgaTypeList.slice(2, oldObjects.length - 1);
+    console.log(hidedenObjects);
 
     if (sliderFlag && oldObjects.length > 0) {
       threeObjects.map((object: any, index: any) => {
-        if (hidedenObjects.toString().indexOf(object.name) !== -1) {
+
+        if (JudgeExisted(hidedenObjects,object.name)) {
+          console.log("回复的时候隐藏的模型",object.name);
           object.material.visible = false;
         } else {
 
           if (object.material.uniforms) {
+
             object.material.visible = true;
+            console.log(object.name);
             object.material.uniforms.coeficient = {type: 'f', value: 1}
           } else {
+
             object.material.visible = true;
             object.material.opacity = 0.9;
           }
@@ -1414,7 +1476,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     await threeObjects.forEach(object => {
 
-        if (name === object.name) {
+        if (name.includes(object.name)) {
 
           const {radius, center} = object.geometry.boundingSphere;
           if (!object.material.visible) {
@@ -1622,14 +1684,18 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
   const RestoreCompare = async (modelTypeName: any) => {
     await threeObjects.forEach(object => {
+      if ("手肘"===object.name){
+        console.log("恢复",object.name, object);
+      }
+
       object.visible = true;
     })
 
-    if (modelTypeName==="overWeight"){
+    if (modelTypeName === "overWeight") {
       await threeStandardObjects.forEach(object => {
         object.visible = false;
       })
-    }else{
+    } else {
       await threeThinnerObjects.forEach(object => {
         object.visible = false;
       })
@@ -1726,7 +1792,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     await threeObjects.forEach((signleOrga: any) => {
       // if (signleOrga.name === "Retopo_皮肤" || JudgeOrgaType(signleOrga.name) === 1) {
-        signleOrga.visible = !signleOrga.visible;
+      signleOrga.visible = !signleOrga.visible;
       // }
     })
 

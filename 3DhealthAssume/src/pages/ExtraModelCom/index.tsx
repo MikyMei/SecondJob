@@ -27,7 +27,7 @@ import {
   Radio,
   Button, Space
 } from "antd";
-import {AntDesignOutlined, CloseCircleOutlined, HeartFilled, HeartOutlined} from "@ant-design/icons";
+import {AntDesignOutlined, CloseCircleOutlined, HeartFilled, HeartOutlined, LoadingOutlined} from "@ant-design/icons";
 import {connect, Dispatch} from "umi";
 import {JudgeHealthRelationship, MatchOrga} from "@/utils/dataReStructure";
 import WholeBodyOrga from "@/pages/ExtraModelCom/Components/WholeBodyOrga";
@@ -66,6 +66,8 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     illList,
     wholeOrgaIll
   } = bodyModelInfo;
+  const loadIcon = <LoadingOutlined style={{ fontSize: 48 }} spin />;
+
 
 
   const bodyRef = useRef(null);
@@ -868,7 +870,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
 
   return (
-    <Spin spinning={false} size="large">
+    <Spin className={styles.spinnerIcon}  spinning={loadStatus} indicator={loadIcon} size="large">
       <div className={styles.mainContainer}>
         {bodyModel}
         <div className={styles.siderColoumn}>

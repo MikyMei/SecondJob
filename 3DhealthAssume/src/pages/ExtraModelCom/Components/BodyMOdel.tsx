@@ -20,10 +20,10 @@ import {CSS3DObject, CSS3DRenderer} from 'three/examples/jsm/renderers/CSS3DRend
 
 
 import styles from './index.less';
-import {Avatar, Badge, Button, Slider, Tooltip, Row, Col, Divider, Tag, Carousel, Tabs, Image} from "antd";
+import {Avatar, Badge, Button, Slider, Tooltip, Row, Spin, Col, Divider, Tag, Carousel, Tabs, Image} from "antd";
 import Utils from "@/pages/ExtraModelCom/utils";
 import * as TWEEN from '@tweenjs/tween.js';
-import {AntDesignOutlined, CloseCircleOutlined, UserOutlined} from "@ant-design/icons";
+import {AntDesignOutlined, CloseCircleOutlined, LoadingOutlined, UserOutlined} from "@ant-design/icons";
 import {CarouselRef} from 'antd/lib/carousel';
 import {JudgeExisted, JudgeGender, MatchIndexAnimaton} from "@/utils/dataReStructure";
 
@@ -80,46 +80,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * 这个需要先确定有哪几类，在确定每一类中的所包含的器官名字，
    * */
   const matchType = ["皮肤", "骨骼", "内脏1", "内脏2", "内脏3", "内脏4", ""];
-  const matchMesh = [["Body002"], ["Circulatory_Heart001"], ["Skeletal001"], []];
 
-  const orgaNameList = ["Retopo_跟骨",
-    "Retopo_腕骨",
-    "Retopo_颈椎",
-    "Retopo_锁骨",
-    "Retopo_颅骨",
-    "Retopo_牙齿_上",
-    "Retopo_股骨",
-    "Retopo_腓骨",
-    "Retopo_肱骨",
-    "Retopo_踝关节",
-    "Retopo_下颌骨",
-    "Retopo_牙齿_下",
-    "Retopo_手",
-    "Retopo_脚",
-    "Retopo_骨盆",
-    "Retopo_桡骨",
-    "Retopo_肋骨",
-    "Retopo_骶骨",
-    "Retopo_肩胛骨",
-    "Retopo_胸骨",
-    "Retopo_跗骨",
-    "Retopo_胫骨",
-    "Retopo_尺骨",
-    "Retopo_脊柱",
-    "Retopo_生殖系统",
-    "Retopo_静脉",
-    "Retopo_动脉",
-    "Retopo_大脑",
-    "Retopo_消化系统",
-    "Retopo_小肠",
-    "Retopo_胃部",
-    "Retopo_肝脏",
-    "Retopo_支气管",
-    "Retopo_肺",
-    "Retopo_肾脏",
-    "Retopo_心脏",
-    "Heart__Ani",
-    "Retopo_皮肤"];  //
   const orgaTypeList = [["Retopo_皮肤", "皮肤", "超重", "全身_1", "胖"],
     ["Retopo_跟骨",
       "Retopo_腕骨",
@@ -288,6 +249,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   };
 
   let choosenMesh: any;
+  const loadIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
   const [infoTitle, setInfoTitle] = useState<any>('');
   const [infoDesc, setInfoDesc] = useState<any>('');
@@ -712,6 +674,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     // }
     controls.enableDamping = true;
 
+
     setThreeScene(scene);
     setThreeCamera(camera);
     setThreeLabelRenderer(labelRenderer);
@@ -765,14 +728,15 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
     setTimeout(() => {
-      changeLoading(false)
+      changeLoading(false);
 
-    }, 1000)
+    }, 1500)
 
     render();
     window.addEventListener('resize', onWindowResize);
 
     document.querySelector("#webgl-output");
+
 
 
   }
@@ -1963,6 +1927,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
                                        value={sliderValue}
                                        onChange={sliderChange}
                                        className={styles.sliderBar}/>}
+
     </div>
   )
 }

@@ -161,7 +161,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       "膝关节",
       "足关节",
       "胸椎",
-      "胖",
 
 
     ],
@@ -631,6 +630,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
              * */
 
             if (child.isMesh) {
+
               child.visible = false;
               if (compareMeshList.includes(child.name)) {
                 thinnerObjects.push(child);
@@ -1252,6 +1252,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
       // 根据器官属于在哪个数组，判断属于哪一类，选择哪一类着色器材质
       const type = JudgeOrgaType(child.name);
+
 
 
       switch (type) {

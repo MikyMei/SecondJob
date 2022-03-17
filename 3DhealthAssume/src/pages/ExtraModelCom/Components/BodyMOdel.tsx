@@ -1260,7 +1260,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
           break;
         default:
-          console.log("需要默认的",child.name);
           child.material = Shaders("#30D2BD").material2;
           child.castShadow = true;
           break;

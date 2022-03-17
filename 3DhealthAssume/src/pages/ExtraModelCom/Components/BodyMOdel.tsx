@@ -178,7 +178,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       "耳",
       "口，舌",
       "面部肌肉，头颈部",
-      "血_胸腺屏障" ,
+      "血_胸腺屏障",
       "血_眼屏障，眼"
 
 
@@ -196,12 +196,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       "前列腺",
       "输精管，射精管",
       "输尿管",
-      "骨盆肌" ,
+      "骨盆肌",
       "肘肌，手肘",
-      "肩肌，肩关节" ,
+      "肩肌，肩关节",
       "颈肌，颈椎",
-      "髋肌，髋部" ,
-      "膝肌，膝关节" ,
+      "髋肌，髋部",
+      "膝肌，膝关节",
       "腰肌，腰椎",
 
 
@@ -224,7 +224,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       "血管",
       "气管",
       "食管",
-      "中枢神经系统" ,
+      "中枢神经系统",
       "周围神经系统"
 
     ],
@@ -245,44 +245,44 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     "Retopo_肾脏": "#F0834D",
     "Retopo_心脏": "#BC4D2A",
 
-    "心脏"	:"#BC4D2A",
-    "气管"	:"#cc594b",
-    "血_脑屏障，中枢神经系统，脑"	:"#D6C0AD",
-    "胃"	:"#EDBDA9",
-    "肝脏"	:"#ee934c",
-    "肾脏，血_尿屏障"	:"#F0834D",
-    "小肠，肠黏膜"	:"#F7D46C",
-    "血管"	:"#fb7f68",
-    "肺脏，血_气屏障"	:"#ff7464",
-    "膀胱"	:"#ee934c",
-    "鼻，头颈部"	:"#ffe196",
-    "大肠"	:"#ff9265",
-    "耳"	:"#fcd1ce",
-    "肛"	:"#fcd1ce",
-    "睾丸，血_睾屏障"	:"#ac7878",
-    "睾丸，血_睾屏障，附睾"	:"#ac7878",
-    "骨盆肌" 	:"#CB8F81",
-    "喉和会厌"	:"#ff8080",
-    "肩肌，肩关节" 	:"#CB8F81",
-    "颈肌，颈椎"	:"#CB8F81",
-    "口，舌"	:"#ff8080",
-    "髋肌，髋部" 	:"#CB8F81",
-    "面部肌肉，头颈部"	:"#CB8F81",
-    "尿道"	:"#ff9265",
-    "前列腺"	:"#ee934c",
-    "食管"	:"#b8c7bf",
-    "输精管，射精管"	:"#fcafaf",
-    "输尿管"	:"#fcafaf",
-    "膝肌，膝关节" 	:"#CB8F81",
-    "血_胸腺屏障" 	:"#ffe8e8",
-    "血_眼屏障，眼"	:"#d2c5c5",
-    "咽"	:"#fca5a5",
-    "腰肌，腰椎"	:"#CB8F81",
-    "中枢神经系统" 	:"#f8ea97",
-    "周围神经系统"	:"#ff2da3",
-    "肘肌，手肘"	:"#CB8F81",
+    "心脏": "#BC4D2A",
+    "气管": "#cc594b",
+    "血_脑屏障，中枢神经系统，脑": "#D6C0AD",
+    "胃": "#EDBDA9",
+    "肝脏": "#ee934c",
+    "肾脏，血_尿屏障": "#F0834D",
+    "小肠，肠黏膜": "#F7D46C",
+    "血管": "#fb7f68",
+    "肺脏，血_气屏障": "#ff7464",
+    "膀胱": "#ee934c",
+    "鼻，头颈部": "#ffe196",
+    "大肠": "#ff9265",
+    "耳": "#fcd1ce",
+    "肛": "#fcd1ce",
+    "睾丸，血_睾屏障": "#ac7878",
+    "睾丸，血_睾屏障，附睾": "#ac7878",
+    "骨盆肌": "#CB8F81",
+    "喉和会厌": "#ff8080",
+    "肩肌，肩关节": "#CB8F81",
+    "颈肌，颈椎": "#CB8F81",
+    "口，舌": "#ff8080",
+    "髋肌，髋部": "#CB8F81",
+    "面部肌肉，头颈部": "#CB8F81",
+    "尿道": "#ff9265",
+    "前列腺": "#ee934c",
+    "食管": "#b8c7bf",
+    "输精管，射精管": "#fcafaf",
+    "输尿管": "#fcafaf",
+    "膝肌，膝关节": "#CB8F81",
+    "血_胸腺屏障": "#ffe8e8",
+    "血_眼屏障，眼": "#d2c5c5",
+    "咽": "#fca5a5",
+    "腰肌，腰椎": "#CB8F81",
+    "中枢神经系统": "#f8ea97",
+    "周围神经系统": "#ff2da3",
+    "肘肌，手肘": "#CB8F81",
 
-};
+  };
 
   let choosenMesh: any;
 
@@ -492,7 +492,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
               child.name = "Retopo_心脏"
             }
 
-          if (child.geometry) {
+            if (child.geometry) {
               child.geometry.computeBoundingBox();
               child.geometry.computeBoundingSphere()
             }
@@ -1254,7 +1254,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       const type = JudgeOrgaType(child.name);
 
 
-
       switch (type) {
         case 0:
           scanMeshModel.push(child);
@@ -1409,7 +1408,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     if (sliderFlag && oldObjects.length > 0) {
       threeObjects.map((object: any, index: any) => {
 
-        if (JudgeExisted(hidedenObjects,object.name)) {
+        if (JudgeExisted(hidedenObjects, object.name)) {
           object.material.visible = false;
         } else {
 
@@ -1530,9 +1529,17 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         if (name.includes(object.name)) {
 
           const {radius, center} = object.geometry.boundingSphere;
+
+          // 在这里对选中的器官模型进行分类处理，1:没有默认显示的模型（器官模型）,2:默认已经显示的模型（骨骼模型）
           if (!object.material.visible) {
             setControlMaterial(object.material);
             object.material.visible = true;
+          } else {
+            object.material.uniforms.glowColor = {
+              type: "c",
+              value: new THREE.Color("#7cff5c")
+              //  #30D2BD
+            }
           }
 
           /**
@@ -1734,6 +1741,19 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   // },[selectedOrga])
 
   const RestoreCompare = async (modelTypeName: any) => {
+    // 如果之前选中的是骨骼，那么在这里需要恢复骨骼
+
+    if (threeChoosenMesh && threeChoosenMesh.material.uniforms) {
+
+      threeObjects.map((item: any) => {
+        if (item.name === threeChoosenMesh.name) {
+          processGLTFChild(item, false)
+
+        }
+      })
+
+    }
+
     await threeObjects.forEach(object => {
 
       object.visible = true;
@@ -1747,7 +1767,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       await threeThinnerObjects.forEach(object => {
         object.visible = false;
       })
-    }else{
+    } else {
       await threeLighterObjects.forEach(object => {
         object.visible = false;
       })
@@ -1856,7 +1876,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       await threeThinnerObjects.forEach((signleOrga: any) => {
         signleOrga.visible = !signleOrga.visible;
       })
-    }else{
+    } else {
       await threeLighterObjects.forEach((signleOrga: any) => {
         signleOrga.visible = !signleOrga.visible;
       })

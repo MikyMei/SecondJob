@@ -223,6 +223,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       "Retopo_支气管",
       "血管",
       "气管",
+      "支气管",
       "食管",
       "中枢神经系统",
       "周围神经系统"
@@ -247,6 +248,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     "心脏": "#BC4D2A",
     "气管": "#cc594b",
+    "支气管": "#cc594b",
+
     "血_脑屏障，中枢神经系统，脑": "#D6C0AD",
     "胃": "#EDBDA9",
     "肝脏": "#ee934c",
@@ -1293,6 +1296,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
           break;
         default:
+          console.log("需要默认的",child.name);
           child.material = Shaders("#30D2BD").material2;
           child.castShadow = true;
           break;

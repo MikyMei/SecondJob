@@ -41,8 +41,6 @@ const {Option} = Select;
 const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch }) => {
 
 
-
-
   const {bodyModelInfo, dispatch} = props;
 
   const {
@@ -230,9 +228,9 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     const partList = Object.keys(allOrgaList);
     const partOptionsTemp: any[] = [];
     if (partList.length > 0) {
-      partList.map(item => {
+      partList.map((item: any, index: any) => {
         partOptionsTemp.push(
-          <Option key={item} value={item}>{item}</Option>
+          <Option key={index} value={item}>{item}</Option>
         )
       })
     } else {
@@ -329,7 +327,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
      * */
 
 
-    if (dispatch && optionsCard[0] != e.currentTarget ) {
+    if (dispatch && optionsCard[0] != e.currentTarget) {
 
 
       const orgaParams = {
@@ -404,7 +402,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
       }
 
     }
-  }, [selectedOrga,  illList])
+  }, [selectedOrga, illList])
 
   const Generate4Index = (topList: any) => {
 
@@ -419,6 +417,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
        * */
 
       const healthRelation = JudgeHealthRelationship(top);
+
 
       cardlist.push(
         <div key={top.name} className={styles.singleTop}>
@@ -721,12 +720,10 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
      * 需要判断当前选中的部位是否是全身性器官，因为全身性器官没有具体的模型动画
      * */
 
-    if(choosenPart!=="全身"){
+    if (choosenPart !== "全身") {
       bodyRef.current.setInfoTabs();
       bodyRef.current.testPlay(keyName);
     }
-
-
 
 
   }
@@ -745,7 +742,9 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
       IllListTemp.map((item: any, index: any) => {
         buttonList.push(
           <Radio.Button
-            onClick={()=>{ choosenPart!=="全身"?bodyRef.current.sliderDivIndex(index):"" }}
+            onClick={() => {
+              choosenPart !== "全身" ? bodyRef.current.sliderDivIndex(index) : ""
+            }}
             key={item.illName || item.name}
             className={styles.radioButton}
             value={item.illName || item.name}>{item.illName || item.name}</Radio.Button>
@@ -762,8 +761,8 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
             }
           }
         })
-        if(IllListTemp[0].illName ){
-          bodyRef.current.setIndex(IllListTemp[0].illName );
+        if (IllListTemp[0].illName) {
+          bodyRef.current.setIndex(IllListTemp[0].illName);
         }
 
 

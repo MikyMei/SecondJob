@@ -10,6 +10,7 @@
 import React, {useEffect, useState, useImperativeHandle, useRef} from 'react';
 import {connect, history, Dispatch} from "umi";
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
+import BmiModal from "@/pages/ExtraModelCom/Components/bmimodal";
 
 
 import * as THREE from "three";
@@ -20,7 +21,7 @@ import {CSS3DObject, CSS3DRenderer} from 'three/examples/jsm/renderers/CSS3DRend
 
 
 import styles from './index.less';
-import {Avatar, Badge, Button, Slider, Tooltip, Row, Spin, Col, Divider, Tag, Carousel, Tabs, Image} from "antd";
+import {Avatar, Badge, Button, Slider, Tooltip, Row, Spin, Col, Divider, Tag, Carousel, Tabs, Image, Form} from "antd";
 import Utils from "@/pages/ExtraModelCom/utils";
 import * as TWEEN from '@tweenjs/tween.js';
 import {AntDesignOutlined, CloseCircleOutlined, LoadingOutlined, UserOutlined} from "@ant-design/icons";
@@ -173,6 +174,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       "Heart__Ani",
       "Retopo_心脏",
       "心脏",
+      "心脏_",
 
       "胃",
       "膀胱",
@@ -208,6 +210,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     "Retopo_心脏": "#BC4D2A",
 
     "心脏": "#BC4D2A",
+    "心脏_": "#BC4D2A",
     "气管": "#cc594b",
     "支气管": "#cc594b",
 
@@ -249,7 +252,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   };
 
   let choosenMesh: any;
-  const loadIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+  const loadIcon = <LoadingOutlined style={{fontSize: 24}} spin/>;
 
   const [infoTitle, setInfoTitle] = useState<any>('');
   const [infoDesc, setInfoDesc] = useState<any>('');
@@ -292,8 +295,13 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const [scanMesh, setScanMesh] = useState<any>();
   const [sliderValue, setSliderValue] = useState<any>(0);
   const [sliderFlag, setSliderFlag] = useState<any>(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [nowBmi, setNowBmi] = useState<any>(21);
+  const [modalForm] = Form.useForm();
+  const [stomacheObject, setStomacheObject] = useState<any>();
 
 
+  const textureLoader = new THREE.TextureLoader();
   let sliderDivIndex: CarouselRef | null = null;
 
   const carRef = useRef(null);
@@ -310,7 +318,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * */
 
 
-    const textureLoader = new THREE.TextureLoader();
     scene = new THREE.Scene();
     /**
      *  只是将图片作为北京图片贴了上去，并没有实现3d效果，尤其是在进行旋转的时候感觉尤为明显,
@@ -398,7 +405,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * 加载当前用户的模型，后面还要加载一个正常模型（所有网格模型都是正常形态，事先让其所有的模型都可见性为false）
      * */
     let model;
-    loader.load(`./img/allKindsOfModel/${modelType}/standardFigure2.gltf`, function (gltf: any) {
+    loader.load(`./img/allKindsOfModel/${modelType}/standardFigure3.gltf`, function (gltf: any) {
         model = gltf.scene;
         model.scale.setScalar(5.5, 5.5, 5.5);
         model.position.setY(-4.5);
@@ -418,6 +425,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
         setMixerAnimation(mixer);
         let tempAnimationList: any = new Object();
+        console.log(gltf.animations);
         if (gltf.animations && gltf.animations.length > 0) {
           gltf.animations.map((item: any, index: any) => {
             if (item.tracks[0] && item.tracks[0].name) {
@@ -437,6 +445,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
                   animationContent: mixer.clipAction(gltf.animations[index])
                 }
               )
+              mixer.clipAction(gltf.animations[index]).play();
             }
           })
         }
@@ -467,8 +476,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
             if (child.isMesh) {
               objects.push(child);
-
-
               processGLTFChild(child, false)
 
             }
@@ -483,6 +490,63 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         console.error(error);
 
       });
+
+    //
+    loader.load('./img/allKindsOfModel/AbnormalOrgaModel/stomache.gltf', function (gltf: any) {
+        let stomacheModel = gltf.scene;
+        stomacheModel.scale.setScalar(0.28);
+        stomacheModel.position.setY(2.3);
+        stomacheModel.position.setX(0.25);
+        stomacheModel.visible = meshCompare;
+
+        /**
+         * beIntersectObjects是用来存放需要射线检测的物体数组。
+         * transformControl可以方便调节物体位置大小。
+         * */
+
+        /**
+         * 在这里将模型地动画全部格式化，并生成mixer
+         * */
+
+
+        stomacheModel.name = "stomacheModel";
+
+        scene.add(stomacheModel);
+        stomacheModel.traverse((child: any) => {
+
+            if (child.isMesh) {
+              child.material = new THREE.MeshPhongMaterial(
+                {
+                  color: "#ffffff",
+                  transparent: true,
+                  opacity: 1,
+                  visible: false,
+                  // metalness: 0,
+                  // roughness: 0,
+                  map: textureLoader.load('./img/abnormalOrgaPicture/img_肺炎.png'), // 加载月球材质
+
+                  // 肺炎
+                  specular: "#ffffff",
+                  shininess: 2000,
+                  envMapIntensity: 1,
+                  side: THREE.DoubleSide,
+                  depthWrite: true
+                });
+              child.castShadow = true;
+            }
+            setStomacheObject(child);
+          }
+        );
+
+      },
+      undefined
+
+      , function (error) {
+
+        console.error(error);
+
+      });
+
 
     /**
      * 加载标准的模型，但是里面的所有child的可见性设置为不可见，目前来看只加载皮肤和骨骼；
@@ -736,7 +800,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     window.addEventListener('resize', onWindowResize);
 
     document.querySelector("#webgl-output");
-
 
 
   }
@@ -1241,6 +1304,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           /**
            * 以下为两种方案，着色器的优势在于控制滑动隐藏上，而动画不能用
            * */
+
+
           child.material = new THREE.MeshPhongMaterial(
             {
               color: orgaMatchColor[`${child.name}`],
@@ -1255,6 +1320,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
               side: THREE.DoubleSide,
               depthWrite: true
             });
+
+
           // child.material = Shaders(orgaMatchColor[`${child.name}`]).material3;
           child.castShadow = true
 
@@ -1585,6 +1652,14 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     //resetSliderValue
     resetSlider: () => {
       ResetAllOpacity();
+    },
+
+    //  替换胃炎模型
+    replaceStomache: () => {
+      adjustStomache()
+    },
+    resetStomache: () => {
+      restoreStomache()
     }
 
 
@@ -1849,8 +1924,95 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       })
     }
 
+  };
+
+
+  /**
+   * 关闭bmi框
+   * */
+  const closeModal = () => {
+    modalForm.resetFields();
+    setModalVisible(false);
   }
 
+  const openModal = () => {
+    setModalVisible(true);
+    modalForm.setFieldsValue({
+      BMI: nowBmi,
+    });
+
+  }
+
+  const changeModel = async () => {
+    const data = await modalForm.validateFields();
+    setModalVisible(false);
+    console.log("数据", data);
+    setTimeout(() => {
+      setNowBmi(data.BMI);
+      if (data.BMI) {
+        if (data.BMI < 18.5) {
+          RestoreCompare("overWeight");
+          RestoreCompare("fat");
+          ComparePartOrga("lighter")
+        } else if (18.5 <= data.BMI && data.BMI <= 23.9) {
+          RestoreCompare("overWeight");
+          RestoreCompare("lighter");
+          RestoreCompare("fat");
+
+        } else if (24 <= data.BMI && data.BMI <= 27.9) {
+          RestoreCompare("lighter");
+          RestoreCompare("fat");
+          ComparePartOrga("overWeight")
+        } else if (28 <= data.BMI) {
+          RestoreCompare("overWeight");
+          RestoreCompare("lighter");
+          ComparePartOrga("fat")
+        }
+      }
+
+    }, 1000)
+
+    modalForm.resetFields();
+  }
+
+  /**
+   * 负组件中调用当点击胃炎的时候调整模型透明度
+   * 以及恢复, 临时的
+   * */
+
+  const adjustStomache = () => {
+    stomacheObject.material.visible = true;
+    // choosenMesh.material.visible=false;
+    threeObjects.map(item => {
+      if (item.name === "胃") {
+        item.material.visible = false;
+      }
+    })
+
+  }
+
+  const restoreStomache = () => {
+    stomacheObject.material.visible = false;
+    // choosenMesh.material.visible=true;
+    threeObjects.map(item => {
+      if (item.name === "胃") {
+        item.material.visible = true;
+      }
+    })
+  }
+
+
+  /**
+   * 临时的
+   * */
+  const changeTabs = (value: any) => {
+    console.log(value);
+    if (value==="胃炎"){
+      adjustStomache()
+    }else if(value==="胃良性肿瘤"){
+      restoreStomache();
+    }
+  }
 
   return (
     <div className={styles.output}>
@@ -1876,7 +2038,11 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
                 }}
                 initialSlide={0}
                 effect={"fade"}
-                afterChange={(current: any) => PlayAnimation(illList.illType[current].illName)}>
+                onChange={changeTabs}
+                afterChange={(current: any) => {
+                  PlayAnimation(illList.illType[current].illName);
+                  changeTabs(illList.illType[current].illName)
+                }}>
                 {contentList}
               </Carousel>
             </TabPane>
@@ -1886,32 +2052,40 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       </div>
       {threeChoosenMesh ? "" :
         <div className={styles.switchGroup}>
+          {/*<div className={styles.compareButton}*/}
+
+          {/*     onMouseDown={() => ComparePartOrga("overWeight")}*/}
+          {/*     onMouseUp={() => RestoreCompare("overWeight")}*/}
+          {/*     onMouseOut={() => RestoreCompare("overWeight")}*/}
+          {/*>*/}
+          {/*  <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>*/}
+          {/*  <a className={styles.compareText}>健康对比（超重身材）</a>*/}
+          {/*</div>*/}
+          {/*<div className={styles.compareButton1}*/}
+
+          {/*     onMouseDown={() => ComparePartOrga("fat")}*/}
+          {/*     onMouseUp={() => RestoreCompare("fat")}*/}
+          {/*     onMouseOut={() => RestoreCompare("fat")}*/}
+          {/*>*/}
+          {/*  <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>*/}
+          {/*  <a className={styles.compareText}>健康对比（肥胖身材）</a>*/}
+          {/*</div>*/}
+          {/*<div className={styles.compareButton2}*/}
+
+          {/*     onMouseDown={() => ComparePartOrga("lighter")}*/}
+          {/*     onMouseUp={() => RestoreCompare("lighter")}*/}
+          {/*     onMouseOut={() => RestoreCompare("lighter")}*/}
+          {/*>*/}
+          {/*  */}
+          {/*  <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>*/}
+          {/*  <a className={styles.compareText}>健康对比（较瘦身材）</a>*/}
+          {/*</div>*/}
           <div className={styles.compareButton}
 
-               onMouseDown={() => ComparePartOrga("overWeight")}
-               onMouseUp={() => RestoreCompare("overWeight")}
-               onMouseOut={() => RestoreCompare("overWeight")}
           >
-            <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>
-            <a className={styles.compareText}>健康对比（超重身材）</a>
-          </div>
-          <div className={styles.compareButton1}
 
-               onMouseDown={() => ComparePartOrga("fat")}
-               onMouseUp={() => RestoreCompare("fat")}
-               onMouseOut={() => RestoreCompare("fat")}
-          >
             <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>
-            <a className={styles.compareText}>健康对比（肥胖身材）</a>
-          </div>
-          <div className={styles.compareButton2}
-
-               onMouseDown={() => ComparePartOrga("lighter")}
-               onMouseUp={() => RestoreCompare("lighter")}
-               onMouseOut={() => RestoreCompare("lighter")}
-          >
-            <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>
-            <a className={styles.compareText}>健康对比（较瘦身材）</a>
+            <a className={styles.compareText} onClick={openModal}>BMI参数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
           </div>
         </div>
 
@@ -1926,6 +2100,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
                                        value={sliderValue}
                                        onChange={sliderChange}
                                        className={styles.sliderBar}/>}
+      <BmiModal
+        visible={modalVisible}
+        form={modalForm}
+        onOk={changeModel}
+        onCancel={closeModal}
+      />
 
     </div>
   )

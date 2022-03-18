@@ -254,7 +254,7 @@ export function MatchOrga(orgaName: any) {
     "膝肌": {orgaName: "膝肌", meshName: ["膝肌，膝关节"], iconName: "icon_胃"},
     "足关节": {orgaName: "足关节", meshName: ["足关节"], iconName: "icon_胃"},
     "食管": {orgaName: "食管", meshName: ["食管"], iconName: "icon_胃"},
-    "心脏": {orgaName: "心脏", meshName: ["心脏"], iconName: "icon_心脏"},
+    "心脏": {orgaName: "心脏", meshName: ["心脏", "心脏_"], iconName: "icon_心脏"},
     "肺脏": {orgaName: "肺脏", meshName: ["肺脏，血_气屏障"], iconName: "icon_肺"},
     "支气管": {orgaName: "支气管", meshName: ["支气管"], iconName: "icon_胃"},
     "气管": {orgaName: "气管", meshName: ["气管"], iconName: "icon_胃"},

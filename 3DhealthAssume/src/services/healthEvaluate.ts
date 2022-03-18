@@ -307,6 +307,33 @@ export async function GetOrgaCommonScoreHistory() {
 
 
 export async function GetOrgaDetailInfo(params: any) {
+  console.log("GetOrgaDetailInfo",params);
+  let illType:any;
+
+  if (params.orgaName.includes("胃")){
+    illType=[
+      {
+        illName:"胃良性肿瘤",
+        illDesc: "胃良性肿瘤一类源于胃壁黏膜上皮组织的腺瘤或息肉样腺瘤。另一类源于胃壁间叶组织的平滑肌瘤、纤维瘤、神经纤维瘤、脂肪瘤、血管瘤等。"
+      },
+      {
+        illName:"胃炎",
+        illDesc: "胃炎（gastritis）是各种原因引起的胃黏膜炎症，为最常见的消化系统疾病之一。"
+      }
+    ]
+  }else{
+    illType=[
+      {
+        illName:"异常指标1",
+        illDesc: "这是一段关于异常指标1的描述。"
+      },
+      {
+        illName:"异常指标2",
+        illDesc: "这是一段关于异常指标2的描述。"
+      }
+    ]
+  }
+
   return {
     code: 200,
     data: [
@@ -319,16 +346,7 @@ export async function GetOrgaDetailInfo(params: any) {
           "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fp9.itc.cn%2Fimages01%2F20210611%2Fa2ad1613d0944d55ab1f462f4105f877.png&refer=http%3A%2F%2Fp9.itc.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644570058&t=f1916a151febb1f6359dd9a71c613cce"
 
         ],
-        illType: [
-          {
-            illName: "异常指标1",
-            illDesc: "这是一段有关异常标识一的描述"
-          },
-          {
-            illName: "异常指标2",
-            illDesc: "这是一段有关异常标识二的描述"
-          }
-        ],
+        illType: illType,
 
       }
     ]

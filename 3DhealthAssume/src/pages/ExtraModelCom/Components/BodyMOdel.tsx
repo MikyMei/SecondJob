@@ -523,7 +523,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
                   visible: false,
                   // metalness: 0,
                   // roughness: 0,
-                  map: textureLoader.load('./img/abnormalOrgaPicture/img_肺炎.png'), // 加载月球材质
+                  map: textureLoader.load('./img/orgaMapPicture/stomache/img_正常.png'), // 加载月球材质
 
                   // 肺炎
                   specular: "#ffffff",

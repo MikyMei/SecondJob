@@ -403,6 +403,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     /**
      * 加载当前用户的模型，后面还要加载一个正常模型（所有网格模型都是正常形态，事先让其所有的模型都可见性为false）
+     * 只是为了展示，做了一些临时的功能
      * */
     let model;
     loader.load(`./img/allKindsOfModel/${modelType}/standardFigure3.gltf`, function (gltf: any) {

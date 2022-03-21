@@ -208,7 +208,7 @@ export function MatchOrga(orgaName: any) {
   };
   // 修改了器官模型的（meshname）的名字，具体器官的名字还没有对应方法学的
   const MatchOrigin2 = {
-    "胃": {orgaName: "胃", meshName: ["胃"], iconName: "icon_胃"},
+    "胃": {orgaName: "胃", meshName: ["胃", "胃_面片"], iconName: "icon_胃"},
     "小肠": {orgaName: "小肠", meshName: ["小肠，肠黏膜"], iconName: "icon_小肠"},
     "肝脏": {orgaName: "肝脏", meshName: ["肝脏"], iconName: "icon_肝脏"},
     "大肠": {orgaName: "大肠", meshName: ["大肠"], iconName: "icon_胃"},

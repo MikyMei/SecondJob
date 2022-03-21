@@ -177,6 +177,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       "心脏_",
 
       "胃",
+      "胃_面片",
       "膀胱",
       "大肠",
 
@@ -216,6 +217,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     "血_脑屏障，中枢神经系统，脑": "#D6C0AD",
     "胃": "#EDBDA9",
+    "胃_面片": "#d7947b",
     "肝脏": "#ee934c",
     "肾脏，血_尿屏障": "#F0834D",
     "小肠，肠黏膜": "#F7D46C",
@@ -309,6 +311,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const initModel = (modelType: any, modelName: any) => {
 
 
+
+
     // 获得渲染器长度
     mainCanvas = document.getElementById("webgl-output");
 
@@ -327,9 +331,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     scene.background = null;
 
 
+
+
     // 获得渲染器所在的标签元素，作为渲染器的尺寸
     renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
     renderer.setClearAlpha(0);
+    renderer.outputEncoding = THREE.sRGBEncoding;
     // renderer.setClearColor(new THREE.Color("#eeeeee"));
     renderer.setSize(mainCanvas.offsetWidth * 0.8, mainCanvas.offsetHeight);
     renderer.shadowMap.enabled = true;
@@ -375,7 +382,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     spotLight.shadow.penumbra = 0.05;
     spotLight.shadow.mapSize.width = 3026;
     spotLight.shadow.mapSize.height = 3026;
-    // scene.add(spotLight);
+    scene.add(spotLight);
 
     ambient = new THREE.AmbientLight(0x444444);
     scene.add(ambient);
@@ -405,7 +412,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * 加载当前用户的模型，后面还要加载一个正常模型（所有网格模型都是正常形态，事先让其所有的模型都可见性为false）
      * */
     let model;
-    loader.load(`./img/allKindsOfModel/${modelType}/standardFigure3.gltf`, function (gltf: any) {
+    loader.load(`./img/allKindsOfModel/${modelType}/modelWithSyomache.gltf`, function (gltf: any) {
         model = gltf.scene;
         model.scale.setScalar(5.5, 5.5, 5.5);
         model.position.setY(-4.5);
@@ -1306,20 +1313,41 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
            * */
 
 
-          child.material = new THREE.MeshPhongMaterial(
-            {
-              color: orgaMatchColor[`${child.name}`],
-              transparent: true,
-              opacity: 0.9,
-              visible: visible,
-              // metalness: 0,
-              // roughness: 0,
-              specular: "#ffffff",
-              shininess: 2000,
-              // envMapIntensity: 1,
-              side: THREE.DoubleSide,
-              depthWrite: true
-            });
+          if (["胃","胃_面片"].includes(child.name)){
+            child.material.emissive =  child.material.color;
+            child.material.emissiveMap = child.material.map ;
+            child.material.visible= visible;
+            // child.material = new THREE.MeshPhongMaterial(
+            //   {
+            //     // color: orgaMatchColor[`${child.name}`],
+            //     // transparent: true,
+            //     // opacity: 0.9,
+            //     visible: visible,
+            //     // metalness: 0,
+            //     // roughness: 0,
+            //     // specular: "#ffffff",
+            //     // shininess: 2000,
+            //     // // envMapIntensity: 1,
+            //     // side: THREE.DoubleSide,
+            //     // depthWrite: true
+            //   });
+          }else{
+            child.material = new THREE.MeshPhongMaterial(
+              {
+                color: orgaMatchColor[`${child.name}`],
+                transparent: true,
+                opacity: 0.9,
+                visible: visible,
+                // metalness: 0,
+                // roughness: 0,
+                specular: "#ffffff",
+                shininess: 2000,
+                // envMapIntensity: 1,
+                side: THREE.DoubleSide,
+                depthWrite: true
+              });
+          }
+
 
 
           // child.material = Shaders(orgaMatchColor[`${child.name}`]).material3;
@@ -1739,6 +1767,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   }
 
   const structIllList = async () => {
+    console.log(illList.desc);
     setInfoTitle(illList.name);
     setInfoDesc(illList.desc);
     const contentTemp: any = [];

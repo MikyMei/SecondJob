@@ -313,13 +313,18 @@ export async function GetOrgaDetailInfo(params: any) {
   if (params.orgaName.includes("胃")){
     illType=[
       {
-        illName:"胃良性肿瘤",
+        illName:"胃癌",
         illDesc: "胃良性肿瘤一类源于胃壁黏膜上皮组织的腺瘤或息肉样腺瘤。另一类源于胃壁间叶组织的平滑肌瘤、纤维瘤、神经纤维瘤、脂肪瘤、血管瘤等。"
       },
       {
         illName:"胃炎",
         illDesc: "胃炎（gastritis）是各种原因引起的胃黏膜炎症，为最常见的消化系统疾病之一。"
-      }
+      },
+      {
+        illName:"胃溃疡",
+        illDesc: "胃溃疡是指发生在胃角、胃窦、贲门和裂孔疝等部位的溃疡，是消化性溃疡的一种。"
+      },
+
     ]
   }else{
     illType=[

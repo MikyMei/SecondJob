@@ -794,11 +794,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
   const GeneratRightOrga = () => {
     const illListTemp = choosenPart === "全身" ? wholeOrgaIll : illList;
-    // console.log("当前一场表示", Array.isArray(illListTemp));
-    // const
-    // if (Array.isArray(illListTemp)){
-    //
-    // }
+
     /**
      * 如果是数组，那就是全身，数组中的元素是疾病
      * 如果是对象，那内容就是illtype

@@ -178,6 +178,9 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
       "胃",
       "胃_面片",
+      "面片_胃_胃炎",
+      "面片_胃_胃癌",
+      "面片_胃_胃溃疡",
       "膀胱",
       "大肠",
 
@@ -279,8 +282,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     value: 0
   });
 
-  const [bodyMaterial, setBodyMaterial] = useState<any>();// 主要用来存放body地material为的是能够更改流光
-  const [threeChoosenMesh, setThreeChoosenMesh] = useState<any>(null);// 主要用来存放body地material为的是能够更改流光
+  const [nowOrgaMeshes, setNowOrgaMeshes] = useState<any>();// 主要用来存放当前宣红模型的时候，模型和片面的数组
+  const [threeChoosenMesh, setThreeChoosenMesh] = useState<any>(null);
 
   const [displayType, setDisplayType] = useState<any>("none");
   const [currentInfoWindow, setCurrentInfoWindow] = useState<any>(); // 在选定器官的时候打开指定的信息窗口，
@@ -311,8 +314,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const initModel = (modelType: any, modelName: any) => {
 
 
-
-
     // 获得渲染器长度
     mainCanvas = document.getElementById("webgl-output");
 
@@ -329,8 +330,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      *  */
     // scene.background = textureLoader.load('./img/sceneBackground.png');
     scene.background = null;
-
-
 
 
     // 获得渲染器所在的标签元素，作为渲染器的尺寸
@@ -370,10 +369,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     labelRenderer.domElement.style = "pointer-events: auto;position: absolute;top: 0px;"  // 处理新的渲染器
 
 
-    const axes = new THREE.AxesHelper(20);
-    // scene.add(axes);
-
-
     // 创建聚光灯
     spotLight = new THREE.SpotLight(0xFFFFFF);
     spotLight.position.set(30, 30, 30);
@@ -382,7 +377,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     spotLight.shadow.penumbra = 0.05;
     spotLight.shadow.mapSize.width = 3026;
     spotLight.shadow.mapSize.height = 3026;
-    scene.add(spotLight);
+    // scene.add(spotLight);
 
     ambient = new THREE.AmbientLight(0x444444);
     scene.add(ambient);
@@ -412,7 +407,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * 加载当前用户的模型，后面还要加载一个正常模型（所有网格模型都是正常形态，事先让其所有的模型都可见性为false）
      * */
     let model;
-    loader.load(`./img/allKindsOfModel/${modelType}/modelWithSyomache.gltf`, function (gltf: any) {
+    loader.load(`./img/allKindsOfModel/${modelType}/standardFigure4.gltf`, function (gltf: any) {
         model = gltf.scene;
         model.scale.setScalar(5.5, 5.5, 5.5);
         model.position.setY(-4.5);
@@ -432,7 +427,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
         setMixerAnimation(mixer);
         let tempAnimationList: any = new Object();
-        console.log(gltf.animations);
         if (gltf.animations && gltf.animations.length > 0) {
           gltf.animations.map((item: any, index: any) => {
             if (item.tracks[0] && item.tracks[0].name) {
@@ -486,62 +480,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
               processGLTFChild(child, false)
 
             }
-          }
-        );
-
-      },
-      undefined
-
-      , function (error) {
-
-        console.error(error);
-
-      });
-
-    //
-    loader.load('./img/allKindsOfModel/AbnormalOrgaModel/stomache.gltf', function (gltf: any) {
-        let stomacheModel = gltf.scene;
-        stomacheModel.scale.setScalar(0.28);
-        stomacheModel.position.setY(2.3);
-        stomacheModel.position.setX(0.25);
-        stomacheModel.visible = meshCompare;
-
-        /**
-         * beIntersectObjects是用来存放需要射线检测的物体数组。
-         * transformControl可以方便调节物体位置大小。
-         * */
-
-        /**
-         * 在这里将模型地动画全部格式化，并生成mixer
-         * */
-
-
-        stomacheModel.name = "stomacheModel";
-
-        scene.add(stomacheModel);
-        stomacheModel.traverse((child: any) => {
-
-            if (child.isMesh) {
-              child.material = new THREE.MeshPhongMaterial(
-                {
-                  color: "#ffffff",
-                  transparent: true,
-                  opacity: 1,
-                  visible: false,
-                  // metalness: 0,
-                  // roughness: 0,
-                  map: textureLoader.load('./img/orgaMapPicture/stomache/img_正常.png'), // 加载月球材质
-
-                  // 肺炎
-                  specular: "#ffffff",
-                  shininess: 2000,
-                  envMapIntensity: 1,
-                  side: THREE.DoubleSide,
-                  depthWrite: true
-                });
-              child.castShadow = true;
-            }
-            setStomacheObject(child);
           }
         );
 
@@ -634,107 +572,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     /**
      * 加载比肥胖的模型，一般来说只加载皮肤和谷歌模型
      * */
-
-    let thinnerModel;
-    loader.load(`./img/allKindsOfModel/${modelType}/fatFigure2.gltf`, function (gltf: any) {
-        thinnerModel = gltf.scene;
-        thinnerModel.scale.setScalar(5.5, 5.5, 5.5);
-        thinnerModel.position.setY(-4.5);
-        thinnerModel.visible = meshCompare;
-
-        /**
-         * beIntersectObjects是用来存放需要射线检测的物体数组。
-         * transformControl可以方便调节物体位置大小。
-         * */
-
-        /**
-         * 在这里将模型地动画全部格式化，并生成mixer
-         * */
-
-
-        thinnerModel.name = "thinnerModel";
-
-        scene.add(thinnerModel);
-        thinnerModel.traverse((child: any) => {
-            /**
-             * 在这里将不同模型根据他的名字，将
-             * */
-
-
-            /**
-             * 遍历模型的时候，加一个参数，主要是为了在加载对比模型
-             * */
-
-            if (child.isMesh) {
-
-              child.visible = false;
-              if (compareMeshList.includes(child.name)) {
-                thinnerObjects.push(child);
-                processGLTFChild(child, true);
-              }
-
-            }
-          }
-        );
-
-      },
-      undefined
-
-      , function (error) {
-
-        console.error(error);
-
-      });
-
-    let lighterModel;
-    loader.load(`./img/allKindsOfModel/${modelType}/thinnerFigure.gltf`, function (gltf: any) {
-        lighterModel = gltf.scene;
-        lighterModel.scale.setScalar(5.5, 5.5, 5.5);
-        lighterModel.position.setY(-4.5);
-        lighterModel.visible = meshCompare;
-
-        /**
-         * beIntersectObjects是用来存放需要射线检测的物体数组。
-         * transformControl可以方便调节物体位置大小。
-         * */
-
-        /**
-         * 在这里将模型地动画全部格式化，并生成mixer
-         * */
-
-
-        lighterModel.name = "lighterModel";
-
-        scene.add(lighterModel);
-        lighterModel.traverse((child: any) => {
-            /**
-             * 在这里将不同模型根据他的名字，将
-             * */
-
-
-            /**
-             * 遍历模型的时候，加一个参数，主要是为了在加载对比模型
-             * */
-
-            if (child.isMesh) {
-              child.visible = false;
-              if (compareMeshList.includes(child.name)) {
-                lighterObjects.push(child);
-                processGLTFChild(child, true);
-              }
-
-            }
-          }
-        );
-
-      },
-      undefined
-
-      , function (error) {
-
-        console.error(error);
-
-      });
 
 
     controls = new OrbitControls(camera, renderer.domElement);
@@ -1313,10 +1150,11 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
            * */
 
 
-          if (["胃","胃_面片"].includes(child.name)){
-            child.material.emissive =  child.material.color;
-            child.material.emissiveMap = child.material.map ;
-            child.material.visible= visible;
+          // 目前先用这种判断，后续所有的器官都有了贴图就不用判断
+          if (["胃", "胃_面片", "面片_胃_胃炎", "面片_胃_胃癌", "面片_胃_胃溃疡"].includes(child.name)) {
+            child.material.emissive = child.material.color;
+            child.material.emissiveMap = child.material.map;
+            child.material.visible = visible;
             // child.material = new THREE.MeshPhongMaterial(
             //   {
             //     // color: orgaMatchColor[`${child.name}`],
@@ -1331,7 +1169,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             //     // side: THREE.DoubleSide,
             //     // depthWrite: true
             //   });
-          }else{
+          } else {
             child.material = new THREE.MeshPhongMaterial(
               {
                 color: orgaMatchColor[`${child.name}`],
@@ -1347,7 +1185,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
                 depthWrite: true
               });
           }
-
 
 
           // child.material = Shaders(orgaMatchColor[`${child.name}`]).material3;
@@ -1579,16 +1416,23 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * 点击放大或者是打开器官的弹框，或者跳到指定位置
    * */
   const enlargeItem = async (name: any) => {
-    await RestoreCompare();
+    await RestoreCompare("null");
+
 
     if (controlMaterial) {
       controlMaterial.visible = false;
       setControlMaterial(null);
     }
+    ;
 
-    await threeObjects.forEach(object => {
+    // 临时保存点击器官后控制展示的器官模型和对应的面片模型
+    const meshList: any = [];
+
+
+    await threeObjects.forEach((object: any, index: any) => {
 
         if (name.includes(object.name)) {
+          meshList.push(object);
 
           const {radius, center} = object.geometry.boundingSphere;
 
@@ -1604,37 +1448,43 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             }
           }
 
-          /**
-           * centeroid是活得地最准确的模型中心坐标
-           * */
-          const centroid = new THREE.Vector3(0, 0, 0);
-          centroid.addVectors(object.geometry.boundingBox.min, object.geometry.boundingBox.max);
-          centroid.multiplyScalar(0.5);
-          centroid.applyMatrix4(object.matrixWorld);
+          if (name.indexOf(object.name) === 0) {
+            /**
+             * centeroid是活得地最准确的模型中心坐标
+             * 只对该器官的第一个模型，器官名字进行位置变换操作
+             * */
+            const centroid = new THREE.Vector3(0, 0, 0);
+            centroid.addVectors(object.geometry.boundingBox.min, object.geometry.boundingBox.max);
+            centroid.multiplyScalar(0.5);
+            centroid.applyMatrix4(object.matrixWorld);
 
 
-          new TWEEN.Tween(threeCamera.position)
-            .to({x: centroid.x, y: centroid.y * 1.1, z: centroid.z + radius * 13}, 3000)
-            .easing(TWEEN.Easing.Quadratic.InOut)
-            .start();
+            new TWEEN.Tween(threeCamera.position)
+              .to({x: centroid.x, y: centroid.y * 0.95, z: centroid.z + radius * 13}, 3000)
+              .easing(TWEEN.Easing.Quadratic.InOut)
+              .start();
 
-          new TWEEN.Tween(threeControls.target)
-            .to({x: centroid.x, y: centroid.y, z: centroid.z}, 1500)
-            .easing(TWEEN.Easing.Quadratic.InOut)
-            .start();
+            new TWEEN.Tween(threeControls.target)
+              .to({x: centroid.x, y: centroid.y, z: centroid.z}, 1500)
+              .easing(TWEEN.Easing.Quadratic.InOut)
+              .start();
 
-          choosenMesh = object;
-          setThreeChoosenMesh(choosenMesh);
-          // setDisplayType("inline")
-          /**
-           * 在这里动态生成信息窗口地内容
-           * */
+            choosenMesh = object;
+            setThreeChoosenMesh(choosenMesh);
+            // setDisplayType("inline")
+            /**
+             * 在这里动态生成信息窗口地内容
+             * */
 
-          GenerateCarousel(name, centroid, radius);
+            GenerateCarousel(object.name, centroid, radius);
+          }
+
 
         }
       }
     )
+
+    setNowOrgaMeshes(meshList)
 
 
   }
@@ -1674,21 +1524,13 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     // 恢复健康比对
     ResetCompare: () => {
-      RestoreCompare()
+      RestoreCompare();
     },
 
     //resetSliderValue
     resetSlider: () => {
       ResetAllOpacity();
     },
-
-    //  替换胃炎模型
-    replaceStomache: () => {
-      adjustStomache()
-    },
-    resetStomache: () => {
-      restoreStomache()
-    }
 
 
   }));
@@ -1767,7 +1609,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   }
 
   const structIllList = async () => {
-    console.log(illList.desc);
     setInfoTitle(illList.name);
     setInfoDesc(illList.desc);
     const contentTemp: any = [];
@@ -1805,44 +1646,61 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     }
   }
 
-  // useEffect(()=>{
-  //   if (!selectedOrga){
-  //     closeInfoWindow();
-  //   }
-  // },[selectedOrga])
 
   const RestoreCompare = async (modelTypeName: any) => {
-    // 如果之前选中的是骨骼，那么在这里需要恢复骨骼
+    // 在这里目前仅仅是恢复了选中的器官模型，而没有恢复他的面片，实际上应该在这进行面片的恢复
 
-    if (threeChoosenMesh && threeChoosenMesh.material.uniforms) {
+    /**
+     * 在这里根据需要回复的
+     * */
 
-      threeObjects.map((item: any) => {
-        if (item.name === threeChoosenMesh.name) {
-          processGLTFChild(item, false)
-
-        }
+    if (Array.isArray(nowOrgaMeshes) && nowOrgaMeshes.length > 0) {
+      setInfoSelectedTab("0");
+      nowOrgaMeshes.map((item: any) => {
+        processGLTFChild(item, false)
       })
 
     }
 
-    await threeObjects.forEach(object => {
+    await threeObjects.forEach((object: any) => {
 
       object.visible = true;
     })
 
-    if (modelTypeName === "overWeight") {
-      await threeStandardObjects.forEach(object => {
-        object.visible = false;
-      })
-    } else if (modelTypeName === "fat") {
-      await threeThinnerObjects.forEach(object => {
-        object.visible = false;
-      })
-    } else {
-      await threeLighterObjects.forEach(object => {
-        object.visible = false;
-      })
+
+    switch (modelTypeName) {
+      case "overWeight":
+        await threeStandardObjects.forEach((object: any) => {
+          object.visible = false;
+        })
+        break;
+      case "fat":
+        await threeStandardObjects.forEach((object: any) => {
+          object.visible = false;
+        })
+        break;
+      case "thinner":
+        await threeStandardObjects.forEach((object: any) => {
+          object.visible = false;
+        })
+        break;
+
+      default:
+        break;
     }
+    /* if (modelTypeName === "overWeight") {
+       await threeStandardObjects.forEach((object: any) => {
+         object.visible = false;
+       })
+     } else if (modelTypeName === "fat") {
+       await threeThinnerObjects.forEach((object: any) => {
+         object.visible = false;
+       })
+     } else if (modelTypeName === "thinner") {
+       await threeLighterObjects.forEach((object: any) => {
+         object.visible = false;
+       })
+     }*/
 
   }
 
@@ -1852,7 +1710,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * 关闭窗口的时候，将相关恢复
      * */
 
-    await RestoreCompare();
+    await RestoreCompare("null");
 
     if (playedAnimationed) {
       playedAnimationed.stop()
@@ -1882,6 +1740,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       .start();
     choosenMesh = null;
     setThreeChoosenMesh(choosenMesh);
+    setNowOrgaMeshes([]);
     if (dispatch) {
       dispatch({
         type: "bodyModel/initSelectedOrga",
@@ -1908,11 +1767,16 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     if (playedAnimationed) {
       playedAnimationed.stop();
     }
-    setInfoSelectedTab(activeKey);
+
     if (activeKey === "2") {
       //  打开默认的第一个动画
       illList.illType[0] ? PlayAnimation(illList.illType[0].illName) : null;
+      changeTabs(illList.illType[0].illName);
+    }else if(infoSelectedTab==="2"){
+      ResstAllIllIndex()
     }
+
+    setInfoSelectedTab(activeKey);
   }
 
 
@@ -1964,83 +1828,39 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     setModalVisible(false);
   }
 
-  const openModal = () => {
-    setModalVisible(true);
-    modalForm.setFieldsValue({
-      BMI: nowBmi,
-    });
 
-  }
-
-  const changeModel = async () => {
-    const data = await modalForm.validateFields();
-    setModalVisible(false);
-    console.log("数据", data);
-    setTimeout(() => {
-      setNowBmi(data.BMI);
-      if (data.BMI) {
-        if (data.BMI < 18.5) {
-          RestoreCompare("overWeight");
-          RestoreCompare("fat");
-          ComparePartOrga("lighter")
-        } else if (18.5 <= data.BMI && data.BMI <= 23.9) {
-          RestoreCompare("overWeight");
-          RestoreCompare("lighter");
-          RestoreCompare("fat");
-
-        } else if (24 <= data.BMI && data.BMI <= 27.9) {
-          RestoreCompare("lighter");
-          RestoreCompare("fat");
-          ComparePartOrga("overWeight")
-        } else if (28 <= data.BMI) {
-          RestoreCompare("overWeight");
-          RestoreCompare("lighter");
-          ComparePartOrga("fat")
+  /**
+   * 当切换信息窗的异常标识的时候进行调用
+   * */
+  const changeTabs = async (value: any) => {
+    /**
+     * 在这里控制那个需要展示， 默认choosenMesh的不控制
+     * 控制剩下的在保存中的
+     * */
+    let illNameArray: any = [];
+    if (Array.isArray(nowOrgaMeshes) && nowOrgaMeshes.length > 0) {
+      await nowOrgaMeshes.map((mesh: any) => {
+        illNameArray = mesh.name.split("_");// 分割面片或者是器官模型的名字，如果是器官里面数组只有一个元素，否则最后一个元素就是名字
+        if ( threeChoosenMesh.name===illNameArray[illNameArray.length - 1] || value === illNameArray[illNameArray.length - 1]) {
+          mesh.visible = true;
+        } else {
+          mesh.visible = false;
         }
-      }
-
-    }, 1000)
-
-    modalForm.resetFields();
-  }
-
-  /**
-   * 负组件中调用当点击胃炎的时候调整模型透明度
-   * 以及恢复, 临时的
-   * */
-
-  const adjustStomache = () => {
-    stomacheObject.material.visible = true;
-    // choosenMesh.material.visible=false;
-    threeObjects.map(item => {
-      if (item.name === "胃") {
-        item.material.visible = false;
-      }
-    })
-
-  }
-
-  const restoreStomache = () => {
-    stomacheObject.material.visible = false;
-    // choosenMesh.material.visible=true;
-    threeObjects.map(item => {
-      if (item.name === "胃") {
-        item.material.visible = true;
-      }
-    })
-  }
-
-
-  /**
-   * 临时的
-   * */
-  const changeTabs = (value: any) => {
-    console.log(value);
-    if (value==="胃炎"){
-      adjustStomache()
-    }else if(value==="胃良性肿瘤"){
-      restoreStomache();
+      })
     }
+
+
+  };
+
+  /**
+   * 当信息窗离开异常标识的tab时候，全部恢复显示
+   * */
+
+  const ResstAllIllIndex=async ()=>{
+    nowOrgaMeshes.map((mesh: any) => {
+        mesh.visible = true;
+
+    })
   }
 
   return (
@@ -2060,14 +1880,13 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
               <Carousel effect={"fade"}>
                 {orgaPicture}
               </Carousel> </TabPane>
-            <TabPane tab={"异常标识"} key={"2"}>
+            <TabPane tab={"异常标识"} key={"2"} >
               <Carousel
                 ref={el => {
                   sliderDivIndex = el
                 }}
                 initialSlide={0}
                 effect={"fade"}
-                onChange={changeTabs}
                 afterChange={(current: any) => {
                   PlayAnimation(illList.illType[current].illName);
                   changeTabs(illList.illType[current].illName)
@@ -2081,40 +1900,14 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       </div>
       {threeChoosenMesh ? "" :
         <div className={styles.switchGroup}>
-          {/*<div className={styles.compareButton}*/}
-
-          {/*     onMouseDown={() => ComparePartOrga("overWeight")}*/}
-          {/*     onMouseUp={() => RestoreCompare("overWeight")}*/}
-          {/*     onMouseOut={() => RestoreCompare("overWeight")}*/}
-          {/*>*/}
-          {/*  <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>*/}
-          {/*  <a className={styles.compareText}>健康对比（超重身材）</a>*/}
-          {/*</div>*/}
-          {/*<div className={styles.compareButton1}*/}
-
-          {/*     onMouseDown={() => ComparePartOrga("fat")}*/}
-          {/*     onMouseUp={() => RestoreCompare("fat")}*/}
-          {/*     onMouseOut={() => RestoreCompare("fat")}*/}
-          {/*>*/}
-          {/*  <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>*/}
-          {/*  <a className={styles.compareText}>健康对比（肥胖身材）</a>*/}
-          {/*</div>*/}
-          {/*<div className={styles.compareButton2}*/}
-
-          {/*     onMouseDown={() => ComparePartOrga("lighter")}*/}
-          {/*     onMouseUp={() => RestoreCompare("lighter")}*/}
-          {/*     onMouseOut={() => RestoreCompare("lighter")}*/}
-          {/*>*/}
-          {/*  */}
-          {/*  <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>*/}
-          {/*  <a className={styles.compareText}>健康对比（较瘦身材）</a>*/}
-          {/*</div>*/}
           <div className={styles.compareButton}
 
+               onMouseDown={() => ComparePartOrga("overWeight")}
+               onMouseUp={() => RestoreCompare("overWeight")}
+               onMouseOut={() => RestoreCompare("overWeight")}
           >
-
             <img className={styles.compareIcon} src={'./img/compare_icon.svg'}/>
-            <a className={styles.compareText} onClick={openModal}>BMI参数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+            <a className={styles.compareText}>健康对比（超重身材）</a>
           </div>
         </div>
 
@@ -2129,12 +1922,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
                                        value={sliderValue}
                                        onChange={sliderChange}
                                        className={styles.sliderBar}/>}
-      <BmiModal
-        visible={modalVisible}
-        form={modalForm}
-        onOk={changeModel}
-        onCancel={closeModal}
-      />
+
 
     </div>
   )

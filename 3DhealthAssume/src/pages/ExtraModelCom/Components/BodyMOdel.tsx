@@ -82,7 +82,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * */
   const matchType = ["皮肤", "骨骼", "内脏1", "内脏2", "内脏3", "内脏4", ""];
 
-  const orgaTypeList = [["Retopo_皮肤", "皮肤", "超重", "全身_1", "胖"],
+  const orgaTypeList = [["Retopo_皮肤", "皮肤", "超重", "全身_1", "胖", "全身001"],
     ["Retopo_跟骨",
       "Retopo_腕骨",
       "Retopo_颈椎",
@@ -407,7 +407,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * 加载当前用户的模型，后面还要加载一个正常模型（所有网格模型都是正常形态，事先让其所有的模型都可见性为false）
      * */
     let model;
-    loader.load(`./img/allKindsOfModel/${modelType}/standardFigure4.gltf`, function (gltf: any) {
+    loader.load(`./img/allKindsOfModel/${modelType}/standardFigure4.gltf`, async function (gltf: any) {
         model = gltf.scene;
         model.scale.setScalar(5.5, 5.5, 5.5);
         model.position.setY(-4.5);
@@ -455,9 +455,9 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
         model.name = "userMeshModel";
-
         scene.add(model);
-        model.traverse((child: any) => {
+
+        await model.traverse((child: any) => {
             /**
              * 在这里将不同模型根据他的名字，将
              * */
@@ -482,6 +482,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             }
           }
         );
+
+
 
       },
       undefined
@@ -1119,10 +1121,9 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
   const processGLTFChild = (child: any, visible: boolean) => {
+    console.log(child.name, child.material.transparent);
 
     try {
-      // if (child.isMesh) {
-
 
       // 根据器官属于在哪个数组，判断属于哪一类，选择哪一类着色器材质
       const type = JudgeOrgaType(child.name);
@@ -1155,31 +1156,26 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             // 在这里设置的透明度，两个有效，两个无效
             child.material.emissive = child.material.color;
             child.material.emissiveMap = child.material.map;
+            // child.material.alphaMap = child.material.map;
+            child.material.emissiveIntensity = 1;
             child.material.visible = visible;
             child.material.transparent = true;
-            // child.material.opacity = 0.5;
-            child.material.emissive = child.material.color;
-            child.material.side = THREE.DoubleSide;
+            child.material._alphaTest = 0;
+            // child.material.side = THREE.DoubleSide;
 
-            // child.material = new THREE.MeshStandardMaterial(
-            //   {
-            //     // color: orgaMatchColor[`${child.name}`],
-            //     transparent: true,
-            //     opacity: 0.9,
-            //     visible: visible,
-            //     metalness: 0,
-            //     roughness: 0,
-            //     specular: child.material.color,
-            //     emissiveMap: child.material.map,
-            //     emissive: child.material.color,
-            //     lightMapIntensity: 1,
-            //     envMapIntensity: 1,
-            //
-            //     shininess: 10,
-            //
-            //     side: THREE.DoubleSide,
-            //     depthWrite: true
-            //   });
+            child.material.opacity = 0.9;
+
+            // const material=new THREE.MeshStandardMaterial({
+            //   ...child.material,
+            //   emissive : child.material.color,
+            //   emissiveMap : child.material.map,
+            //   visible:visible,
+            //   transparent:true,
+            //   opacity:0.9,
+            // })
+
+            // child.material=material;
+
           } else {
             child.material = new THREE.MeshPhongMaterial(
               {
@@ -1207,7 +1203,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           child.castShadow = true;
           break;
       }
-      // }
     } catch (e) {
       console.log('error:', e)
       console.error('设置色彩出错, child:', child)

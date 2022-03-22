@@ -281,16 +281,13 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const [threeStartTime, setThreeStartTime] = useState<any>({
     value: 0
   });
-
   const [nowOrgaMeshes, setNowOrgaMeshes] = useState<any>();// 主要用来存放当前宣红模型的时候，模型和片面的数组
   const [threeChoosenMesh, setThreeChoosenMesh] = useState<any>(null);
-
   const [displayType, setDisplayType] = useState<any>("none");
   const [currentInfoWindow, setCurrentInfoWindow] = useState<any>(); // 在选定器官的时候打开指定的信息窗口，
   const [controlMaterial, setControlMaterial] = useState<any>(null); // 保存起初就是不展示的器官，在点击之后再显示
   const [mixerAnimation, setMixerAnimation] = useState<any>(null); // 控制动画的
   const [animationList, setAnimationList] = useState<any>(); // 存放动画的数据组
-
   const [infoSelectedTab, setInfoSelectedTab] = useState<any>("0"); // 信息窗口选中的选项，主要是为了区分是否是异常标识
   const [playedAnimationed, setPlayedAnimationed] = useState<any>(null); //已经再被播放的动画、
   const [selectedAbnormal, setSelectedAbnormal] = useState<any>(null);  // 当前选中的异常标识
@@ -301,15 +298,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const [sliderValue, setSliderValue] = useState<any>(0);
   const [sliderFlag, setSliderFlag] = useState<any>(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [nowBmi, setNowBmi] = useState<any>(21);
   const [modalForm] = Form.useForm();
-  const [stomacheObject, setStomacheObject] = useState<any>();
 
 
   const textureLoader = new THREE.TextureLoader();
   let sliderDivIndex: CarouselRef | null = null;
 
-  const carRef = useRef(null);
 
   const initModel = (modelType: any, modelName: any) => {
 
@@ -377,13 +371,13 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     spotLight.shadow.penumbra = 0.05;
     spotLight.shadow.mapSize.width = 3026;
     spotLight.shadow.mapSize.height = 3026;
-    // scene.add(spotLight);
+    scene.add(spotLight);
 
     ambient = new THREE.AmbientLight(0x444444);
     scene.add(ambient);
 
     /**
-     * 前后两个点光源
+     * 前后两个点光源，如果没有光源那么前端写的材质就会是黑色的，除非使用自发光，但是单纯的自发光效果不好，有点糊
      * */
     point = new THREE.PointLight(0xffffff);
     point.position.set(0, 200, 300); // 点光源位置
@@ -541,7 +535,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             /**
              * 在这里将不同模型根据他的名字，将
              * */
-
 
             /**
              * 遍历模型的时候，加一个参数，主要是为了在加载对比模型
@@ -1119,14 +1112,10 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
   const processGLTFChild = (child: any, visible: boolean) => {
-    console.log(child.name, child.material.transparent);
 
     try {
-
       // 根据器官属于在哪个数组，判断属于哪一类，选择哪一类着色器材质
       const type = JudgeOrgaType(child.name);
-
-
       switch (type) {
         case 0:
           scanMeshModel.push(child);
@@ -1145,13 +1134,11 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         case 5:
 
           /**
-           * 以下为两种方案，着色器的优势在于控制滑动隐藏上，而动画不能用
+           * 目前先用这种判断，后续所有的器官都有了贴图就不用判断
            * */
 
 
-          // 目前先用这种判断，后续所有的器官都有了贴图就不用判断
           if (["胃", "胃_面片", "面片_胃_胃炎", "面片_胃_胃癌", "面片_胃_胃溃疡"].includes(child.name)) {
-            // 在这里设置的透明度，两个有效，两个无效
             child.material.emissive = child.material.color;
             child.material.emissiveMap = child.material.map;
             // child.material.alphaMap = child.material.map;
@@ -1160,19 +1147,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             child.material.transparent = true;
             child.material._alphaTest = 0;
             // child.material.side = THREE.DoubleSide;
-
             child.material.opacity = 0.9;
-
-            // const material=new THREE.MeshStandardMaterial({
-            //   ...child.material,
-            //   emissive : child.material.color,
-            //   emissiveMap : child.material.map,
-            //   visible:visible,
-            //   transparent:true,
-            //   opacity:0.9,
-            // })
-
-            // child.material=material;
 
           } else {
             child.material = new THREE.MeshPhongMaterial(

@@ -66,8 +66,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     illList,
     wholeOrgaIll
   } = bodyModelInfo;
-  const loadIcon = <LoadingOutlined style={{ fontSize: 48 }} spin />;
-
+  const loadIcon = <LoadingOutlined style={{fontSize: 48}} spin/>;
 
 
   const bodyRef = useRef(null);
@@ -293,8 +292,8 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
    * 判断当前是否有已经被选中的器官卡片，如果有就恢复
    * */
 
-  const RestoreStyle = () => {
-    if (optionsCard.length > 1) {
+  const RestoreStyle = (type?: any) => {
+    if (optionsCard.length > 1 || (type && type === "restore" && optionsCard.length >= 1)) {
       optionsCard[0].children[0].children[0].children[0].children[0].src = optionsCard[0].children[0].children[0].children[0].children[0].src.replace(/yellowOne/, "greenOne");
 
       optionsCard[0].style.boxShadow = '0 0 0px #ffffff';
@@ -302,7 +301,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
       optionsCard[0].children[0].children[1].children[0].style.opacity = 0.8;
       // optionsCard[0].children[0].children[2].style.color = "#00FFDE";
       optionsCard[0].children[0].children[2].style.opacity = 0.7;
-      optionsCard[0].children[0].children[2].style.textShadow = "0 0 0px #ffffff";
+      optionsCard[0].children[0].children[2].style.textShadow = "0px 0px 0px";
       optionsCard.splice(0, 1);
     }
   }
@@ -350,6 +349,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     }
 
     optionsCard.push(e.currentTarget);
+
 
     RestoreStyle();
     enlargeItem(meshName);
@@ -401,6 +401,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
       if (personalHealthScore && personalScoreHistory && commonScoreHistory && keyHealthIndex && abnormalOrgaTop4) {
         GenerateRightPerson();
         // GeneratRightOrga()
+        RestoreStyle("restore");
       }
 
     }
@@ -866,7 +867,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
 
   return (
-    <Spin className={styles.spinnerIcon}  spinning={loadStatus} indicator={loadIcon} size="large">
+    <Spin className={styles.spinnerIcon} spinning={loadStatus} indicator={loadIcon} size="large">
       <div className={styles.mainContainer}>
         {bodyModel}
         <div className={styles.siderColoumn}>

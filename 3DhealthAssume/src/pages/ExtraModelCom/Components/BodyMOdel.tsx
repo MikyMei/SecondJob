@@ -1158,7 +1158,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             child.material.visible = visible;
             child.material.transparent = true;
             // child.material.opacity = 0.5;
-            child.material.emissive=child.material.color;
+            child.material.emissive = child.material.color;
             child.material.side = THREE.DoubleSide;
 
             // child.material = new THREE.MeshStandardMaterial(
@@ -1280,10 +1280,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           /**
            * 这个适用于着色器的修改透明度
            * */
-          // new TWEEN.Tween(object.material.uniforms.coeficient)
-          //   .to({type: 'f', value: 1}, 2000) // 在1s内移动至 (0, 0)
-          //   .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动功能使的动画更加平滑
-          //   .start()
+
 
           if (object.material.uniforms) {
             new TWEEN.Tween(object.material.uniforms.coeficient)
@@ -1384,36 +1381,39 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
   /**
-   * 点击打开进行展示模型
-   * 参数为网格模型的名字
+   * 一个公共的相机和场景中心移动补间动画的方法
+   * 参数为需要拉近的模型，和位置计算用到的半径，
    * */
 
-  const OpenInfoWindow = () => {
+  const MoveTargetCamera = (mesh?: any, radius?: any) => {
 
-    const centroid = new THREE.Vector3(0, 0, 0);
-    centroid.addVectors(threeChoosenMesh.geometry.boundingBox.min, threeChoosenMesh.geometry.boundingBox.max);
-    centroid.multiplyScalar(0.5);
-    centroid.applyMatrix4(threeChoosenMesh.matrixWorld);
-
-    const {radius, center} = threeChoosenMesh.geometry.boundingSphere;
-    const testAnt = document.getElementById("testAnt");
-    // testAnt.style.display = "none";
-
-    let newWorldVector = new THREE.Vector3(centroid.x - radius / 5, centroid.y, centroid.z);
+    // 如果两个参数都有，就是拉近距离，否则就是回退到原始
+    if (mesh && radius){
+      const centroid = new THREE.Vector3(0, 0, 0);
+      centroid.addVectors(mesh.geometry.boundingBox.min, mesh.geometry.boundingBox.max);
+      centroid.multiplyScalar(0.5);
+      centroid.applyMatrix4(mesh.matrixWorld);
 
 
-    var standardVector1 = newWorldVector.project(threeCamera);
-    // var standardVector1 = new THREE.Vector3(0,0,1);
-    var a1 = threeMainCanvas.offsetWidth * 0.8 / 2;
-    var b1 = threeMainCanvas.offsetHeight / 2;
+      new TWEEN.Tween(threeCamera.position)
+        .to({x: centroid.x, y: centroid.y * 1.0, z: centroid.z + radius * 13}, 3000)
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .start();
 
-
-    var x1 = Math.round((standardVector1.x) * a1 + a1);
-    var y1 = Math.round(-standardVector1.y * b1 + b1);
-
-    testAnt.style.top = y1 + 'px';
-    testAnt.style.right = (threeMainCanvas.offsetWidth * 0.8 - x1) + 'px';
-
+      new TWEEN.Tween(threeControls.target)
+        .to({x: centroid.x, y: centroid.y, z: centroid.z}, 1500)
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .start();
+    }else{
+      new TWEEN.Tween(threeCamera.position)
+        .to({x: 0, y: 2, z: 15}, 1500)
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .start();
+      new TWEEN.Tween(threeControls.target)
+        .to({x: 0, y: 0, z: 0}, 1500)
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .start();
+    }
 
   }
 
@@ -1464,21 +1464,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
              * centeroid是活得地最准确的模型中心坐标
              * 只对该器官的第一个模型，器官名字进行位置变换操作
              * */
+            MoveTargetCamera(object, radius)
             const centroid = new THREE.Vector3(0, 0, 0);
             centroid.addVectors(object.geometry.boundingBox.min, object.geometry.boundingBox.max);
             centroid.multiplyScalar(0.5);
             centroid.applyMatrix4(object.matrixWorld);
 
-
-            new TWEEN.Tween(threeCamera.position)
-              .to({x: centroid.x, y: centroid.y * 0.95, z: centroid.z + radius * 13}, 3000)
-              .easing(TWEEN.Easing.Quadratic.InOut)
-              .start();
-
-            new TWEEN.Tween(threeControls.target)
-              .to({x: centroid.x, y: centroid.y, z: centroid.z}, 1500)
-              .easing(TWEEN.Easing.Quadratic.InOut)
-              .start();
 
             choosenMesh = object;
             setThreeChoosenMesh(choosenMesh);
@@ -1741,14 +1732,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     setDisplayType("none");
 
 
-    new TWEEN.Tween(threeCamera.position)
-      .to({x: 0, y: 2, z: 15}, 1500)
-      .easing(TWEEN.Easing.Quadratic.InOut)
-      .start();
-    new TWEEN.Tween(threeControls.target)
-      .to({x: 0, y: 0, z: 0}, 1500)
-      .easing(TWEEN.Easing.Quadratic.InOut)
-      .start();
+    MoveTargetCamera();
+
     choosenMesh = null;
     setThreeChoosenMesh(choosenMesh);
     setNowOrgaMeshes([]);
@@ -1863,26 +1848,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           mesh.visible = false;
         }
 
-        if (value === illNameArray[illNameArray.length - 1]){
-        //   位置移动
+        if (value === illNameArray[illNameArray.length - 1]) {
+          //   位置移动
+
+          MoveTargetCamera(mesh, radius)
 
 
-
-          const centroid = new THREE.Vector3(0, 0, 0);
-          centroid.addVectors(mesh.geometry.boundingBox.min, mesh.geometry.boundingBox.max);
-          centroid.multiplyScalar(0.5);
-          centroid.applyMatrix4(mesh.matrixWorld);
-
-
-          new TWEEN.Tween(threeCamera.position)
-            .to({x: centroid.x, y: centroid.y * 0.95, z: centroid.z + radius * 13}, 3000)
-            .easing(TWEEN.Easing.Quadratic.InOut)
-            .start();
-
-          new TWEEN.Tween(threeControls.target)
-            .to({x: centroid.x, y: centroid.y, z: centroid.z}, 1500)
-            .easing(TWEEN.Easing.Quadratic.InOut)
-            .start();
 
         }
       })
@@ -1903,21 +1874,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     //  回复位置
     const {radius, center} = threeChoosenMesh.geometry.boundingSphere;
-    const centroid = new THREE.Vector3(0, 0, 0);
-    centroid.addVectors(threeChoosenMesh.geometry.boundingBox.min, threeChoosenMesh.geometry.boundingBox.max);
-    centroid.multiplyScalar(0.5);
-    centroid.applyMatrix4(threeChoosenMesh.matrixWorld);
+    MoveTargetCamera(threeChoosenMesh,radius)
 
-
-    new TWEEN.Tween(threeCamera.position)
-      .to({x: centroid.x, y: centroid.y * 1.0, z: centroid.z + radius * 13}, 3000)
-      .easing(TWEEN.Easing.Quadratic.InOut)
-      .start();
-
-    new TWEEN.Tween(threeControls.target)
-      .to({x: centroid.x, y: centroid.y, z: centroid.z}, 1500)
-      .easing(TWEEN.Easing.Quadratic.InOut)
-      .start();
   }
 
   return (

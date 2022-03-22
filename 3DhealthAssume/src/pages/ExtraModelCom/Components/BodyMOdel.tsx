@@ -463,9 +463,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
              * */
 
 
-            if (child.name === "Retopo_心脏_") {
-              child.name = "Retopo_心脏"
-            }
+
 
             if (child.geometry) {
               child.geometry.computeBoundingBox();
@@ -1390,8 +1388,9 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       centroid.applyMatrix4(mesh.matrixWorld);
 
 
+
       new TWEEN.Tween(threeCamera.position)
-        .to({x: centroid.x, y: centroid.y * 1.0, z: centroid.z + radius * 13}, 3000)
+        .to({x: centroid.x, y: centroid.y * 1.0, z: centroid.z>=0?(centroid.z + radius * 13):(centroid.z - radius * 13)}, 3000)
         .easing(TWEEN.Easing.Quadratic.InOut)
         .start();
 
@@ -1464,6 +1463,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             centroid.addVectors(object.geometry.boundingBox.min, object.geometry.boundingBox.max);
             centroid.multiplyScalar(0.5);
             centroid.applyMatrix4(object.matrixWorld);
+            console.log(centroid);
 
 
             choosenMesh = object;
@@ -1555,7 +1555,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     const earthLabel = new CSS2DObject(infoWindow);
     earthLabel.name = "infoWindow";
-    earthLabel.position.set(position.x - radius * 7 / 2, position.y - radius * 10 / 4, position.z);
+    earthLabel.position.set(position.z>=0?(position.x - radius * 7 / 2):(position.x + radius * 7 / 2), position.y - radius * 10 / 4, position.z);
     setCurrentInfoWindow(earthLabel);
     threeScence.add(earthLabel);
   }

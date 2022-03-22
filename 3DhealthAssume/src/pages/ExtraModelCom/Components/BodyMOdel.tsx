@@ -388,7 +388,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     point = new THREE.PointLight(0xffffff);
     point.position.set(0, 200, 300); // 点光源位置
     scene.add(point);
-
+    //
     const backPoint = new THREE.PointLight(0xffffff);
     backPoint.position.set(0, 200, -300); // 点光源位置
     scene.add(backPoint);
@@ -1152,22 +1152,33 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
           // 目前先用这种判断，后续所有的器官都有了贴图就不用判断
           if (["胃", "胃_面片", "面片_胃_胃炎", "面片_胃_胃癌", "面片_胃_胃溃疡"].includes(child.name)) {
+            // 在这里设置的透明度，两个有效，两个无效
             child.material.emissive = child.material.color;
             child.material.emissiveMap = child.material.map;
             child.material.visible = visible;
-            // child.material = new THREE.MeshPhongMaterial(
+            child.material.transparent = true;
+            // child.material.opacity = 0.5;
+            child.material.emissive=child.material.color;
+            child.material.side = THREE.DoubleSide;
+
+            // child.material = new THREE.MeshStandardMaterial(
             //   {
             //     // color: orgaMatchColor[`${child.name}`],
-            //     // transparent: true,
-            //     // opacity: 0.9,
+            //     transparent: true,
+            //     opacity: 0.9,
             //     visible: visible,
-            //     // metalness: 0,
-            //     // roughness: 0,
-            //     // specular: "#ffffff",
-            //     // shininess: 2000,
-            //     // // envMapIntensity: 1,
-            //     // side: THREE.DoubleSide,
-            //     // depthWrite: true
+            //     metalness: 0,
+            //     roughness: 0,
+            //     specular: child.material.color,
+            //     emissiveMap: child.material.map,
+            //     emissive: child.material.color,
+            //     lightMapIntensity: 1,
+            //     envMapIntensity: 1,
+            //
+            //     shininess: 10,
+            //
+            //     side: THREE.DoubleSide,
+            //     depthWrite: true
             //   });
           } else {
             child.material = new THREE.MeshPhongMaterial(
@@ -1772,7 +1783,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       //  打开默认的第一个动画
       illList.illType[0] ? PlayAnimation(illList.illType[0].illName) : null;
       changeTabs(illList.illType[0].illName);
-    }else if(infoSelectedTab==="2"){
+    } else if (infoSelectedTab === "2") {
       ResstAllIllIndex()
     }
 
@@ -1836,15 +1847,43 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     /**
      * 在这里控制那个需要展示， 默认choosenMesh的不控制
      * 控制剩下的在保存中的
+     * 切换到某个异常标识的时候就根据对应的异常标识进行场景中心的位置移动
      * */
     let illNameArray: any = [];
     if (Array.isArray(nowOrgaMeshes) && nowOrgaMeshes.length > 0) {
+      // 因为片元的半径太小，所以用选中模型的
+      const {radius, center} = threeChoosenMesh.geometry.boundingSphere;
       await nowOrgaMeshes.map((mesh: any) => {
         illNameArray = mesh.name.split("_");// 分割面片或者是器官模型的名字，如果是器官里面数组只有一个元素，否则最后一个元素就是名字
-        if ( threeChoosenMesh.name===illNameArray[illNameArray.length - 1] || value === illNameArray[illNameArray.length - 1]) {
+
+
+        if (threeChoosenMesh.name === illNameArray[illNameArray.length - 1] || value === illNameArray[illNameArray.length - 1]) {
           mesh.visible = true;
         } else {
           mesh.visible = false;
+        }
+
+        if (value === illNameArray[illNameArray.length - 1]){
+        //   位置移动
+
+
+
+          const centroid = new THREE.Vector3(0, 0, 0);
+          centroid.addVectors(mesh.geometry.boundingBox.min, mesh.geometry.boundingBox.max);
+          centroid.multiplyScalar(0.5);
+          centroid.applyMatrix4(mesh.matrixWorld);
+
+
+          new TWEEN.Tween(threeCamera.position)
+            .to({x: centroid.x, y: centroid.y * 0.95, z: centroid.z + radius * 13}, 3000)
+            .easing(TWEEN.Easing.Quadratic.InOut)
+            .start();
+
+          new TWEEN.Tween(threeControls.target)
+            .to({x: centroid.x, y: centroid.y, z: centroid.z}, 1500)
+            .easing(TWEEN.Easing.Quadratic.InOut)
+            .start();
+
         }
       })
     }
@@ -1856,11 +1895,29 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * 当信息窗离开异常标识的tab时候，全部恢复显示
    * */
 
-  const ResstAllIllIndex=async ()=>{
+  const ResstAllIllIndex = async () => {
     nowOrgaMeshes.map((mesh: any) => {
-        mesh.visible = true;
-
+      mesh.visible = true;
     })
+
+
+    //  回复位置
+    const {radius, center} = threeChoosenMesh.geometry.boundingSphere;
+    const centroid = new THREE.Vector3(0, 0, 0);
+    centroid.addVectors(threeChoosenMesh.geometry.boundingBox.min, threeChoosenMesh.geometry.boundingBox.max);
+    centroid.multiplyScalar(0.5);
+    centroid.applyMatrix4(threeChoosenMesh.matrixWorld);
+
+
+    new TWEEN.Tween(threeCamera.position)
+      .to({x: centroid.x, y: centroid.y * 1.0, z: centroid.z + radius * 13}, 3000)
+      .easing(TWEEN.Easing.Quadratic.InOut)
+      .start();
+
+    new TWEEN.Tween(threeControls.target)
+      .to({x: centroid.x, y: centroid.y, z: centroid.z}, 1500)
+      .easing(TWEEN.Easing.Quadratic.InOut)
+      .start();
   }
 
   return (
@@ -1880,7 +1937,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
               <Carousel effect={"fade"}>
                 {orgaPicture}
               </Carousel> </TabPane>
-            <TabPane tab={"异常标识"} key={"2"} >
+            <TabPane tab={"异常标识"} key={"2"}>
               <Carousel
                 ref={el => {
                   sliderDivIndex = el

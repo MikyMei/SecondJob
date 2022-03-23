@@ -155,6 +155,7 @@ export async function GetAllOrgaList(params: any) {
           {name: "膝肌", exceptionCount: 3, score: 95},
           {name: "足关节", exceptionCount: 4, score: 96},],
         "胸部": [{name: "食管", exceptionCount: 1, score: 97},
+          // {name: "血管", exceptionCount: 3, score: 67},
           {name: "心脏", exceptionCount: 2, score: 98},
           {name: "肺脏", exceptionCount: 3, score: 99},
           {name: "支气管", exceptionCount: 4, score: 100},

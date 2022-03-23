@@ -41,8 +41,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
   /**
-   *beIntersectObjects是用来存放需要射线检测的物体数组。
-   *transformControl可以方便调节物体位置大小。
+   * beIntersectObjects是用来存放需要射线检测的物体数组。
+   * transformControl可以方便调节物体位置大小。
    * */
   let scene: any;
   const objects: any = [];
@@ -198,6 +198,26 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     ],
     []
   ];  // 根据器官将他们分为不同的部分，首先要知道他有几类
+  const compareMeshList = [
+    "腰椎关节，腰椎",
+    "肩关节",
+    "手肘",
+    "手腕",
+    "手指",
+    "牙，口",
+    "头颈部，颅盖",
+    "面部关节，头颈部",
+    "颈椎",
+    "骨盆，髋部",
+    "骨盆，骶骨，髋部",
+    "股骨，髋部，膝关节",
+    "膝关节",
+    "足关节",
+    "胸椎",
+    "全身_1",
+    "胖",
+  ]
+
 
   const orgaMatchColor = {
     "Retopo_生殖系统": "#fcafaf",
@@ -257,7 +277,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   };
 
   let choosenMesh: any;
-  const loadIcon = <LoadingOutlined style={{fontSize: 24}} spin/>;
 
   const [infoTitle, setInfoTitle] = useState<any>('');
   const [infoDesc, setInfoDesc] = useState<any>('');
@@ -308,15 +327,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const initModel = (modelType: any, modelName: any) => {
 
 
-    // 获得渲染器长度
     mainCanvas = document.getElementById("webgl-output");
-
-
-    /**
-     * 结束
-     * */
-
-
     scene = new THREE.Scene();
     /**
      *  只是将图片作为北京图片贴了上去，并没有实现3d效果，尤其是在进行旋转的时候感觉尤为明显,
@@ -416,8 +427,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
          * 在这里将模型地动画全部格式化，并生成mixer
          * */
         const mixer = new THREE.AnimationMixer(model);
-        // const action = mixer.clipAction(gltf.animations[0]);
-        // action.play();
+
 
         setMixerAnimation(mixer);
         let tempAnimationList: any = new Object();
@@ -430,9 +440,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
                * */
               let orgaName = item.tracks[0].name.split(".")[0];
               const animationName = item.tracks[0].name.split(".")[1];
-              if (orgaName === "Retopo_心脏_") {
-                orgaName = "Retopo_心脏"
-              }
+
               tempAnimationList[`${orgaName}`] = [];
               tempAnimationList[`${orgaName}`].push(
                 {
@@ -447,7 +455,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
         setAnimationList(tempAnimationList);
 
-
         model.name = "userMeshModel";
         scene.add(model);
 
@@ -455,9 +462,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             /**
              * 在这里将不同模型根据他的名字，将
              * */
-
-
-
 
             if (child.geometry) {
               child.geometry.computeBoundingBox();
@@ -469,12 +473,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
             if (child.isMesh) {
               objects.push(child);
+              console.log(child.name);
               processGLTFChild(child, false)
 
             }
           }
         );
-
 
 
       },
@@ -492,66 +496,40 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * 定义一个对比模型需要加载的子模型的名字，例如只加载骨骼和皮肤
      * */
     let standardModel;
-    const compareMeshList = [
-      "腰椎关节，腰椎",
-      "肩关节",
-      "手肘",
-      "手腕",
-      "手指",
-      "牙，口",
-      "头颈部，颅盖",
-      "面部关节，头颈部",
-      "颈椎",
-      "骨盆，髋部",
-      "骨盆，骶骨，髋部",
-      "股骨，髋部，膝关节",
-      "膝关节",
-      "足关节",
-      "胸椎",
-      "全身_1",
-      "胖",
-    ]
 
-    loader.load(`./img/allKindsOfModel/${modelType}/overWeightFigure2.gltf`, function (gltf: any) {
+    loader.load(`./img/allKindsOfModel/${modelType}/overWeightFigure2.gltf`,  function (gltf: any) {
         standardModel = gltf.scene;
         standardModel.scale.setScalar(5.5, 5.5, 5.5);
         standardModel.position.setY(-4.5);
         standardModel.visible = meshCompare;
 
-        /**
-         * beIntersectObjects是用来存放需要射线检测的物体数组。
-         * transformControl可以方便调节物体位置大小。
-         * */
-
-        /**
-         * 在这里将模型地动画全部格式化，并生成mixer
-         * */
-
-
         standardModel.name = "standardModel";
 
-        scene.add(standardModel);
-        standardModel.traverse((child: any) => {
-            /**
-             * 在这里将不同模型根据他的名字，将
-             * */
+        /**
+         *
+         * 这里自定义一个group，这样是为了不全部加载对比模型，只加载骨骼和皮肤
+         * 在这里不可以在traverse的时候一个个的添加网格模型，因为他们本身的树级关系很重要
+         * */
 
-            /**
-             * 遍历模型的时候，加一个参数，主要是为了在加载对比模型
-             * */
+
+        scene.add(standardModel);
+
+        standardModel.traverse((child: any) => {
 
             if (child.isMesh) {
-
               child.visible = false;
               if (compareMeshList.includes(child.name)) {
                 standardObjects.push(child);
                 processGLTFChild(child, true);
+              }else{
+                child.geometry.dispose();
+                child.material.dispose();
               }
-
 
             }
           }
         );
+        // scene.add(compareGroup);
 
       },
       undefined
@@ -568,6 +546,9 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
     controls = new OrbitControls(camera, renderer.domElement);
+    /**
+     * 控制鼠标的事件交互
+     * */
     // controls.mouseButtons = {
     //   LEFT: THREE.MOUSE.ROTATE,
     //   MIDDLE: THREE.MOUSE.DOLLY,
@@ -687,8 +668,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         addTimer = true
       }
     }
-    setThreeAddTimer(addTimer);
-    setThreeTime(time);
     /**
      * 这里是固定了皮肤的在最后一个，实际上需要在最开始的时候就整出来
      * */
@@ -700,16 +679,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     }
 
-
-    if (isStart) {
-      StartTime.value += dt * 0.6;
-      if (StartTime.value >= 1) {
-        StartTime.value = 1;
-        isStart = false;
-      }
-    }
-    setThreeIsStart(isStart);
-    setThreeStartTime(StartTime);
 
 
     if (threeControls) {
@@ -1356,16 +1325,19 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const MoveTargetCamera = (mesh?: any, radius?: any) => {
 
     // 如果两个参数都有，就是拉近距离，否则就是回退到原始
-    if (mesh && radius){
+    if (mesh && radius) {
       const centroid = new THREE.Vector3(0, 0, 0);
       centroid.addVectors(mesh.geometry.boundingBox.min, mesh.geometry.boundingBox.max);
       centroid.multiplyScalar(0.5);
       centroid.applyMatrix4(mesh.matrixWorld);
 
 
-
       new TWEEN.Tween(threeCamera.position)
-        .to({x: centroid.x, y: centroid.y * 1.0, z: centroid.z>=0?(centroid.z + radius * 13):(centroid.z - radius * 13)}, 3000)
+        .to({
+          x: centroid.x,
+          y: centroid.y * 1.0,
+          z: centroid.z >= 0 ? (centroid.z + radius * 13) : (centroid.z - radius * 13)
+        }, 3000)
         .easing(TWEEN.Easing.Quadratic.InOut)
         .start();
 
@@ -1373,7 +1345,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         .to({x: centroid.x, y: centroid.y, z: centroid.z}, 1500)
         .easing(TWEEN.Easing.Quadratic.InOut)
         .start();
-    }else{
+    } else {
       new TWEEN.Tween(threeCamera.position)
         .to({x: 0, y: 2, z: 15}, 1500)
         .easing(TWEEN.Easing.Quadratic.InOut)
@@ -1530,7 +1502,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     const earthLabel = new CSS2DObject(infoWindow);
     earthLabel.name = "infoWindow";
-    earthLabel.position.set(position.z>=0?(position.x - radius * 7 / 2):(position.x + radius * 7 / 2), position.y - radius * 10 / 4, position.z);
+    earthLabel.position.set(position.z >= 0 ? (position.x - radius * 7 / 2) : (position.x + radius * 7 / 2), position.y - radius * 10 / 4, position.z);
     setCurrentInfoWindow(earthLabel);
     threeScence.add(earthLabel);
   }
@@ -1763,6 +1735,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * 如果当前选中的器官模型有，就只是改变该模型，否则，改变所有的当前material可见的
      * */
 
+    console.log("当前场景",threeScence);
     await threeObjects.forEach((signleOrga: any) => {
       // if (signleOrga.name === "Retopo_皮肤" || JudgeOrgaType(signleOrga.name) === 1) {
       signleOrga.visible = !signleOrga.visible;
@@ -1784,15 +1757,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     }
 
   };
-
-
-  /**
-   * 关闭bmi框
-   * */
-  const closeModal = () => {
-    modalForm.resetFields();
-    setModalVisible(false);
-  }
 
 
   /**
@@ -1824,7 +1788,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           MoveTargetCamera(mesh, radius)
 
 
-
         }
       })
     }
@@ -1844,7 +1807,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     //  回复位置
     const {radius, center} = threeChoosenMesh.geometry.boundingSphere;
-    MoveTargetCamera(threeChoosenMesh,radius)
+    MoveTargetCamera(threeChoosenMesh, radius)
 
   }
 
@@ -1913,7 +1876,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   )
 }
 
-// export default BodyModel;
 export default connect(({bodyModel}) => ({
   bodyModelInfo: bodyModel,
 }))(BodyModel);

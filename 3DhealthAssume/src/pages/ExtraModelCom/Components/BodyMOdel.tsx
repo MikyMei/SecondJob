@@ -81,7 +81,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * 这个需要先确定有哪几类，在确定每一类中的所包含的器官名字，
    * */
   const matchType = ["皮肤", "骨骼", "内脏1", "内脏2", "内脏3", "内脏4", ""];
-
   const orgaTypeList = [["Retopo_皮肤", "皮肤", "超重", "全身_1", "胖", "全身001"],
     ["Retopo_跟骨",
       "Retopo_腕骨",
@@ -217,8 +216,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     "全身_1",
     "胖",
   ]
-
-
   const orgaMatchColor = {
     "Retopo_生殖系统": "#fcafaf",
     "Retopo_静脉": "#b8c7bf",
@@ -275,8 +272,18 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     "肘肌，手肘": "#CB8F81",
 
   };
-
   let choosenMesh: any;
+
+
+/*
+   设置渲染频率为45FBS，也就是每秒调用渲染器render方法大约45次
+   在尽可能不影响视觉效果地可能下降低render次数
+*/
+  const FPS = 45;
+  const renderT = 1 / FPS; //单位秒  间隔多长时间渲染渲染一次
+  // 声明一个变量表示render()函数被多次调用累积时间
+  // 如果执行一次renderer.render，timeS重新置0
+  let timeS = 0;
 
   const [infoTitle, setInfoTitle] = useState<any>('');
   const [infoDesc, setInfoDesc] = useState<any>('');
@@ -473,7 +480,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
             if (child.isMesh) {
               objects.push(child);
-              console.log(child.name);
               processGLTFChild(child, false)
 
             }
@@ -690,6 +696,20 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       TWEEN.update();
     }
 
+
+    // console.log("不加帧率控制情况下地render间隔",dt*1000+"毫秒");
+
+    timeS = timeS + dt;
+
+
+    // requestAnimationFrame默认调用render函数60次，通过时间判断，降低renderer.render执行频率
+    if (timeS > renderT) {
+      // 控制台查看渲染器渲染方法的调用周期，也就是间隔时间是多少
+      threeRenderer.render(threeScence, threeCamera);
+      threeLabelRenderer.render(threeScence, threeCamera);
+      // renderer.render每执行一次，timeS置0
+      timeS = 0;
+    }
 
     threeRenderer.render(threeScence, threeCamera);
     threeLabelRenderer.render(threeScence, threeCamera);
@@ -1410,7 +1430,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             centroid.addVectors(object.geometry.boundingBox.min, object.geometry.boundingBox.max);
             centroid.multiplyScalar(0.5);
             centroid.applyMatrix4(object.matrixWorld);
-            console.log(centroid);
 
 
             choosenMesh = object;
@@ -1735,7 +1754,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * 如果当前选中的器官模型有，就只是改变该模型，否则，改变所有的当前material可见的
      * */
 
-    console.log("当前场景",threeScence);
     await threeObjects.forEach((signleOrga: any) => {
       // if (signleOrga.name === "Retopo_皮肤" || JudgeOrgaType(signleOrga.name) === 1) {
       signleOrga.visible = !signleOrga.visible;

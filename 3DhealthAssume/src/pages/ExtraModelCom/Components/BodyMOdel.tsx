@@ -1357,7 +1357,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         .to({
           x: centroid.x,
           y: centroid.y * 1.0,
-          z: centroid.z >= 0 ? (centroid.z + radius * 13) : (centroid.z - radius * 13)
+          z: centroid.z >= -0.1 ? (centroid.z + radius * 13) : (centroid.z - radius * 13)
         }, 3000)
         .easing(TWEEN.Easing.Quadratic.InOut)
         .start();
@@ -1522,7 +1522,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     const earthLabel = new CSS2DObject(infoWindow);
     earthLabel.name = "infoWindow";
-    earthLabel.position.set(position.z >= 0 ? (position.x - radius * 7 / 2) : (position.x + radius * 7 / 2), position.y - radius * 10 / 4, position.z);
+    earthLabel.position.set(position.z >= -0.1 ? (position.x - radius * 7 / 2) : (position.x + radius * 7 / 2), position.y - radius * 10 / 4, position.z);
     setCurrentInfoWindow(earthLabel);
     threeScence.add(earthLabel);
   }

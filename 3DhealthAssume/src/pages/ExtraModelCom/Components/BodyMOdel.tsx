@@ -655,13 +655,16 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     /**
      * 模型的动画
      * */
-
     if (mixerAnimation) {
       mixerAnimation.update(dt);
     }
 
 
-    if (dt > 1) return false;
+
+    /**
+     * 在这里当页面被切换出去超过1秒，render就会停止，
+     * */
+    // if (dt > 1) return false;
 
     if (time.value >= 0.48 || addTimer === true) {
       time.value -= dt / 5;
@@ -684,8 +687,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
     }
-
-
 
     if (threeControls) {
       threeControls.update();

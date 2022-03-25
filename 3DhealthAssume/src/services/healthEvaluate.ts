@@ -308,7 +308,6 @@ export async function GetOrgaCommonScoreHistory() {
 
 
 export async function GetOrgaDetailInfo(params: any) {
-  console.log("GetOrgaDetailInfo",params);
   let illType:any;
 
   if (params.orgaName.includes("胃")){

@@ -226,7 +226,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     "Retopo_胃部": "#ff9265",
     "Retopo_肝脏": "#ee934c",
     "Retopo_支气管": "#cc594b",
-    "Retopo_肺": "#CB8F81",
+    "Retopo_肺": "#ee8772",
     "Retopo_肾脏": "#F0834D",
     "Retopo_心脏": "#BC4D2A",
 
@@ -250,26 +250,26 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     "肛": "#fcd1ce",
     "睾丸，血_睾屏障": "#ac7878",
     "睾丸，血_睾屏障，附睾": "#ac7878",
-    "骨盆肌": "#CB8F81",
+    "骨盆肌": "#ee8772",
     "喉和会厌": "#ff8080",
-    "肩肌，肩关节": "#CB8F81",
-    "颈肌，颈椎": "#CB8F81",
+    "肩肌，肩关节": "#ee8772",
+    "颈肌，颈椎": "#ee8772",
     "口，舌": "#ff8080",
-    "髋肌，髋部": "#CB8F81",
-    "面部肌肉，头颈部": "#CB8F81",
+    "髋肌，髋部": "#ee8772",
+    "面部肌肉，头颈部": "#ee8772",
     "尿道": "#ff9265",
     "前列腺": "#ee934c",
     "食管": "#b8c7bf",
     "输精管，射精管": "#fcafaf",
     "输尿管": "#fcafaf",
-    "膝肌，膝关节": "#CB8F81",
+    "膝肌，膝关节": "#ee8772",
     "血_胸腺屏障": "#ffe8e8",
     "血_眼屏障，眼": "#d2c5c5",
     "咽": "#fca5a5",
-    "腰肌，腰椎": "#CB8F81",
+    "腰肌，腰椎": "#ee8772",
     "中枢神经系统": "#f8ea97",
     "周围神经系统": "#ff2da3",
-    "肘肌，手肘": "#CB8F81",
+    "肘肌，手肘": "#ee8772",
 
   };
   let choosenMesh: any;
@@ -279,7 +279,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    设置渲染频率为45FBS，也就是每秒调用渲染器render方法大约45次
    在尽可能不影响视觉效果地可能下降低render次数
 */
-  const FPS = 45;
+  const FPS = 60;
   const renderT = 1 / FPS; //单位秒  间隔多长时间渲染渲染一次
   // 声明一个变量表示render()函数被多次调用累积时间
   // 如果执行一次renderer.render，timeS重新置0
@@ -381,15 +381,15 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     labelRenderer.domElement.style = "pointer-events: auto;position: absolute;top: 0px;"  // 处理新的渲染器
 
 
-    // 创建聚光灯
-    spotLight = new THREE.SpotLight(0xFFFFFF);
-    spotLight.position.set(30, 30, 30);
-    spotLight.castShadow = true;
-    spotLight.angle = Math.PI / 10;
-    spotLight.shadow.penumbra = 0.05;
-    spotLight.shadow.mapSize.width = 3026;
-    spotLight.shadow.mapSize.height = 3026;
-    scene.add(spotLight);
+    // // 创建聚光灯
+    // spotLight = new THREE.SpotLight(0xFFFFFF);
+    // spotLight.position.set(30, 30, 30);
+    // spotLight.castShadow = true;
+    // spotLight.angle = Math.PI / 10;
+    // spotLight.shadow.penumbra = 0.05;
+    // spotLight.shadow.mapSize.width = 3026;
+    // spotLight.shadow.mapSize.height = 3026;
+    // scene.add(spotLight);
 
     ambient = new THREE.AmbientLight(0x444444);
     scene.add(ambient);
@@ -698,19 +698,16 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     }
 
 
-    // console.log("不加帧率控制情况下地render间隔",dt*1000+"毫秒");
 
-    timeS = timeS + dt;
-
-
-    // requestAnimationFrame默认调用render函数60次，通过时间判断，降低renderer.render执行频率
-    if (timeS > renderT) {
-      // 控制台查看渲染器渲染方法的调用周期，也就是间隔时间是多少
-      threeRenderer.render(threeScence, threeCamera);
-      threeLabelRenderer.render(threeScence, threeCamera);
-      // renderer.render每执行一次，timeS置0
-      timeS = 0;
-    }
+    // timeS = timeS + dt;
+    // // requestAnimationFrame默认调用render函数60次，通过时间判断，降低renderer.render执行频率
+    // if (timeS > renderT) {
+    //   // 控制台查看渲染器渲染方法的调用周期，也就是间隔时间是多少
+    //   threeRenderer.render(threeScence, threeCamera);
+    //   threeLabelRenderer.render(threeScence, threeCamera);
+    //   // renderer.render每执行一次，timeS置0
+    //   timeS = 0;
+    // }
 
     threeRenderer.render(threeScence, threeCamera);
     threeLabelRenderer.render(threeScence, threeCamera);

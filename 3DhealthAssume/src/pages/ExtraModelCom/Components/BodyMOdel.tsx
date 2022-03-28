@@ -177,6 +177,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
       "胃",
       "胃_面片",
+      "胃_剖面",
       "面片_胃_胃炎",
       "面片_胃_胃癌",
       "面片_胃_胃溃疡",
@@ -272,6 +273,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     "肘肌，手肘": "#ee8772",
 
   };
+
+  const materialExistedList=["胃", "胃_面片", "面片_胃_胃炎", "面片_胃_胃癌", "面片_胃_胃溃疡","胃_剖面"]; // 存放不需要使用自定义材质的名字
   let choosenMesh: any;
 
 
@@ -419,7 +422,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * 加载当前用户的模型，后面还要加载一个正常模型（所有网格模型都是正常形态，事先让其所有的模型都可见性为false）
      * */
     let model;
-    loader.load(`./img/allKindsOfModel/${modelType}/standardFigure4.gltf`, async function (gltf: any) {
+    loader.load(`./img/allKindsOfModel/${modelType}/standardFigure6.gltf`, async function (gltf: any) {
         model = gltf.scene;
         model.scale.setScalar(5.5, 5.5, 5.5);
         model.position.setY(-4.5);
@@ -1102,6 +1105,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     try {
       // 根据器官属于在哪个数组，判断属于哪一类，选择哪一类着色器材质
+      child.frustumCulled = false;
       const type = JudgeOrgaType(child.name);
       switch (type) {
         case 0:
@@ -1125,16 +1129,16 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
            * */
 
 
-          if (["胃", "胃_面片", "面片_胃_胃炎", "面片_胃_胃癌", "面片_胃_胃溃疡"].includes(child.name)) {
+          if (materialExistedList.includes(child.name)) {
             child.material.emissive = child.material.color;
             child.material.emissiveMap = child.material.map;
-            // child.material.alphaMap = child.material.map;
             child.material.emissiveIntensity = 1;
             child.material.visible = visible;
             child.material.transparent = true;
-            child.material._alphaTest = 0;
-            // child.material.side = THREE.DoubleSide;
-            child.material.opacity = 0.9;
+            child.material.side = THREE.DoubleSide;
+            child.material.depthWrite = true;  // 这个一定要加
+            child.material.opacity = child.name==="胃_剖面"?0:1;
+            console.log(child.name,child.material.opacity);
 
           } else {
             child.material = new THREE.MeshPhongMaterial(
@@ -1784,6 +1788,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * 控制剩下的在保存中的
      * 切换到某个异常标识的时候就根据对应的异常标识进行场景中心的位置移动
      * */
+    console.log(nowOrgaMeshes);
     let illNameArray: any = [];
     if (Array.isArray(nowOrgaMeshes) && nowOrgaMeshes.length > 0) {
       // 因为片元的半径太小，所以用选中模型的
@@ -1792,9 +1797,13 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         illNameArray = mesh.name.split("_");// 分割面片或者是器官模型的名字，如果是器官里面数组只有一个元素，否则最后一个元素就是名字
 
 
+
+        // 在这里加入透明度的动画，也可以取消
         if (threeChoosenMesh.name === illNameArray[illNameArray.length - 1] || value === illNameArray[illNameArray.length - 1]) {
           mesh.visible = true;
         } else {
+
+
           mesh.visible = false;
         }
 

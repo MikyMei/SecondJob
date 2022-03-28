@@ -385,15 +385,15 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
     // // 创建聚光灯
-    // spotLight = new THREE.SpotLight(0xFFFFFF);
-    // spotLight.position.set(30, 30, 30);
-    // spotLight.castShadow = true;
-    // spotLight.angle = Math.PI / 10;
-    // spotLight.shadow.penumbra = 0.05;
-    // spotLight.shadow.mapSize.width = 3026;
-    // spotLight.shadow.mapSize.height = 3026;
+    spotLight = new THREE.SpotLight(0xFFFFFF);
+    spotLight.position.set(30, 30, 30);
+    spotLight.castShadow = true;
+    spotLight.angle = Math.PI / 10;
+    spotLight.shadow.penumbra = 0.05;
+    spotLight.shadow.mapSize.width = 3026;
+    spotLight.shadow.mapSize.height = 3026;
     // scene.add(spotLight);
-
+    //
     ambient = new THREE.AmbientLight(0x444444);
     scene.add(ambient);
 
@@ -1130,15 +1130,28 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
 
           if (materialExistedList.includes(child.name)) {
+
+
+
+            /**
+             * 这里是保证病灶模型边缘和器官模型的一致
+             * 在这里控制一下透明度，因为透明度对于剖面模型是不同的
+             * */
+            const opacityNum=child.name.indexOf("剖面") != -1?0.6:1;
+
+            child.material.metalness = 0.5;
+            child.material.roughness = 1;
+
+
             child.material.emissive = child.material.color;
-            child.material.emissiveMap = child.material.map;
             child.material.emissiveIntensity = 1;
+            child.material.emissiveMap = child.material.map;
+
             child.material.visible = visible;
             child.material.transparent = true;
-            child.material.side = THREE.DoubleSide;
+            // child.material.side = THREE.DoubleSide;
             child.material.depthWrite = true;  // 这个一定要加
-            child.material.opacity = child.name==="胃_剖面"?0:1;
-            console.log(child.name,child.material.opacity);
+            child.material.opacity =opacityNum;
 
           } else {
             child.material = new THREE.MeshPhongMaterial(

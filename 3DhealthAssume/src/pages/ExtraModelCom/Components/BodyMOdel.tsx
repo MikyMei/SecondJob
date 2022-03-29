@@ -352,6 +352,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     renderer.setClearAlpha(0);
     renderer.outputEncoding = THREE.sRGBEncoding;
     // renderer.setClearColor(new THREE.Color("#eeeeee"));
+    renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize(mainCanvas.offsetWidth * 0.8, mainCanvas.offsetHeight);
     renderer.shadowMap.enabled = true;
 

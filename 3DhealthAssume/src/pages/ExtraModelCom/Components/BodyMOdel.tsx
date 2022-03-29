@@ -353,6 +353,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     renderer.outputEncoding = THREE.sRGBEncoding;
     // renderer.setClearColor(new THREE.Color("#eeeeee"));
     renderer.setPixelRatio( window.devicePixelRatio );
+    // renderer.physicallyCorrectLights=true; // 是否使用物理上正确的光照模式。
+
     renderer.setSize(mainCanvas.offsetWidth * 0.8, mainCanvas.offsetHeight);
     renderer.shadowMap.enabled = true;
 
@@ -1161,14 +1163,16 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
                 transparent: true,
                 opacity: 0.9,
                 visible: visible,
-                // metalness: 0,
-                // roughness: 0,
+                metalness: 0.5,
+                roughness: 0,
                 specular: "#ffffff",
                 shininess: 2000,
                 // envMapIntensity: 1,
                 side: THREE.DoubleSide,
                 depthWrite: true
               });
+
+
           }
 
 

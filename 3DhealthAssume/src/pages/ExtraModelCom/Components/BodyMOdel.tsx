@@ -274,14 +274,14 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
   };
 
-  const materialExistedList=["胃", "胃_面片", "面片_胃_胃炎", "面片_胃_胃癌", "面片_胃_胃溃疡","胃_剖面"]; // 存放不需要使用自定义材质的名字
+  const materialExistedList = ["胃", "胃_面片", "面片_胃_胃炎", "面片_胃_胃癌", "面片_胃_胃溃疡", "胃_剖面"]; // 存放不需要使用自定义材质的名字
   let choosenMesh: any;
 
 
-/*
-   设置渲染频率为45FBS，也就是每秒调用渲染器render方法大约45次
-   在尽可能不影响视觉效果地可能下降低render次数
-*/
+  /*
+     设置渲染频率为45FBS，也就是每秒调用渲染器render方法大约45次
+     在尽可能不影响视觉效果地可能下降低render次数
+  */
   const FPS = 60;
   const renderT = 1 / FPS; //单位秒  间隔多长时间渲染渲染一次
   // 声明一个变量表示render()函数被多次调用累积时间
@@ -352,7 +352,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     renderer.setClearAlpha(0);
     renderer.outputEncoding = THREE.sRGBEncoding;
     // renderer.setClearColor(new THREE.Color("#eeeeee"));
-    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.setPixelRatio(window.devicePixelRatio);
     // renderer.physicallyCorrectLights=true; // 是否使用物理上正确的光照模式。
 
     renderer.setSize(mainCanvas.offsetWidth * 0.8, mainCanvas.offsetHeight);
@@ -509,7 +509,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * */
     let standardModel;
 
-    loader.load(`./img/allKindsOfModel/${modelType}/overWeightFigure2.gltf`,  function (gltf: any) {
+    loader.load(`./img/allKindsOfModel/${modelType}/overWeightFigure2.gltf`, function (gltf: any) {
         standardModel = gltf.scene;
         standardModel.scale.setScalar(5.5, 5.5, 5.5);
         standardModel.position.setY(-4.5);
@@ -533,7 +533,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
               if (compareMeshList.includes(child.name)) {
                 standardObjects.push(child);
                 processGLTFChild(child, true);
-              }else{
+              } else {
                 child.geometry.dispose();
                 child.material.dispose();
               }
@@ -666,7 +666,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     }
 
 
-
     /**
      * 在这里当页面被切换出去超过1秒，render就会停止，
      * */
@@ -702,7 +701,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     if (TWEEN) {
       TWEEN.update();
     }
-
 
 
     // timeS = timeS + dt;
@@ -1135,12 +1133,11 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           if (materialExistedList.includes(child.name)) {
 
 
-
             /**
              * 这里是保证病灶模型边缘和器官模型的一致
              * 在这里控制一下透明度，因为透明度对于剖面模型是不同的
              * */
-            const opacityNum=child.name.indexOf("剖面") != -1?0.6:1;
+            const opacityNum = child.name.indexOf("剖面") != -1 ? 0.6 : 1;
 
             child.material.metalness = 0.5;
             child.material.roughness = 1;
@@ -1154,7 +1151,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             child.material.transparent = true;
             // child.material.side = THREE.DoubleSide;
             child.material.depthWrite = true;  // 这个一定要加
-            child.material.opacity =opacityNum;
+            child.material.opacity = opacityNum;
 
           } else {
             child.material = new THREE.MeshPhongMaterial(
@@ -1406,6 +1403,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
   /**
    * 点击放大或者是打开器官的弹框，或者跳到指定位置
+   * 在这里需要根据已有的异常标识的名字来决定展示那些病灶模型，同时异常标识的模型名字和异常标识需要一个映射处理
    * */
   const enlargeItem = async (name: any) => {
     await RestoreCompare("null");
@@ -1420,9 +1418,13 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     // 临时保存点击器官后控制展示的器官模型和对应的面片模型
     const meshList: any = [];
 
+    console.log("当前的疾病异常标识",illList);
+
 
     await threeObjects.forEach((object: any, index: any) => {
 
+
+        // 控制显示和隐藏
         if (name.includes(object.name)) {
           meshList.push(object);
 
@@ -1461,8 +1463,9 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
             GenerateCarousel(object.name, centroid, radius);
           }
-
-
+        }else{
+          // 3D病灶微信群添加需求，要求在展示器官的时候，骨骼和皮肤不予展示
+          object.visible = false;
         }
       }
     )
@@ -1592,6 +1595,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   }
 
   const structIllList = async () => {
+
+
     setInfoTitle(illList.name);
     setInfoDesc(illList.desc);
     const contentTemp: any = [];
@@ -1671,19 +1676,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       default:
         break;
     }
-    /* if (modelTypeName === "overWeight") {
-       await threeStandardObjects.forEach((object: any) => {
-         object.visible = false;
-       })
-     } else if (modelTypeName === "fat") {
-       await threeThinnerObjects.forEach((object: any) => {
-         object.visible = false;
-       })
-     } else if (modelTypeName === "thinner") {
-       await threeLighterObjects.forEach((object: any) => {
-         object.visible = false;
-       })
-     }*/
+
 
   }
 
@@ -1799,38 +1792,29 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
   /**
    * 当切换信息窗的异常标识的时候进行调用
+   * 在这里控制那个需要展示， 默认choosenMesh的不控制
+   * 控制剩下的在保存中的
+   * 切换到某个异常标识的时候就根据对应的异常标识进行场景中心的位置移动
+   * 因为片元的半径太小，所以用选中模型的半径
+   * 在这里需要调用一个异常标识和病灶模型的映射函数，原因:
+   * 1,因为模型名字和异常标识模型不是相等的，切可能不是一对一的关系
+   * 2,异常标识的对外显示标签和标签不一定相等，而且无法确定模型使用的名称、后端传来的数据使用的是哪一个字段
+   *
    * */
   const changeTabs = async (value: any) => {
-    /**
-     * 在这里控制那个需要展示， 默认choosenMesh的不控制
-     * 控制剩下的在保存中的
-     * 切换到某个异常标识的时候就根据对应的异常标识进行场景中心的位置移动
-     * */
-    console.log(nowOrgaMeshes);
+
     let illNameArray: any = [];
     if (Array.isArray(nowOrgaMeshes) && nowOrgaMeshes.length > 0) {
-      // 因为片元的半径太小，所以用选中模型的
       const {radius, center} = threeChoosenMesh.geometry.boundingSphere;
       await nowOrgaMeshes.map((mesh: any) => {
         illNameArray = mesh.name.split("_");// 分割面片或者是器官模型的名字，如果是器官里面数组只有一个元素，否则最后一个元素就是名字
-
-
-
-        // 在这里加入透明度的动画，也可以取消
         if (threeChoosenMesh.name === illNameArray[illNameArray.length - 1] || value === illNameArray[illNameArray.length - 1]) {
           mesh.visible = true;
         } else {
-
-
           mesh.visible = false;
         }
-
         if (value === illNameArray[illNameArray.length - 1]) {
-          //   位置移动
-
           MoveTargetCamera(mesh, radius)
-
-
         }
       })
     }

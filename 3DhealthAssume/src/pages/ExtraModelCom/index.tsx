@@ -86,6 +86,14 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
   const [defaultSelectedIndex, setDefaultSelectedIndex] = useState<any>(null); // 默认选中的异常标识，可以用在右侧信息栏
 
   const enlargeItem = async (value: any) => {
+
+    /**
+     * 在这里做一个处理，保证有异常标识的在传进去给放大
+     * 在这里，除了器官名字，就是带剖面的模型，其他的都要去匹配
+     * */
+
+
+
     await bodyRef.current.resetSlider();
     await bodyRef.current.testEnlarge(value);
 
@@ -252,7 +260,10 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
       for (let key in allOrgaList) {
         orgaCardList[`${key}`] = [];
         allOrgaList[`${key}`].map((item: any) => {
+
           const orgaRelated = MatchOrga(item.name);
+
+
           orgaCardList[`${key}`].push(
             <div key={item.name} className={styles.signleOption_unchecked}
                  onClick={(e) => {

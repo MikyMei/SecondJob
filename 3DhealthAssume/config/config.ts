@@ -59,6 +59,13 @@ export default defineConfig({
       changeOrigin: true, //是否跨域
       pathRewrite: { '/api2': '' }
     },
+
+    '/api3': {
+      target: 'https://3-d-health-1253940515.cos.ap-shanghai.myqcloud.com', // 存储桶加载模型之类
+      // ws: true, // websoket 服务
+      changeOrigin: true, //是否跨域
+      pathRewrite: { '/api3': '' }
+    },
     proxy:[REACT_APP_ENV || 'dev']},
   manifest: {
     basePath: '/',

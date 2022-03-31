@@ -40,6 +40,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const loader = new GLTFLoader();
 
 
+
   /**
    * beIntersectObjects是用来存放需要射线检测的物体数组。
    * transformControl可以方便调节物体位置大小。
@@ -425,7 +426,10 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * 加载当前用户的模型，后面还要加载一个正常模型（所有网格模型都是正常形态，事先让其所有的模型都可见性为false）
      * */
     let model;
-    loader.load(`./img/allKindsOfModel/${modelType}/standardFigure6.gltf`, async function (gltf: any) {
+
+
+    loader.setCrossOrigin('Anonymous');
+    loader.load(`/api3/allKindsOfModel/${modelType}/standardFigure6.gltf`, async function (gltf: any) {
         model = gltf.scene;
         model.scale.setScalar(5.5, 5.5, 5.5);
         model.position.setY(-4.5);
@@ -509,7 +513,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * */
     let standardModel;
 
-    loader.load(`./img/allKindsOfModel/${modelType}/overWeightFigure2.gltf`, function (gltf: any) {
+    loader.load(`/api3/allKindsOfModel/${modelType}/overWeightFigure2.gltf`, function (gltf: any) {
         standardModel = gltf.scene;
         standardModel.scale.setScalar(5.5, 5.5, 5.5);
         standardModel.position.setY(-4.5);
@@ -1160,8 +1164,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
                 transparent: true,
                 opacity: 0.9,
                 visible: visible,
-                metalness: 0.5,
-                roughness: 0,
+                // metalness: 0.5,
+                // roughness: 0,
                 specular: "#ffffff",
                 shininess: 2000,
                 // envMapIntensity: 1,

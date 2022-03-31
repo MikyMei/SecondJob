@@ -255,7 +255,6 @@ const Model: ModelType = {
       };
     },
     initIllList(state, {payload}) {
-      console.log("initIllList",payload.newIllList);
       return {
         ...state,
         illList: payload.newIllList,

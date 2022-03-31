@@ -40,7 +40,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const loader = new GLTFLoader();
 
 
-
   /**
    * beIntersectObjects是用来存放需要射线检测的物体数组。
    * transformControl可以方便调节物体位置大小。
@@ -428,7 +427,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     let model;
 
 
-    loader.setCrossOrigin('Anonymous');
     loader.load(`/api3/allKindsOfModel/${modelType}/standardFigure6.gltf`, async function (gltf: any) {
         model = gltf.scene;
         model.scale.setScalar(5.5, 5.5, 5.5);
@@ -1422,8 +1420,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     // 临时保存点击器官后控制展示的器官模型和对应的面片模型
     const meshList: any = [];
 
-    console.log("当前的疾病异常标识",illList);
-
 
     await threeObjects.forEach((object: any, index: any) => {
 
@@ -1436,8 +1432,11 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
           // 在这里对选中的器官模型进行分类处理，1:没有默认显示的模型（器官模型）,2:默认已经显示的模型（骨骼模型）
           if (!object.material.visible) {
-            setControlMaterial(object.material);
-            object.material.visible = true;
+            if (name[0] === object.name || object.name.indexOf("剖面") != -1) {
+              setControlMaterial(object.material);
+              object.material.visible = true;
+            }
+
           } else {
             object.material.uniforms.glowColor = {
               type: "c",
@@ -1467,7 +1466,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
             GenerateCarousel(object.name, centroid, radius);
           }
-        }else{
+        } else {
           // 3D病灶微信群添加需求，要求在展示器官的时候，骨骼和皮肤不予展示
           object.visible = false;
         }
@@ -1558,8 +1557,11 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * */
 
   useEffect(() => {
-    structIllList();
-  }, [illList]);
+    if (illList && nowOrgaMeshes) {
+      structIllList();
+    }
+
+  }, [illList, nowOrgaMeshes]);
 
 
   /**
@@ -1605,11 +1607,15 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     setInfoDesc(illList.desc);
     const contentTemp: any = [];
     const imgTemp: any = [];
+    const nameTemp: any = [];
+    let nameSplit: any = [];
 
 
     if (illList.illType) {
 
+
       await illList.illType.map((item: any, index: any) => {
+        nameTemp.push(item.illName)
         contentTemp.push(
           <div key={item.illName}>
             <Row className={styles.illType}>
@@ -1621,7 +1627,14 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           </div>
         );
       })
-      setContentList(contentTemp)
+
+      await nowOrgaMeshes.map((item: any) => {
+        nameSplit=item.name.split('_')
+        if (nameTemp.includes(nameSplit[nameSplit.length-1])) {
+          item.material.visible = true;
+        }
+      })
+      setContentList(contentTemp);
     }
 
     if (illList.orgaPicture) {

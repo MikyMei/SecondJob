@@ -137,14 +137,15 @@ const MixLineChart: React.FC<any> = (props) => {
           data: lineData.data,
           type: 'line',
           smooth: true,
+
           itemStyle: {
 
-            normal: {
+            // normal: {
               lineStyle: {
                 color: '#00FFE8',
                 width: 1
               }
-            }
+            // }
           },
           areaStyle: {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
@@ -168,12 +169,12 @@ const MixLineChart: React.FC<any> = (props) => {
           type: 'line',
           smooth: true,
           itemStyle: {
-            normal: {
+            // normal: {
               lineStyle: {
                 color: '#D3D3D3',
                 width: 1
               }
-            }
+            // }
           },
           areaStyle: {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [

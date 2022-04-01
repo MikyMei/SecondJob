@@ -698,6 +698,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     }
 
 
+
     return advice;
   }
 
@@ -807,6 +808,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
   const GeneratRightOrga = () => {
     const illListTemp = choosenPart === "全身" ? wholeOrgaIll : illList;
 
+
     /**
      * 如果是数组，那就是全身，数组中的元素是疾病
      * 如果是对象，那内容就是illtype
@@ -834,11 +836,11 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
             </div>
           </div>
           <div className={styles.abnormalIndex}>
-            <Row className={styles.abnormalList}>
+            <Row  className={styles.abnormalList}>
               异常标识
             </Row>
             <Divider className={styles.indexDivider}/>
-            <Row className={styles.indexTag}>
+            <Row  className={styles.indexTag}>
               {/*<Radio.Group*/}
               {/*  defaultValue={1}*/}
               {/*  className={styles.radioGroup}*/}
@@ -855,7 +857,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
             </Row>
           </div>
           <div className={styles.healthAdvice}>
-            <Row className={styles.adviceTitle}>
+            <Row  className={styles.adviceTitle}>
               健康建议
             </Row>
             <Divider className={styles.indexDivider}/>

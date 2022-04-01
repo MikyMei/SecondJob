@@ -427,7 +427,10 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     let model;
 
 
-    loader.load(`/api3/allKindsOfModel/${modelType}/standardFigure6.gltf`, async function (gltf: any) {
+    //  /api3/allKindsOfModel/${modelType}/standardFigure6.gltf
+    // 目前线上会有跨域问题需要黄家辉配置nginx
+
+    loader.load(`./img/allKindsOfModel/${modelType}/standardFigure6.gltf`, async function (gltf: any) {
         model = gltf.scene;
         model.scale.setScalar(5.5, 5.5, 5.5);
         model.position.setY(-4.5);
@@ -511,7 +514,9 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * */
     let standardModel;
 
-    loader.load(`/api3/allKindsOfModel/${modelType}/overWeightFigure2.gltf`, function (gltf: any) {
+
+    // 存储同地址 /api3/allKindsOfModel/${modelType}/overWeightFigure2.gltf
+    loader.load(`./img/allKindsOfModel/${modelType}/overWeightFigure2.gltf`, function (gltf: any) {
         standardModel = gltf.scene;
         standardModel.scale.setScalar(5.5, 5.5, 5.5);
         standardModel.position.setY(-4.5);
@@ -1408,6 +1413,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * 在这里需要根据已有的异常标识的名字来决定展示那些病灶模型，同时异常标识的模型名字和异常标识需要一个映射处理
    * */
   const enlargeItem = async (name: any) => {
+    console.log("enlarge");
     await RestoreCompare("null");
 
 

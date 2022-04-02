@@ -181,6 +181,18 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       "面片_胃_胃炎",
       "面片_胃_胃癌",
       "面片_胃_胃溃疡",
+      "面片_胃_慢性胃炎",
+      "面片_胃_出血性胃炎",
+      "面片_胃_残胃炎",
+      "面片_胃_反流性胃炎",
+      "面片_胃_糜烂性胃炎",
+      "面片_胃_萎缩性胃炎",
+      "面片_胃_胃吻合口炎",
+      "面片_胃_胃复合性溃疡",
+      "面片_胃_消化性溃疡",
+      "面片_胃_胃部癌变",
+
+
       "膀胱",
       "大肠",
 
@@ -274,7 +286,17 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
   };
 
-  const materialExistedList = ["胃", "胃_面片", "面片_胃_胃炎", "面片_胃_胃癌", "面片_胃_胃溃疡", "胃_剖面"]; // 存放不需要使用自定义材质的名字， 后续所有由ui生成材质的模型就要全部放在这里面
+  const materialExistedList = [
+    "胃", "胃_面片", "面片_胃_胃炎", "面片_胃_胃癌", "面片_胃_胃溃疡", "胃_剖面",   "面片_胃_慢性胃炎",
+    "面片_胃_出血性胃炎",
+    "面片_胃_残胃炎",
+    "面片_胃_反流性胃炎",
+    "面片_胃_糜烂性胃炎",
+    "面片_胃_萎缩性胃炎",
+    "面片_胃_胃吻合口炎",
+    "面片_胃_胃复合性溃疡",
+    "面片_胃_消化性溃疡",
+    "面片_胃_胃部癌变",]; // 存放不需要使用自定义材质的名字， 后续所有由ui生成材质的模型就要全部放在这里面
   let choosenMesh: any;
 
 
@@ -888,6 +910,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     Utils.forMaterial(object.material, (material: any) => {
       material.transparent = true;
+      material.visible = true;
       material.color.setStyle('#ffffff');
       BodyShader = {
         uniforms: {
@@ -1231,27 +1254,30 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * */
 
   const ResetAllOpacity = () => {
+
     const oldObjects = orgaTypeList.slice(0);
     const displayObjects = orgaTypeList.slice(0, 2);
     const hidedenObjects = orgaTypeList.slice(2, oldObjects.length - 1);
 
     if (sliderFlag && oldObjects.length > 0) {
       threeObjects.map((object: any, index: any) => {
+        processGLTFChild(object,false);
 
-        if (JudgeExisted(hidedenObjects, object.name)) {
-          object.material.visible = false;
-        } else {
-
-          if (object.material.uniforms) {
-
-            object.material.visible = true;
-            object.material.uniforms.coeficient = {type: 'f', value: 1}
-          } else {
-
-            object.material.visible = true;
-            object.material.opacity = 0.9;
-          }
-        }
+        // if (JudgeExisted(hidedenObjects, object.name)) {
+        //   object.material.visible = false;
+        // } else {
+        //
+        //   if (object.material.uniforms) {
+        //
+        //     object.material.visible = true;
+        //     object.material.uniforms.coeficient = {type: 'f', value: 1}
+        //   } else {
+        //
+        //     console.log(object.name);
+        //     object.material.visible = true;
+        //     object.material.opacity = object.name.indexOf("剖面") != -1 ? 0.6 : 0.9;;
+        //   }
+        // }
 
       })
       setSliderValue(0);
@@ -1351,7 +1377,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * 在这里需要根据已有的异常标识的名字来决定展示那些病灶模型，同时异常标识的模型名字和异常标识需要一个映射处理
    * */
   const enlargeItem = async (name: any) => {
-    console.log("enlarge");
     await RestoreCompare("null");
 
 
@@ -1387,6 +1412,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
               value: new THREE.Color("#7cff5c")
               //  #30D2BD
             }
+
+
           }
 
           if (name.indexOf(object.name) === 0) {
@@ -1601,6 +1628,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     }
 
     await threeObjects.forEach((object: any) => {
+      // processGLTFChild(object, false)
+
+      if ("全身_1"===object.name){
+        console.log(object.material);
+      }
+
 
       object.visible = true;
     })

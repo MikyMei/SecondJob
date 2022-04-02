@@ -1222,7 +1222,11 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
         }
 
-        if (afterObjects.toString().indexOf(object.name) !== -1) {
+
+        /**
+         * 滑动控制条不能控制病灶模型，因为这里默认展示健康人体
+         * */
+        if (afterObjects.toString().indexOf(object.name) !== -1 && object.name.indexOf("面片")===-1) {
 
           object.material.visible = true;
           /**
@@ -1628,13 +1632,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     }
 
     await threeObjects.forEach((object: any) => {
-      // processGLTFChild(object, false)
-
-      if ("全身_1"===object.name){
-        console.log(object.material);
-      }
-
-
       object.visible = true;
     })
 

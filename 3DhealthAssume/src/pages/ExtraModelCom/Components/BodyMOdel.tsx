@@ -274,7 +274,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
   };
 
-  const materialExistedList = ["胃", "胃_面片", "面片_胃_胃炎", "面片_胃_胃癌", "面片_胃_胃溃疡", "胃_剖面"]; // 存放不需要使用自定义材质的名字
+  const materialExistedList = ["胃", "胃_面片", "面片_胃_胃炎", "面片_胃_胃癌", "面片_胃_胃溃疡", "胃_剖面"]; // 存放不需要使用自定义材质的名字， 后续所有由ui生成材质的模型就要全部放在这里面
   let choosenMesh: any;
 
 
@@ -326,8 +326,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const [scanMesh, setScanMesh] = useState<any>();
   const [sliderValue, setSliderValue] = useState<any>(0);
   const [sliderFlag, setSliderFlag] = useState<any>(false);
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [modalForm] = Form.useForm();
 
 
   const textureLoader = new THREE.TextureLoader();
@@ -379,15 +377,15 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     scene.add(circle);
 
 
-    // 2d渲染器
+    /**
+     *  2d渲染器，主要用来加入信息窗体组件
+     *  */
     labelRenderer = new CSS2DRenderer();  // 新增的渲染器
     labelRenderer.setSize(mainCanvas.offsetWidth * 0.8, mainCanvas.offsetHeight);
-    // this.labelRenderer.domElement.style.position = 'absolute';
-    // this.labelRenderer.domElement.style.top = 0;
     labelRenderer.domElement.style = "pointer-events: auto;position: absolute;top: 0px;"  // 处理新的渲染器
 
 
-    // // 创建聚光灯
+    //  创建聚光灯
     spotLight = new THREE.SpotLight(0xFFFFFF);
     spotLight.position.set(30, 30, 30);
     spotLight.castShadow = true;
@@ -396,7 +394,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     spotLight.shadow.mapSize.width = 3026;
     spotLight.shadow.mapSize.height = 3026;
     // scene.add(spotLight);
-    //
+
     ambient = new THREE.AmbientLight(0x444444);
     scene.add(ambient);
 
@@ -406,15 +404,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     point = new THREE.PointLight(0xffffff);
     point.position.set(0, 200, 300); // 点光源位置
     scene.add(point);
-    //
     const backPoint = new THREE.PointLight(0xffffff);
     backPoint.position.set(0, 200, -300); // 点光源位置
     scene.add(backPoint);
 
 
     camera = new THREE.PerspectiveCamera(45, mainCanvas.offsetWidth * 0.8 / mainCanvas.offsetHeight, 0.1, 2000);
-
-    // 定位相机，并且指向场景中心
     camera.position.x = 0;
     camera.position.y = 2;
     camera.position.z = 15;
@@ -423,12 +418,11 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     /**
      * 加载当前用户的模型，后面还要加载一个正常模型（所有网格模型都是正常形态，事先让其所有的模型都可见性为false）
+     *    /api3/allKindsOfModel/${modelType}/standardFigure6.gltf
+     *    目前线上会有跨域问题需要黄家辉配置nginx
      * */
     let model;
-
-
-    //  /api3/allKindsOfModel/${modelType}/standardFigure6.gltf
-    // 目前线上会有跨域问题需要黄家辉配置nginx
+    //
 
     loader.load(`./img/allKindsOfModel/${modelType}/standardFigure6.gltf`, async function (gltf: any) {
         model = gltf.scene;
@@ -535,6 +529,10 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
         standardModel.traverse((child: any) => {
 
+          if (child.geometry) {
+            child.geometry.computeBoundingBox();
+            child.geometry.computeBoundingSphere()
+          }
             if (child.isMesh) {
               child.visible = false;
               if (compareMeshList.includes(child.name)) {
@@ -619,25 +617,13 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const BuildScene = () => {
     window.document.getElementById('webgl-output').appendChild(threeRenderer.domElement);
     window.document.getElementById("webgl-output").appendChild(threeLabelRenderer.domElement);
-    // generatePointsCircle();
-
-    setTimeout(() => {
-      setThreeIsStart(true);
-
-
-    }, 200)
-
 
     setTimeout(() => {
       changeLoading(false);
-
     }, 1500)
 
     render();
     window.addEventListener('resize', onWindowResize);
-
-    document.querySelector("#webgl-output");
-
 
   }
 
@@ -647,11 +633,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     if (threeMainCanvas) {
       threeCamera.aspect = threeMainCanvas.offsetWidth * 0.8 / threeMainCanvas.offsetHeight;
       threeCamera.updateProjectionMatrix();
-
       threeRenderer.setSize(threeMainCanvas.offsetWidth * 0.8, threeMainCanvas.offsetHeight);
-      // threeLabelRenderer.setSize(window.innerWidth, threeMainCanvas.offsetHeight);
-
-
     }
 
   }
@@ -665,18 +647,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
      * 实现身体扫光
      * */
     const dt = clock.getDelta();
-    /**
-     * 模型的动画
-     * */
-    if (mixerAnimation) {
-      mixerAnimation.update(dt);
-    }
-
-
-    /**
-     * 在这里当页面被切换出去超过1秒，render就会停止，
-     * */
-    // if (dt > 1) return false;
 
     if (time.value >= 0.48 || addTimer === true) {
       time.value -= dt / 5;
@@ -689,20 +659,22 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         addTimer = true
       }
     }
-    /**
-     * 这里是固定了皮肤的在最后一个，实际上需要在最开始的时候就整出来
-     * */
+
     if (scanMesh.length > 0) {
-      scanMesh.map(item => {
+      scanMesh.map((item: any) => {
         item.material.uniforms.time = time;
       })
+    }
 
-
+    /**
+     * 模型的动画
+     * */
+    if (mixerAnimation) {
+      mixerAnimation.update(dt);
     }
 
     if (threeControls) {
       threeControls.update();
-
     }
 
     if (TWEEN) {
@@ -722,10 +694,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     threeRenderer.render(threeScence, threeCamera);
     threeLabelRenderer.render(threeScence, threeCamera);
-
-
     requestAnimationFrame(render);
-
 
   }
 
@@ -903,25 +872,10 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * 给材质赋值颜色
    * */
   const setCityMaterial = (object: any) => {
-    // 确定oject的geometry的box size
-    object.geometry.computeBoundingBox();
-    object.geometry.computeBoundingSphere();
+
     let materialBody: any;
     const {geometry} = object;
-
-    // 获取geometry的长宽高 中心点
     const {center, radius} = geometry.boundingSphere;
-
-    /**
-     *
-     * 把保卫模型的球弄出来
-     * */
-
-
-    /**
-     *
-     *
-     * */
 
     const {max, min} = geometry.boundingBox;
 
@@ -934,7 +888,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     Utils.forMaterial(object.material, (material: any) => {
       material.transparent = true;
-
       material.color.setStyle('#ffffff');
       BodyShader = {
         uniforms: {
@@ -1103,7 +1056,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       if (item.indexOf(orgaName) != -1) {
         result = index;
       }
-
     })
     return result;
   }
@@ -1135,8 +1087,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           /**
            * 目前先用这种判断，后续所有的器官都有了贴图就不用判断
            * */
-
-
           if (materialExistedList.includes(child.name)) {
 
 
@@ -1148,12 +1098,9 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
             child.material.metalness = 0.5;
             child.material.roughness = 1;
-
-
             child.material.emissive = child.material.color;
             child.material.emissiveIntensity = 1;
             child.material.emissiveMap = child.material.map;
-
             child.material.visible = visible;
             child.material.transparent = true;
             // child.material.side = THREE.DoubleSide;
@@ -1179,8 +1126,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
           }
 
-
-          // child.material = Shaders(orgaMatchColor[`${child.name}`]).material3;
           child.castShadow = true
 
           break;
@@ -1242,7 +1187,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     const beforeObjects = oldObjects.slice(0, index);
     const afterObjects = oldObjects.slice(index + 1, oldObjects.length - 1);
 
-
     /**
      *分别对前后进行不同的操作
      * 1，对前面的
@@ -1262,7 +1206,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
            * 这个适用于着色器的修改透明度
            * */
 
-
           if (object.material.uniforms) {
             new TWEEN.Tween(object.material.uniforms.coeficient)
               .to({type: 'f', value: 1}, 500) // 在1s内移动至 (0, 0)
@@ -1279,7 +1222,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
       })
     }
-
 
   }
 
@@ -1364,17 +1306,16 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   /**
    * 一个公共的相机和场景中心移动补间动画的方法
    * 参数为需要拉近的模型，和位置计算用到的半径，
+   * 如果两个参数都有，就是拉近距离，否则就是回退到原始
    * */
 
   const MoveTargetCamera = (mesh?: any, radius?: any) => {
 
-    // 如果两个参数都有，就是拉近距离，否则就是回退到原始
     if (mesh && radius) {
       const centroid = new THREE.Vector3(0, 0, 0);
       centroid.addVectors(mesh.geometry.boundingBox.min, mesh.geometry.boundingBox.max);
       centroid.multiplyScalar(0.5);
       centroid.applyMatrix4(mesh.matrixWorld);
-
 
       new TWEEN.Tween(threeCamera.position)
         .to({
@@ -1405,10 +1346,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   /**
    * 在人体模型的右侧防止一个器官的栏目，点击具体的栏目会直接展开栏目的模型, 在加载玩模型的时候在重置一个,
    * 不能使用多场景，只能使用图标，对性能要求第一点
-   * */
-
-
-  /**
+   *
    * 点击放大或者是打开器官的弹框，或者跳到指定位置
    * 在这里需要根据已有的异常标识的名字来决定展示那些病灶模型，同时异常标识的模型名字和异常标识需要一个映射处理
    * */
@@ -1489,21 +1427,17 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * */
 
   useImperativeHandle(onRef, () => ({
-    // onChild 就是暴露给父组件的方法
     onChild: () => {
       return {
         childName: '我是子组件'
       }
     },
-
     testEnlarge: (name: any) => {
       enlargeItem(name)
     },
-
     testClose: () => {
       closeInfoWindow()
     },
-
     testPlay: (indexName: any) => {
       PlayAnimation(indexName);
     },
@@ -1516,18 +1450,12 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     sliderDivIndex: (divIndex: any) => {
       SliderTo(divIndex)
     },
-
-    // 恢复健康比对
     ResetCompare: () => {
       RestoreCompare();
     },
-
-    //resetSliderValue
     resetSlider: () => {
       ResetAllOpacity();
     },
-
-
   }));
 
 
@@ -1635,8 +1563,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       })
 
       await nowOrgaMeshes.map((item: any) => {
-        nameSplit=item.name.split('_')
-        if (nameTemp.includes(nameSplit[nameSplit.length-1])) {
+        nameSplit = item.name.split('_')
+        if (nameTemp.includes(nameSplit[nameSplit.length - 1])) {
           item.material.visible = true;
         }
       })
@@ -1656,7 +1584,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       setOrgaPicture(imgTemp)
     }
   }
-
 
   const RestoreCompare = async (modelTypeName: any) => {
     // 在这里目前仅仅是恢复了选中的器官模型，而没有恢复他的面片，实际上应该在这进行面片的恢复
@@ -1748,9 +1675,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
    * 一键切换按钮，对比不同模型
    * */
 
-  const CompareStandardModel = () => {
-
-  }
 
   /**
    * 信息串口，切换面板的时候，如果切换到异常标识，自动播放第一个异常标识的动画
@@ -1776,7 +1700,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   const SliderTo = (divIndex: any) => {
     if (sliderDivIndex) {
       sliderDivIndex.innerSlider.slickGoTo(divIndex);
-
     }
   }
 
@@ -1836,6 +1759,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         } else {
           mesh.visible = false;
         }
+
         if (value === illNameArray[illNameArray.length - 1]) {
           MoveTargetCamera(mesh, radius)
         }
@@ -1853,9 +1777,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     nowOrgaMeshes.map((mesh: any) => {
       mesh.visible = true;
     })
-
-
-    //  回复位置
     const {radius, center} = threeChoosenMesh.geometry.boundingSphere;
     MoveTargetCamera(threeChoosenMesh, radius)
 

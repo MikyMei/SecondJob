@@ -82,8 +82,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
   const [visible, setVisible] = useState<any>(false)
   const [modalTitle, setModalTitle] = useState<any>('');
   const [rightColumnContent, setRightColumnContent] = useState<any>();
-  const [nowSelectedOrga, setNowSelectedOrga] = useState<any>("555");
-  const [defaultSelectedIndex, setDefaultSelectedIndex] = useState<any>(null); // 默认选中的异常标识，可以用在右侧信息栏
+
 
   const enlargeItem = async (value: any) => {
 
@@ -91,7 +90,6 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
      * 在这里做一个处理，保证有异常标识的在传进去给放大
      * 在这里，除了器官名字，就是带剖面的模型，其他的都要去匹配
      * */
-
 
 
     await bodyRef.current.resetSlider();
@@ -152,7 +150,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
 
   }, [abnormalOrgaTop4]);
 
-  const OpenWholeOrga = (e: any, iconName: any, orgaName: any, orgaAll) => {
+  const OpenWholeOrga = (e: any, iconName: any, orgaName: any, orgaAll: any) => {
     e.currentTarget.style.boxShadow = '0px 0px 10px #d2a845 inset';
     /**
      * 要改变的项目是当前选中的，框的阴影图， 名字字体颜色，成绩字体颜色高亮, 在关闭信息窗的时候恢复，和点击其他的时候恢复
@@ -166,10 +164,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     optionsCard.push(e.currentTarget);
     RestoreStyle();
 
-    //  在这里请求全身性器官的具体病症
     if (dispatch) {
-
-
       const orgaParams = {
         orgaName: orgaAll.name
       }
@@ -262,7 +257,6 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
         allOrgaList[`${key}`].map((item: any) => {
 
           const orgaRelated = MatchOrga(item.name);
-
 
           orgaCardList[`${key}`].push(
             <div key={item.name} className={styles.signleOption_unchecked}
@@ -486,7 +480,6 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
           const tempTop = oldList[i];
           oldList[i] = oldList[0];
           oldList[0] = tempTop
-
         }
       }
     }
@@ -507,7 +500,6 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
               <Row className={styles.orgaIconRow}>
                 <img className={styles.abnormalOrgaIcon}
                      src={`./img/allOrgaIcon/yellowOne/${orgaRelated.iconName}.png`}/>
-                {/*<span className={styles.abnormalScoreNumber}>{top.score}</span>*/}
               </Row>
 
 
@@ -605,74 +597,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     )
   }
 
-  const healthAdvice = [
-    "饮食宜软，易消化，少食刺激性及过冷、过热、过硬的食物，定时定量进餐，细嚼慢咽，戒烟酒，少用对胃有刺激的药物，必要时检查胃镜。",
-    "（奥美拉唑/埃索美拉唑20mg　Bid＋阿莫西林1000mg Bid＋克拉霉素0.5　Bid ＋枸橼酸铋钾220mg Bid，正规服用14天，停药一月后复查呼气试验），随访胃镜。",
-    "每年随访胃镜，消化科随诊。"
-  ]
-  const abnormalIndex = [
-    {projectName: "电子胃镜全套1", resultKeyWords: {content: "“贲门”增生性息肉", direction: null}, normalRank: "--", careDegree: 4},
-    {
-      projectName: "胃蛋白酶原Ⅰ",
-      resultKeyWords: {content: 249, direction: "up"},
-      normalRank: "70～200ng/ml",
-      careDegree: 4.5
-    },
-    {
-      projectName: "胃蛋白酶原Ⅱ",
-      resultKeyWords: {content: 33.1, direction: "down"},
-      normalRank: "1～28.2ng/ml",
-      careDegree: 2
-    },
-    {
-      projectName: "胃蛋白酶原Ⅱ",
-      resultKeyWords: {content: 33.1, direction: "down"},
-      normalRank: "1～28.2ng/ml",
-      careDegree: 2
-    },
-  ]
-  const columns = [
-    {
-      title: "项目名",
-      dataIndex: "projectName",
-      key: "projectName",
-    },
-    {
-      title: "结果或关键词",
-      dataIndex: "resultKeyWords",
-      key: "resultKeyWords",
-      render: (text: any, record: any, index: any) => {
-        // (record.resultKeyWords.direction&&record.resultKeyWords.direction==="up")?return
 
-        if (record.resultKeyWords.direction) {
-          return <span>
-           {record.resultKeyWords.content}&nbsp;&nbsp;
-            {record.resultKeyWords.direction === "up" ? <img src={"./img/upArrow.png"}/> :
-              <img src={"./img/downArrow.png"}/>}
-         </span>
-        } else {
-          return <span>{record.resultKeyWords.content}</span>
-        }
-      }
-    },
-    {
-      title: "正常值范围",
-      dataIndex: "normalRank",
-      key: "normalRank",
-    },
-    {
-      title: "关心程度",
-      dataIndex: "careDegree",
-      key: "careDegree",
-      width: 200,
-      render: (text: any, record: any) => {
-
-        return <Rate allowHalf disabled className={record.careDegree > 3 ? styles.heartIcon : styles.heartIcon2}
-                     defaultValue={record.careDegree} character={() => <HeartFilled/>}/>
-
-      }
-    }
-  ]
 
   /**
    * 将建议遍历生成一些减小一列表
@@ -696,7 +621,6 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
         <Empty className={styles.emptyContent} description={"暂无建议"}/>
       )
     }
-
 
 
     return advice;
@@ -836,28 +760,16 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
             </div>
           </div>
           <div className={styles.abnormalIndex}>
-            <Row  className={styles.abnormalList}>
+            <Row className={styles.abnormalList}>
               异常标识
             </Row>
             <Divider className={styles.indexDivider}/>
-            <Row  className={styles.indexTag}>
-              {/*<Radio.Group*/}
-              {/*  defaultValue={1}*/}
-              {/*  className={styles.radioGroup}*/}
-              {/*  onChange={changeIndex}*/}
-              {/*  optionType="button"*/}
-              {/*>*/}
-              {/*  <Space size={"middle"}>*/}
+            <Row className={styles.indexTag}>
               {GenerateRadioButton(illListTemp)}
-
-              {/*  </Space>*/}
-
-              {/*</Radio.Group>*/}
-
             </Row>
           </div>
           <div className={styles.healthAdvice}>
-            <Row  className={styles.adviceTitle}>
+            <Row className={styles.adviceTitle}>
               健康建议
             </Row>
             <Divider className={styles.indexDivider}/>
@@ -948,16 +860,12 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
           visible={visible}
           onCancel={CloseOrgaModal}
           modalTitle={modalTitle}
-
         />
-
-
       </div>
     </Spin>
   )
 }
 
-// export default NormalProject;
 
 export default connect(({bodyModel}) => ({
   bodyModelInfo: bodyModel,

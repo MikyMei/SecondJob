@@ -50,7 +50,6 @@ export function CompareScore(obj1: any, obj2: any) {
 
 export function MatchOrga(orgaName: any) {
 
-  let result: any = {orgaName: "", meshName: "", iconName: "icon_胃"};
 
   // 修改了器官模型的（meshname）的名字，具体器官的名字还没有对应方法学的
   const MatchOrigin2 = {
@@ -108,10 +107,10 @@ export function MatchOrga(orgaName: any) {
     "胸椎": {orgaName: "胸椎", meshName: ["胸椎"], iconName: "icon_胃"},
     "皮肤": {orgaName: "皮肤", meshName: ["全身_1"], iconName: "icon_胃"},
 
-    "心率": {orgaName: "心率", meshName: "", iconName: "icon_心率"},
-    "血压": {orgaName: "血压", meshName: "", iconName: "icon_血压"},
-    "血糖": {orgaName: "血糖", meshName: "", iconName: "icon_血糖"},
-    "BMI": {orgaName: "BMI", meshName: "", iconName: "icon_bmi"},
+    "心率": {orgaName: "心率", meshName: [], iconName: "icon_心率"},
+    "血压": {orgaName: "血压", meshName: [], iconName: "icon_血压"},
+    "血糖": {orgaName: "血糖", meshName: [], iconName: "icon_血糖"},
+    "BMI": {orgaName: "BMI", meshName: [], iconName: "icon_bmi"},
 
   };
 
@@ -150,7 +149,6 @@ export function RestructureCommonScore(originList: any, length: any) {
   for (let i = 0; i < length; i++) {
     result.Data[i] = originList[0].avg
   }
-
 
   return result;
 }

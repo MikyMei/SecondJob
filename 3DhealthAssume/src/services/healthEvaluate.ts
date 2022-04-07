@@ -29,7 +29,7 @@ export async function GetPersonalHealthInfo(params: any) {
       last_check_score: 94,
       last_check_time: "2017-12-08",
       user_id: "2017014713",
-      BMI:3.5, // 这个主要用来确定用户应该加载的模型
+      BMI: 3.5, // 这个主要用来确定用户应该加载的模型
     }
   ]
   return data;
@@ -105,9 +105,9 @@ export async function GetAllOrgaList(params: any) {
   //     }]
   // }
 
-  return{
-    code:2000,
-    data:[
+  return {
+    code: 2000,
+    data: [
       {
         "腹部": [{name: "胃", exceptionCount: 2, score: 52},
           {name: "小肠", exceptionCount: 3, score: 53},
@@ -258,7 +258,7 @@ export async function AddNewRole(params: any) {
 /**
  * 下面的两个方法，都是获得器官的得分历史和同质人群的历史得分
  * */
-export async function GetOrgaScoreHistory() {
+export async function GetOrgaScoreHistory(params: any) {
 
   return {
     code: 200,
@@ -294,7 +294,7 @@ export async function GetOrgaScoreHistory() {
 }
 
 
-export async function GetOrgaCommonScoreHistory() {
+export async function GetOrgaCommonScoreHistory(params: any) {
 
   return {
     code: 200,
@@ -308,32 +308,32 @@ export async function GetOrgaCommonScoreHistory() {
 
 
 export async function GetOrgaDetailInfo(params: any) {
-  let illType:any;
+  let illType: any;
 
-  if (params.orgaName.includes("胃")){
-    illType=[
+  if (params.orgaName.includes("胃")) {
+    illType = [
       {
-        illName:"胃癌",
+        illName: "胃癌",
         illDesc: "胃良性肿瘤一类源于胃壁黏膜上皮组织的腺瘤或息肉样腺瘤。另一类源于胃壁间叶组织的平滑肌瘤、纤维瘤、神经纤维瘤、脂肪瘤、血管瘤等。"
       },
       {
-        illName:"胃炎",
+        illName: "胃炎",
         illDesc: "胃炎（gastritis）是各种原因引起的胃黏膜炎症，为最常见的消化系统疾病之一。"
       },
       {
-        illName:"胃溃疡",
+        illName: "胃溃疡",
         illDesc: "胃溃疡是指发生在胃角、胃窦、贲门和裂孔疝等部位的溃疡，是消化性溃疡的一种。"
       },
 
     ]
-  }else{
-    illType=[
+  } else {
+    illType = [
       {
-        illName:"异常指标1",
+        illName: "异常指标1",
         illDesc: "这是一段关于异常指标1的描述。"
       },
       {
-        illName:"异常指标2",
+        illName: "异常指标2",
         illDesc: "这是一段关于异常指标2的描述。"
       }
     ]
@@ -424,7 +424,8 @@ export async function GetSpecificIndexDetail(params: any) {
   return {
     code: 200,
     data: [
-      {projectName: `${params.indexName}项目一`,
+      {
+        projectName: `${params.indexName}项目一`,
         resultKeyWords: {content: "“贲门”增生性息肉", direction: ""},
         normalRank: "--", careDegree: 2.5
       },

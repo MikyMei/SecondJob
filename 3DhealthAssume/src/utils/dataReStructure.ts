@@ -8,6 +8,7 @@
 
 import moment from "moment";
 import Icon, {HomeOutlined} from '@ant-design/icons';
+import {GetOrgaCommonScoreHistory, GetOrgaScoreHistory} from "@/services/healthEvaluate";
 
 /**
  * 传入接口请求来的所有部位和其中的器官数据，比较得出四个最小值，传进来的是个对象，其中key为器官所属类别，value为数组
@@ -53,7 +54,8 @@ export function MatchOrga(orgaName: any) {
 
   // 修改了器官模型的（meshname）的名字，具体器官的名字还没有对应方法学的
   const MatchOrigin2 = {
-    "胃": {orgaName: "胃",
+    "胃": {
+      orgaName: "胃",
       meshName: ["胃", "面片_胃_胃炎", "面片_胃_胃癌", "面片_胃_胃溃疡", "胃_剖面",
         "面片_胃_慢性胃炎",
         "面片_胃_出血性胃炎",
@@ -65,7 +67,8 @@ export function MatchOrga(orgaName: any) {
         "面片_胃_胃复合性溃疡",
         "面片_胃_消化性溃疡",
         "面片_胃_胃部癌变",],
-      iconName: "icon_胃"},
+      iconName: "icon_胃"
+    },
     "小肠": {orgaName: "小肠", meshName: ["小肠，肠黏膜"], iconName: "icon_小肠"},
     "肝脏": {orgaName: "肝脏", meshName: ["肝脏"], iconName: "icon_肝脏"},
     "大肠": {orgaName: "大肠", meshName: ["大肠"], iconName: "icon_胃"},
@@ -3088,5 +3091,26 @@ export async function MatchIndexMesh(indexName: any, keyName: any) {
   }
 
   return result;
+
+}
+
+
+/**
+ * 一次请求获得top4异常器官的详细信息
+ * */
+
+export async function GetTop4Detail(top4List: any) {
+
+  if (Array.isArray(top4List)&&top4List.length>0){
+    await top4List.map(async (item: any, index: any) => {
+      top4List[index].historyScore = (await GetOrgaScoreHistory(item.name)).data;
+      top4List[index].commonScore =  (await GetOrgaCommonScoreHistory( item.name)).data;
+      console.log("执行");
+    })
+  }
+
+
+
+
 
 }

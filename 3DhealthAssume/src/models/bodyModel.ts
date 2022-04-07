@@ -14,7 +14,7 @@ import {
   GetPersonalScoreHistory,
   GetSignleWholeOrgaIll, GetSpecificIndexDetail
 } from "@/services/healthEvaluate";
-import {GetTop4AbnormalOrga} from "@/utils/dataReStructure";
+import {GetTop4AbnormalOrga, GetTop4Detail} from "@/utils/dataReStructure";
 
 
 export type StateType = {
@@ -68,7 +68,7 @@ export type ModelType = {
 
     getWholeOrgaIllDetail: Effect;
     getSelectedOrgaDetail: Effect;
-    getSelectedIndexProject:Effect; // 获得当前的选中的指标的项目细节
+    getSelectedIndexProject: Effect; // 获得当前的选中的指标的项目细节
 
   };
   reducers: {
@@ -123,34 +123,20 @@ const Model: ModelType = {
 
     },
 
-    * getAllPersonalHealthInformation({payload}, {call, put}) {
+    * getAllPersonalHealthInformation({payload}, {call, put})  {
       const newPersonalHealthInfo = yield call(GetPersonalHealthInfo, payload.params.personalHealthInfoParams);
       const newAllOrgaList = yield call(GetAllOrgaList, payload.params.allOrgaListParams);
       const newPersonalScoreHistory = yield call(GetPersonalScoreHistory, payload.params.personalScoreHistoryParams);
       const newCommonScoreHistory = yield call(GetCommonScoreHistory, payload.params.personalScoreHistoryParams);// 个人的历年参数一样
       const newKeyHealthIndex = yield call(GetKeyHealthIndex, payload.params.keyHealthIndexParams);// 个人的历年参数一样
 
-
       /**
        * 获取四个，top4地器官的相关信息
        * */
       const newAbnormalTop4 = GetTop4AbnormalOrga(newAllOrgaList.data[0]);
       const tempList = JSON.parse(JSON.stringify(newAbnormalTop4));
-      // payload.abnormalTop4
-
       if (tempList.length > 0) {
-        tempList[0].historyScore = (yield call(GetOrgaScoreHistory, tempList[0].name)).data;
-        tempList[0].commonScore = (yield call(GetOrgaCommonScoreHistory, tempList[0].name)).data;
-
-        tempList[1] ? tempList[1].historyScore = (yield call(GetOrgaScoreHistory, tempList[1].name)).data : null;
-        tempList[1] ? tempList[1].commonScore = (yield call(GetOrgaCommonScoreHistory, tempList[1].name)).data : null;
-
-        tempList[2] ? tempList[2].historyScore = (yield call(GetOrgaScoreHistory, tempList[2].name)).data : null;
-        tempList[2] ? tempList[2].commonScore = (yield call(GetOrgaCommonScoreHistory, tempList[2].name)).data : null;
-
-        tempList[3] ? tempList[3].historyScore = (yield call(GetOrgaScoreHistory, tempList[3].name)).data : null;
-        tempList[3] ? tempList[3].commonScore = (yield call(GetOrgaCommonScoreHistory, tempList[3].name)).data : null;
-
+        yield call(GetTop4Detail, tempList);
       }
 
 
@@ -159,7 +145,6 @@ const Model: ModelType = {
         && newPersonalScoreHistory[0]
         && newCommonScoreHistory
         && newKeyHealthIndex.data) {
-
 
         yield put({
           type: "initAllPersonalHealthInformation",
@@ -210,32 +195,32 @@ const Model: ModelType = {
       const scoreHistoryResponse = yield call(GetOrgaScoreHistory, payload.orgaParams);
       const commonHistoryResponse = yield call(GetOrgaCommonScoreHistory, payload.orgaParams);
       const healthAdviceResponse = yield call(GetOrgaHealthAdvice, payload.orgaParams);
-    // 在初始化的时候，请求第一个异常标识地异常项目
+      // 在初始化的时候，请求第一个异常标识地异常项目
 
       yield put({
-        type:"initSelectedOrgaDetail",
-        payload:{
-          newOrgaHistory:scoreHistoryResponse.data||[],
-          newCommonHistory:commonHistoryResponse.data||[],
-          newHealthAdvice:healthAdviceResponse.data||[],
+        type: "initSelectedOrgaDetail",
+        payload: {
+          newOrgaHistory: scoreHistoryResponse.data || [],
+          newCommonHistory: commonHistoryResponse.data || [],
+          newHealthAdvice: healthAdviceResponse.data || [],
         }
       });
       yield put({
-        type:"initSelectedOrga",
-        payload:{newSelectedOrga:payload.orgaAll}
+        type: "initSelectedOrga",
+        payload: {newSelectedOrga: payload.orgaAll}
       })
     },
 
-    * getSelectedIndexProject({payload},{call, put}){
+    * getSelectedIndexProject({payload}, {call, put}) {
       /**
        * 获得当前选中指标地
        * */
 
-      const indexDetailResponse=yield call(GetSpecificIndexDetail, payload.indexParams);
+      const indexDetailResponse = yield call(GetSpecificIndexDetail, payload.indexParams);
       yield put({
-        type:"initSelectedIndexDetail",
-        payload:{
-          newIndexDetail:indexDetailResponse.data||[],
+        type: "initSelectedIndexDetail",
+        payload: {
+          newIndexDetail: indexDetailResponse.data || [],
         }
       })
 
@@ -313,18 +298,18 @@ const Model: ModelType = {
       }
     },
     initSelectedOrga(state, {payload}) {
-      let orgaTemp:any;
-      if (payload.newSelectedOrga===state.selectedOrga){
-        orgaTemp=null;
-      }else{
-        orgaTemp=payload.newSelectedOrga;
+      let orgaTemp: any;
+      if (payload.newSelectedOrga === state.selectedOrga) {
+        orgaTemp = null;
+      } else {
+        orgaTemp = payload.newSelectedOrga;
       }
       return {
         ...state,
         selectedOrga: orgaTemp,
       }
     },
-    initSelectedOrgaDetail(state, {payload}){
+    initSelectedOrgaDetail(state, {payload}) {
       return {
         ...state,
         currentOrgaScoreHistory: payload.newOrgaHistory, // 当前器官的历史的分
@@ -333,7 +318,7 @@ const Model: ModelType = {
         // currentIindexDetail: payload.newIndexDetail, // 当前一场表示地异常指标,buzai
       }
     },
-    initSelectedIndexDetail(state, {payload}){
+    initSelectedIndexDetail(state, {payload}) {
       return {
         ...state,
         currentIindexDetail: payload.newIndexDetail, // 当前一场表示地异常指标

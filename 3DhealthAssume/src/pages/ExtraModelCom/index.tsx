@@ -597,8 +597,6 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     )
   }
 
-
-
   /**
    * 将建议遍历生成一些减小一列表
    * */

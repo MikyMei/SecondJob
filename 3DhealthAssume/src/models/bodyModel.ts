@@ -60,12 +60,8 @@ export type ModelType = {
   namespace: string;
   state: StateType;
   effects: {
-    changeOrgaInfo: Effect;
-
     getAllPersonalHealthInformation: Effect;  // 刚进入页面时，请求所有的个人健康相关信息接口
-
     getOrgaDetail: Effect;
-
     getWholeOrgaIllDetail: Effect;
     getSelectedOrgaDetail: Effect;
     getSelectedIndexProject: Effect; // 获得当前的选中的指标的项目细节
@@ -73,7 +69,6 @@ export type ModelType = {
   };
   reducers: {
     initOrgaInfo: Reducer<StateType>;
-    initInfoWindow: Reducer<StateType>;
     initIllList: Reducer<StateType>;
 
     initAllPersonalHealthInformation: Reducer<StateType>; // 初始化所有的个人健康信息
@@ -119,9 +114,7 @@ const Model: ModelType = {
   },
 
   effects: {
-    * changeOrgaInfo({payload}, {call, put}) {
 
-    },
 
     * getAllPersonalHealthInformation({payload}, {call, put})  {
       const newPersonalHealthInfo = yield call(GetPersonalHealthInfo, payload.params.personalHealthInfoParams);
@@ -157,7 +150,6 @@ const Model: ModelType = {
             AbnorMalTop4: newAbnormalTop4,
             PersonalHealthScore: newPersonalHealthInfo[0].last_check_score || 0,
             AbnormalTop4Detail: tempList,
-
           }
         })
       }
@@ -239,40 +231,14 @@ const Model: ModelType = {
         illList: payload.newIllList,
       };
     },
+
     initIllList(state, {payload}) {
       return {
         ...state,
         illList: payload.newIllList,
       };
     },
-    initInfoWindow(state, {payload}) {
-      const bodyPart = {
-        Body002: "包在身体表面，直接同外界环境接触，具有保护、排泄、调节体温和感受外界刺激等作用的一种器官，是人的身体器官中最大的器官",
-        Circulatory_Heart001: "心脏主要功能是为血液流动提供动力，把血液运行至身体各个部分。人类的心脏位于胸腔中部偏左下方，体积约相当于一个拳头大小，重量约250克。女性的心脏通常要比男性的体积小且重量轻",
-        Skeletal001: "人或动物体内或体表坚硬的组织。分内骨骼和外骨骼两种，人和高等动物的骨骼在体内，由许多块骨头组成，叫内骨骼；软体动物体外的硬壳以及某些脊椎动物（如鱼、龟等）体表的鳞、甲等叫外骨骼。",
 
-      }
-      const contentlist1: any = [];
-      contentlist1.push({
-        illType: "肺占位性病变",
-        illDesc: "占位性病变通常泛指肿瘤（良性的、恶性的）、寄生虫等，而不涉及疾病的病因。"
-      })
-      contentlist1.push({
-        illType: "肺占位性病变",
-        illDesc: "占位性病变通常泛指肿瘤（良性的、恶性的）、寄生虫等，而不涉及疾病的病因。"
-      })
-
-
-      return {
-        ...state,
-        infoDisplay: payload.newInfoDisplay,
-        infoTop: payload.newInfoTop,
-        infoRight: payload.newInfoRight,
-        orgaName: payload.newOrgaName,
-        orgaDesc: bodyPart[`${payload.newOrgaName}`],
-        illList: contentlist1,
-      };
-    },
     initAllPersonalHealthInformation(state, {payload}) {
       return {
         ...state,
@@ -297,6 +263,7 @@ const Model: ModelType = {
         wholeOrgaIll: payload.newWholeOrgaIll,
       }
     },
+
     initSelectedOrga(state, {payload}) {
       let orgaTemp: any;
       if (payload.newSelectedOrga === state.selectedOrga) {
@@ -309,6 +276,7 @@ const Model: ModelType = {
         selectedOrga: orgaTemp,
       }
     },
+
     initSelectedOrgaDetail(state, {payload}) {
       return {
         ...state,
@@ -318,6 +286,7 @@ const Model: ModelType = {
         // currentIindexDetail: payload.newIndexDetail, // 当前一场表示地异常指标,buzai
       }
     },
+
     initSelectedIndexDetail(state, {payload}) {
       return {
         ...state,

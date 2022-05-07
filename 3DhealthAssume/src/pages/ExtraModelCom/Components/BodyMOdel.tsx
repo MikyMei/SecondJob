@@ -287,7 +287,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
   };
 
   const materialExistedList = [
-    "胃", "胃_面片", "面片_胃_胃炎", "面片_胃_胃癌", "面片_胃_胃溃疡", "胃_剖面",   "面片_胃_慢性胃炎",
+    "胃", "胃_面片", "面片_胃_胃炎", "面片_胃_胃癌", "面片_胃_胃溃疡", "胃_剖面", "面片_胃_慢性胃炎",
     "面片_胃_出血性胃炎",
     "面片_胃_残胃炎",
     "面片_胃_反流性胃炎",
@@ -551,10 +551,10 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
         standardModel.traverse((child: any) => {
 
-          if (child.geometry) {
-            child.geometry.computeBoundingBox();
-            child.geometry.computeBoundingSphere()
-          }
+            if (child.geometry) {
+              child.geometry.computeBoundingBox();
+              child.geometry.computeBoundingSphere()
+            }
             if (child.isMesh) {
               child.visible = false;
               if (compareMeshList.includes(child.name)) {
@@ -1226,7 +1226,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
         /**
          * 滑动控制条不能控制病灶模型，因为这里默认展示健康人体
          * */
-        if (afterObjects.toString().indexOf(object.name) !== -1 && object.name.indexOf("面片")===-1) {
+        if (afterObjects.toString().indexOf(object.name) !== -1 && object.name.indexOf("面片") === -1) {
 
           object.material.visible = true;
           /**
@@ -1265,7 +1265,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     if (sliderFlag && oldObjects.length > 0) {
       threeObjects.map((object: any, index: any) => {
-        processGLTFChild(object,false);
+        processGLTFChild(object, false);
 
         // if (JudgeExisted(hidedenObjects, object.name)) {
         //   object.material.visible = false;
@@ -1487,6 +1487,9 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
     resetSlider: () => {
       ResetAllOpacity();
     },
+
+    testAutoInteracte: () => AutoInteracte(),
+    testAutoInteracte2: () => AutoInteracte2(),
   }));
 
 
@@ -1717,7 +1720,7 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
     if (activeKey === "2") {
       //  打开默认的第一个动画
-      illList.illType[0] ? PlayAnimation(illList.illType[0].illName) : null;
+      // illList.illType[0] && illList.illType[0].illName? PlayAnimation(illList.illType[0].illName) : null;
       changeTabs(illList.illType[0].illName);
     } else if (infoSelectedTab === "2") {
       ResstAllIllIndex()
@@ -1812,6 +1815,89 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
 
   }
 
+
+  /**
+   *
+   * 自动交互方法
+   * */
+
+
+  const AutoInteracte = () => {
+    // ChangeIndex("1");
+
+    // 点击器官卡片的交互
+    setTimeout(() => {
+      ChangeIndex("1");
+    }, 2000)
+
+    setTimeout(()=>{
+      document.getElementsByClassName('ant-image')[0].click();
+      setTimeout(() => {
+        // console.log(document.getElementsByClassName('ant-image-preview-operations-icon'));
+        document.getElementsByClassName('ant-image-preview-operations-icon')[0].click();
+      }, 2000)
+    }, 3000)
+
+  }
+
+  const AutoInteracte2 = async () => {
+
+    ComparePartOrga("overWeight");
+    await setTimeout(() => {
+      RestoreCompare("overWeight")
+    }, 3000)
+
+    // 控制滑动条
+    await setTimeout(() => {
+      sliderChange(0.5);
+    }, 5000)
+    await setTimeout(() => {
+      sliderChange(1.5);
+    }, 6000)
+    await setTimeout(() => {
+      sliderChange(2.5);
+    }, 7000)
+    await setTimeout(() => {
+      sliderChange(3.5);
+    }, 8000)
+    await setTimeout(() => {
+      sliderChange(4.5);
+    }, 9000)
+    await setTimeout(() => {
+      sliderChange(5.5);
+    }, 10000)
+    await setTimeout(() => {
+      sliderChange(0.0);
+    }, 11000)
+    await setTimeout(() => {
+      // RestoreCompare('null');
+      // ResetAllOpacity()
+      threeObjects.map((object: any, index: any) => {
+        processGLTFChild(object, false);
+
+        // if (JudgeExisted(hidedenObjects, object.name)) {
+        //   object.material.visible = false;
+        // } else {
+        //
+        //   if (object.material.uniforms) {
+        //
+        //     object.material.visible = true;
+        //     object.material.uniforms.coeficient = {type: 'f', value: 1}
+        //   } else {
+        //
+        //     console.log(object.name);
+        //     object.material.visible = true;
+        //     object.material.opacity = object.name.indexOf("剖面") != -1 ? 0.6 : 0.9;;
+        //   }
+        // }
+
+      })
+      // closeInfoWindow();
+
+    }, 11000)
+  }
+
+
   return (
     <div className={styles.output}>
       <div className={styles.webglOutput} id="webgl-output">
@@ -1826,7 +1912,27 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
                 {infoDesc}
               </Row> </TabPane>
             <TabPane tab={"医学影像"} key={"1"}>
-              <Carousel effect={"fade"}>
+              <Carousel effect={"fade"}
+                        autoplay={true}
+                        beforeChange={(from: any, to: any) => {
+                          // console.log("切换",from, to);
+                          if (to === 0) {
+                            ChangeIndex("2");
+                          }
+                        }}
+                        afterChange={(current: any) => {
+                          if (infoSelectedTab==="1"){
+                            // console.log(document.getElementsByClassName('ant-image'));
+                            document.getElementsByClassName('ant-image')[current].click();
+                            setTimeout(() => {
+                              console.log(document.getElementsByClassName('ant-image-preview-operations-icon'));
+                              document.getElementsByClassName('ant-image-preview-operations-icon')[0 + (current) * 5].click();
+                            }, 2000)
+                          }
+
+
+                        }}
+              >
                 {orgaPicture}
               </Carousel> </TabPane>
             <TabPane tab={"异常标识"} key={"2"}>
@@ -1836,8 +1942,19 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
                 }}
                 initialSlide={0}
                 effect={"fade"}
+                autoplay={true}
+                beforeChange={(from: any, to: any) => {
+                  // console.log("切换",from, to);
+                  if (to === 0) {
+                    // ChangeIndex("0");
+                    // setTimeout(() => {
+                    closeInfoWindow();
+                    // }, 4000)
+                  }
+                  // ChangeIndex("0");
+                }}
                 afterChange={(current: any) => {
-                  PlayAnimation(illList.illType[current].illName);
+                  // PlayAnimation(illList.illType[current].illName);
                   changeTabs(illList.illType[current].illName)
                 }}>
                 {contentList}

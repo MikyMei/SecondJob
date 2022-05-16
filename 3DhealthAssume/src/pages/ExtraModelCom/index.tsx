@@ -96,29 +96,28 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     await bodyRef.current.testEnlarge(value);
 
     // 执行另外的操作
-    setTimeout(()=>{
-      bodyRef.current.testAutoInteracte();
-    }, 3000)
+    // setTimeout(()=>{
+    //   bodyRef.current.testAutoInteracte();
+    // }, 3000)
 
 
   }
 
-  useEffect(async ()=>{
 
-    await setTimeout(async ()=>{
-
-      // 点击器官卡片的交互
-      // enlargeItem(['胃', '面片_胃_胃炎', '面片_胃_胃癌', '面片_胃_胃溃疡', '胃_剖面', '面片_胃_慢性胃炎', '面片_胃_出血性胃炎', '面片_胃_残胃炎', '面片_胃_反流性胃炎', '面片_胃_糜烂性胃炎', '面片_胃_萎缩性胃炎', '面片_胃_胃吻合口炎', '面片_胃_胃复合性溃疡', '面片_胃_消化性溃疡', '面片_胃_胃部癌变'])
-      await bodyRef.current.testAutoInteracte2();
-    },5000)
-
-    await setTimeout(()=>{
-      enlargeItem(['胃', '面片_胃_胃炎', '面片_胃_胃癌', '面片_胃_胃溃疡', '胃_剖面', '面片_胃_慢性胃炎', '面片_胃_出血性胃炎', '面片_胃_残胃炎', '面片_胃_反流性胃炎', '面片_胃_糜烂性胃炎', '面片_胃_萎缩性胃炎', '面片_胃_胃吻合口炎', '面片_胃_胃复合性溃疡', '面片_胃_消化性溃疡', '面片_胃_胃部癌变'])
-
-    },18000)
-
-
-  },[])
+  /**
+   * 未了宣传视频做的自动触发
+   * */
+  // useEffect(async ()=>{
+  //
+  //   await setTimeout(async ()=>{
+  //     await bodyRef.current.testAutoInteracte2();
+  //   },5000)
+  //
+  //   await setTimeout(()=>{
+  //     enlargeItem(['胃', '面片_胃_胃炎', '面片_胃_胃癌', '面片_胃_胃溃疡', '胃_剖面', '面片_胃_慢性胃炎', '面片_胃_出血性胃炎', '面片_胃_残胃炎', '面片_胃_反流性胃炎', '面片_胃_糜烂性胃炎', '面片_胃_萎缩性胃炎', '面片_胃_胃吻合口炎', '面片_胃_胃复合性溃疡', '面片_胃_消化性溃疡', '面片_胃_胃部癌变'])
+  //   },18000)
+  //
+  // },[])
 
 
   const closeInfoWindow = () => {

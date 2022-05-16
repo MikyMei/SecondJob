@@ -8,6 +8,7 @@ export default {
   'menu.admin': '管理页',
   'menu.admin.sub-page': '二级管理页',
   'menu.login': '登录',
+  'menu.sliderOrga':'滑动模型',
   'menu.JokerBody':'人体',
   'menu.register': '注册',
   'menu.Airflight':'粒子光效',

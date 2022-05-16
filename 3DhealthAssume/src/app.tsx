@@ -64,6 +64,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         history.push(loginPath);
       }
     },
+    collapsedButtonRender: false,
+
+
+    collapsed: true,
     links: isDev
       ? [
 

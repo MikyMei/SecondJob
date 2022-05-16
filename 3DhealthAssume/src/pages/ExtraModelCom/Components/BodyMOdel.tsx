@@ -1875,21 +1875,6 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
       threeObjects.map((object: any, index: any) => {
         processGLTFChild(object, false);
 
-        // if (JudgeExisted(hidedenObjects, object.name)) {
-        //   object.material.visible = false;
-        // } else {
-        //
-        //   if (object.material.uniforms) {
-        //
-        //     object.material.visible = true;
-        //     object.material.uniforms.coeficient = {type: 'f', value: 1}
-        //   } else {
-        //
-        //     console.log(object.name);
-        //     object.material.visible = true;
-        //     object.material.opacity = object.name.indexOf("剖面") != -1 ? 0.6 : 0.9;;
-        //   }
-        // }
 
       })
       // closeInfoWindow();
@@ -1913,25 +1898,24 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
               </Row> </TabPane>
             <TabPane tab={"医学影像"} key={"1"}>
               <Carousel effect={"fade"}
-                        autoplay={true}
-                        beforeChange={(from: any, to: any) => {
-                          // console.log("切换",from, to);
-                          if (to === 0) {
-                            ChangeIndex("2");
-                          }
-                        }}
-                        afterChange={(current: any) => {
-                          if (infoSelectedTab==="1"){
-                            // console.log(document.getElementsByClassName('ant-image'));
-                            document.getElementsByClassName('ant-image')[current].click();
-                            setTimeout(() => {
-                              console.log(document.getElementsByClassName('ant-image-preview-operations-icon'));
-                              document.getElementsByClassName('ant-image-preview-operations-icon')[0 + (current) * 5].click();
-                            }, 2000)
-                          }
+                        // autoplay={true}
+                        // beforeChange={(from: any, to: any) => {
+                        //   if (to === 0) {
+                        //     ChangeIndex("2");
+                        //   }
+                        // }}
+                        /*afterChange={(current: any) => {*/
+                        /*  if (infoSelectedTab==="1"){*/
+                        /*    // console.log(document.getElementsByClassName('ant-image'));*/
+                        //     document.getElementsByClassName('ant-image')[current].click();
+                        //     setTimeout(() => {
+                        //       console.log(document.getElementsByClassName('ant-image-preview-operations-icon'));
+                        //       document.getElementsByClassName('ant-image-preview-operations-icon')[0 + (current) * 5].click();
+                        /*    }, 2000)*/
+                        /*  } */
 
-
-                        }}
+                        //
+                        // }}
               >
                 {orgaPicture}
               </Carousel> </TabPane>
@@ -1942,17 +1926,14 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
                 }}
                 initialSlide={0}
                 effect={"fade"}
-                autoplay={true}
-                beforeChange={(from: any, to: any) => {
-                  // console.log("切换",from, to);
-                  if (to === 0) {
-                    // ChangeIndex("0");
-                    // setTimeout(() => {
-                    closeInfoWindow();
-                    // }, 4000)
-                  }
-                  // ChangeIndex("0");
-                }}
+                // autoplay={true}
+                // beforeChange={(from: any, to: any) => {
+                //   // console.log("切换",from, to);
+                //   if (to === 0) {
+                //
+                //     closeInfoWindow();
+                //   }
+                // }}
                 afterChange={(current: any) => {
                   // PlayAnimation(illList.illType[current].illName);
                   changeTabs(illList.illType[current].illName)

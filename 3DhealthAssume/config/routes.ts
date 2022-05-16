@@ -28,10 +28,19 @@
     component: './ExtraModelCom',
     hideInMenu:true,
   },
+  {
+    path: '/sliderModel',
+    name: 'sliderOrga',
+    icon: 'smile',
+
+    component: './SliderOrga',
+    hideInMenu:true,
+  },
 
   {
     path: '/',
-    redirect: '/extraModeCom',
+    redirect: '/sliderModel',
+    // redirect: '/extraModeCom',
   },
   {
     component: './404',

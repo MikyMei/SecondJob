@@ -23,9 +23,12 @@ import {SkeletonHelper} from 'three/src/helpers/SkeletonHelper.js';
 import styles from './index.less';
 import {Button, Card, Slider} from "antd";
 import Three3D from "@/pages/3DBody";
+import WholeBodyOrga from "./components/WholeBodyOrga";
 
 
 const SliderOrga: React.FC = () => {
+
+  const [visible, setVisible] = useState<any>(false)
 
   let container: any, camera: any, renderer: any, controls: any;
   let sceneL: any, sceneR: any;
@@ -921,11 +924,33 @@ const SliderOrga: React.FC = () => {
   }, [])
 
 
+  const CloseOrgaModal = () => {
+    // if (dispatch) {
+    //   dispatch({
+    //     type: "bodyModel/initSelectedOrga",
+    //     payload: {
+    //       newSelectedOrga: null
+    //     }
+    //   })
+    // }
+    setVisible(false);
+  }
+
   return (
     <>
+
       <div id="container" className={styles.container}>
-        <div id="slider" className={styles.slider} />
+        <Button className={styles.testButton} onClick={()=>setVisible(true)}>视频测试</Button>
+
+        <div id="slider" className={styles.slider} >
+
+        </div>
       </div>
+      <WholeBodyOrga
+        visible={visible}
+        onCancel={CloseOrgaModal}
+        modalTitle={"白血病"}
+      />
     </>
   )
 }

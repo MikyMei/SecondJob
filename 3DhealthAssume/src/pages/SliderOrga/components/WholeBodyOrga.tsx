@@ -109,8 +109,8 @@ const WholeBodyOrga: React.FC = (props: any) => {
       <VideoPlayer
         playerList={playerList}
         HDvideoUrl={wholeOrgaIll[0].HDvideoUrl || ''}
-        SDvideoUrl={wholeOrgaIll[0].SCvideoUrl || ''}
         SDvideoUrl={wholeOrgaIll[0].SDvideoUrl || ''}
+        SCvideoUrl={wholeOrgaIll[0].SCvideoUrl || ''}
 
       />
 

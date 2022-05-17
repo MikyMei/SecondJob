@@ -21,7 +21,9 @@ const VideoPlayer: React.FC = (props: any) => {
   useEffect(() => {
     const dp = new DPlayer({
       container: inputEl.current,
+      // theme:"#616161",
       video: {
+
         // url: videoUrl,
         quality: [
           {
@@ -52,7 +54,6 @@ const VideoPlayer: React.FC = (props: any) => {
 
         ],
         defaultQuality: 0,
-        //
         pic: ' https://keogp-front-1253940515.cos.ap-shanghai.myqcloud.com/asset/doctor.png',
         thumbnails: ' https://keogp-front-1253940515.cos.ap-shanghai.myqcloud.com/asset/doctor.png',
       },

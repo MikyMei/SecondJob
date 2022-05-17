@@ -33,12 +33,12 @@ const WholeBodyOrga: React.FC = (props: any) => {
   const [indexContent, setIndexContent] = useState<any>([]);
   const [playerList, setPlayerList]=useState<any>([]);
 
-  useEffect(() => {
-    if (wholeOrgaIll.length > 0) {
-      generateLiiList();
-    }
-
-  }, [wholeOrgaIll])
+  // useEffect(() => {
+  //   if (wholeOrgaIll.length > 0) {
+  //     generateLiiList();
+  //   }
+  //
+  // }, [wholeOrgaIll])
 
 
 

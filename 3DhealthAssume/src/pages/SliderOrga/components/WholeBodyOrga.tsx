@@ -21,17 +21,27 @@ const WholeBodyOrga: React.FC = (props: any) => {
 
   const {visible, onCancel, modalTitle, bodyModelInfo, dispatch,} = props;
   // const {wholeOrgaIll} = bodyModelInfo;
-  const wholeOrgaIll= [
+  const wholeOrgaIll = [
     {
       name: "白血病",
-      videoUrl: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4",
+      SCvideoUrl:"https://3-d-health-1253940515.cos.ap-shanghai.myqcloud.com/video/SCDoctor",
+      HDvideoUrl:"https://3-d-health-1253940515.cos.ap-shanghai.myqcloud.com/video/HDDoctor",
+      SDvideoUrl:"https://3-d-health-1253940515.cos.ap-shanghai.myqcloud.com/video/SDDoctor",
+
+      // HDvideoUrl: "https://selfpage-gips.cdn.bcebos.com/selfvideo/8eceb846da9f64a6e124daf607616339.mp4", // 正常播放
+      // SDvideoUrl: "https://selfpage-gips.cdn.bcebos.com/selfvideo/8eceb846da9f64a6e124daf607616339.mp4", // 正常播放
+
+
+
+      // HDvideoUrl: "https://api.dogecloud.com/player/get.m3u8?vcode=5ac682e6f8231991&userId=17&ext=.m3u8", // hls播放器， 又bug 现在不能用
+      // SDvideoUrl: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4",
       illDesc: "白血病是一类造血干细胞恶性克隆性疾病。克隆性白血病细胞因为增殖失控、分化障碍、凋亡受阻等机制在骨髓和其他造血组织中大量增殖累积，并浸润其他非造血组织和器官，同时抑制正常造血功能。临床可见不同程度的贫血、出血、感染发热以及肝、脾、淋巴结肿大和骨骼疼痛。"
     },
   ]
 
 
   const [indexContent, setIndexContent] = useState<any>([]);
-  const [playerList, setPlayerList]=useState<any>([]);
+  const [playerList, setPlayerList] = useState<any>([]);
 
   // useEffect(() => {
   //   if (wholeOrgaIll.length > 0) {
@@ -41,10 +51,9 @@ const WholeBodyOrga: React.FC = (props: any) => {
   // }, [wholeOrgaIll])
 
 
-
-  const CloseModalAndPlayer=()=>{
+  const CloseModalAndPlayer = () => {
     onCancel();
-    playerList.map(player=>{
+    playerList.map(player => {
       player.pause();
     })
   }
@@ -53,29 +62,28 @@ const WholeBodyOrga: React.FC = (props: any) => {
   /**
    * 切换选项卡时的内容，关闭其他的播放器
    * */
-  const PausBeforePlayer=()=>{
-    if (playerList){
-      playerList.map(player=>{
+  const PausBeforePlayer = () => {
+    if (playerList) {
+      playerList.map(player => {
         player.pause();
       })
     }
   }
 
   const generateLiiList = () => {
-    const tempList:any=[];
+    const tempList: any = [];
 
 
     wholeOrgaIll.map((item: any, index: any) => {
       tempList.push(
+        <div className={styles.videoDesc}>
+          <div id={item.name} className={styles.videoContent}>
 
-          <div className={styles.videoDesc}>
-            <div id={item.name} className={styles.videoContent}>
+            <VideoPlayer playerList={playerList} videoUrl={item.videoUrl || ''}/>
 
-              <VideoPlayer playerList={playerList} videoUrl={item.videoUrl||''}/>
-
-            </div>
-            {/*<Divider className={styles.videoDivider}/>*/}
           </div>
+          {/*<Divider className={styles.videoDivider}/>*/}
+        </div>
       );
 
 
@@ -84,12 +92,6 @@ const WholeBodyOrga: React.FC = (props: any) => {
     setIndexContent(tempList);
 
   }
-
-
-
-
-
-
 
 
   return (
@@ -104,10 +106,16 @@ const WholeBodyOrga: React.FC = (props: any) => {
     >
 
 
-          <VideoPlayer playerList={playerList} videoUrl={wholeOrgaIll[0].videoUrl||''}/>
+      <VideoPlayer
+        playerList={playerList}
+        HDvideoUrl={wholeOrgaIll[0].HDvideoUrl || ''}
+        SDvideoUrl={wholeOrgaIll[0].SCvideoUrl || ''}
+        SDvideoUrl={wholeOrgaIll[0].SDvideoUrl || ''}
+
+      />
 
 
-        {/*{indexContent}*/}
+      {/*{indexContent}*/}
     </Modal>
   )
 }

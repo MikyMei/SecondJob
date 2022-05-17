@@ -949,7 +949,7 @@ const SliderOrga: React.FC = () => {
       <WholeBodyOrga
         visible={visible}
         onCancel={CloseOrgaModal}
-        modalTitle={"白血病"}
+        modalTitle={"某某科室医生介绍视频"}
       />
     </>
   )

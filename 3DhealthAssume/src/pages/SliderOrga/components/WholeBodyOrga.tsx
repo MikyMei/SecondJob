@@ -111,7 +111,6 @@ const WholeBodyOrga: React.FC = (props: any) => {
         HDvideoUrl={wholeOrgaIll[0].HDvideoUrl || ''}
         SDvideoUrl={wholeOrgaIll[0].SDvideoUrl || ''}
         SCvideoUrl={wholeOrgaIll[0].SCvideoUrl || ''}
-
       />
 
 

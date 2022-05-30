@@ -39,8 +39,8 @@
 
   {
     path: '/',
-    redirect: '/sliderModel',
-    // redirect: '/extraModeCom',
+    // redirect: '/sliderModel',
+    redirect: '/extraModeCom',
   },
   {
     component: './404',

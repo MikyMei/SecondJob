@@ -218,6 +218,7 @@ const NormalProject: React.FC = (props: { bodyModelInfo: any, dispatch: Dispatch
     setModalTitle(`${orgaName}异常标识`);
     setVisible(true);
   }
+
   const CloseOrgaModal = () => {
     // if (dispatch) {
     //   dispatch({

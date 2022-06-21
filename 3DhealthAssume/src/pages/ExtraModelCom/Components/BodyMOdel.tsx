@@ -1113,6 +1113,8 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
           if (materialExistedList.includes(child.name)) {
 
 
+
+
             /**
              * 这里是保证病灶模型边缘和器官模型的一致
              * 在这里控制一下透明度，因为透明度对于剖面模型是不同的
@@ -1129,6 +1131,9 @@ const BodyModel: React.FC = (props: { onRef: any, currentOrga: any, orgaDescript
             // child.material.side = THREE.DoubleSide;
             child.material.depthWrite = true;  // 这个一定要加
             child.material.opacity = opacityNum;
+            child.material.opacity = opacityNum;
+              child.material.clearcoat=1.0;
+              child.material.clearcoatRoughness= 0.1;
 
           } else {
             child.material = new THREE.MeshPhongMaterial(

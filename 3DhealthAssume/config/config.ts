@@ -91,6 +91,8 @@ export default defineConfig({
   exportStatic: {},
   // fastRefresh: {},
   runtimePublicPath:true,
+  mfsu:{},
+  // mfsu.production = {} //开启生产模式
   extraPostCSSPlugins: [
     px2rem({
       rootValue: 16, // 开启hd后需要换算：rootValue=designWidth*100/750,此处设计稿为1920，所以1920*100/750=256
